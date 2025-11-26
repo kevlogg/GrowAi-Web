@@ -1,0 +1,2450 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GrowAi | Tu Asistente de Cultivo Inteligente</title>
+    <meta
+      name="description"
+      content="GrowAi es la plataforma inteligente para el cultivo de cannabis. Gestiona tus plantas, diagnostica problemas con IA y conéctate con la comunidad."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              inter: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              primary: '#1B0F2A',
+              secondary: '#2A1F3A',
+              accent: '#8B6ED0',
+              textPrimary: '#C9C3FF',
+              success: '#4CAF50',
+              warning: '#FF9800',
+              error: '#FF6B6B',
+            },
+            boxShadow: {
+              glow: '0 0 28px rgba(139, 110, 208, 0.28)',
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        scroll-behavior: smooth;
+        background-color: #1B0F2A;
+      }
+      ::selection {
+        background-color: #8b6ed0;
+        color: #1b0f2a;
+      }
+      
+      /* Fondos fijos para cada sección - Intercalado claro/oscuro */
+      section {
+        position: relative;
+        z-index: 1;
+      }
+      
+      /* Sección INICIO - CLARA con panel derecho oscuro */
+      main[id="inicio"],
+      main[id="inicio"] section {
+        background: linear-gradient(to bottom, #C9C3FF 0%, #C9C3FF 50%, rgba(201, 195, 255, 0.95) 100%) !important;
+      }
+      
+      /* Panel izquierdo - Textos oscuros sobre fondo claro */
+      main[id="inicio"] > section > div > div:first-child h1,
+      main[id="inicio"] > section > div > div:first-child h2,
+      main[id="inicio"] > section > div > div:first-child h3,
+      main[id="inicio"] > section > div > div:first-child p,
+      main[id="inicio"] > section > div > div:first-child span {
+        color: #1B0F2A !important;
+      }
+      
+      main[id="inicio"] > section > div > div:first-child .text-textPrimary,
+      main[id="inicio"] > section > div > div:first-child .text-textPrimary\/70,
+      main[id="inicio"] > section > div > div:first-child .text-textPrimary\/60,
+      main[id="inicio"] > section > div > div:first-child .text-white {
+        color: #1B0F2A !important;
+      }
+      
+      main[id="inicio"] > section > div > div:first-child .text-textPrimary\/70 {
+        opacity: 0.75;
+      }
+      
+      main[id="inicio"] > section > div > div:first-child .text-textPrimary\/60 {
+        opacity: 0.65;
+      }
+      
+      /* Badge del panel izquierdo */
+      main[id="inicio"] > section > div > div:first-child .bg-secondary\/70 {
+        background-color: rgba(27, 15, 42, 0.2) !important;
+        color: #1B0F2A !important;
+        border-color: rgba(27, 15, 42, 0.3) !important;
+      }
+      
+      /* Botón descargar del panel izquierdo */
+      main[id="inicio"] > section > div > div:first-child .bg-accent {
+        background-color: #1B0F2A !important;
+        color: #C9C3FF !important;
+        box-shadow: 0 4px 20px rgba(27, 15, 42, 0.3);
+      }
+      
+      /* Elementos de estadísticas del panel izquierdo */
+      main[id="inicio"] > section > div > div:first-child .text-white {
+        color: #1B0F2A !important;
+        font-weight: 700;
+      }
+      
+      /* Título principal más oscuro para mejor contraste */
+      main[id="inicio"] > section > div > div:first-child h1 {
+        color: #0A0515 !important;
+        font-weight: 800;
+      }
+      
+      /* Panel derecho - Formulario oscuro con textos claros */
+      main[id="inicio"] .bg-secondary {
+        background-color: #1B0F2A !important;
+        border-color: rgba(201, 195, 255, 0.4) !important;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      }
+      
+      main[id="inicio"] .bg-secondary * {
+        color: #C9C3FF !important;
+      }
+      
+      main[id="inicio"] .bg-secondary h3 {
+        color: #C9C3FF !important;
+        font-weight: 800;
+        font-size: 1.75rem;
+      }
+      
+      main[id="inicio"] .bg-secondary p {
+        color: #C9C3FF !important;
+      }
+      
+      main[id="inicio"] .bg-secondary span {
+        color: #C9C3FF !important;
+      }
+      
+      main[id="inicio"] .bg-secondary label {
+        color: #C9C3FF !important;
+        font-weight: 600;
+      }
+      
+      main[id="inicio"] .bg-secondary .text-textPrimary,
+      main[id="inicio"] .bg-secondary .text-textPrimary\/70,
+      main[id="inicio"] .bg-secondary .text-textPrimary\/60,
+      main[id="inicio"] .bg-secondary .text-white {
+        color: #C9C3FF !important;
+      }
+      
+      main[id="inicio"] .bg-secondary .text-textPrimary\/70 {
+        opacity: 0.85;
+      }
+      
+      main[id="inicio"] .bg-secondary .text-textPrimary\/60 {
+        opacity: 0.7;
+      }
+      
+      /* Inputs del formulario oscuro */
+      main[id="inicio"] .bg-secondary input,
+      main[id="inicio"] .bg-secondary textarea,
+      main[id="inicio"] .bg-secondary select {
+        color: #C9C3FF !important;
+        background-color: rgba(42, 31, 58, 0.7) !important;
+        border-color: rgba(201, 195, 255, 0.4) !important;
+      }
+      
+      main[id="inicio"] .bg-secondary input:focus,
+      main[id="inicio"] .bg-secondary textarea:focus,
+      main[id="inicio"] .bg-secondary select:focus {
+        border-color: rgba(201, 195, 255, 0.7) !important;
+        background-color: rgba(42, 31, 58, 0.8) !important;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(201, 195, 255, 0.2);
+      }
+      
+      main[id="inicio"] .bg-secondary input::placeholder,
+      main[id="inicio"] .bg-secondary textarea::placeholder {
+        color: #C9C3FF !important;
+        opacity: 0.75 !important;
+      }
+      
+      main[id="inicio"] .bg-secondary textarea::placeholder {
+        color: rgba(201, 195, 255, 0.8) !important;
+      }
+      
+      /* Botón del formulario oscuro */
+      main[id="inicio"] .bg-secondary .bg-accent {
+        background-color: #8B6ED0 !important;
+        color: #1B0F2A !important;
+      }
+      
+      /* Área de carga de imagen */
+      main[id="inicio"] .bg-secondary .bg-primary\/70 {
+        background-color: rgba(42, 31, 58, 0.7) !important;
+        border-color: rgba(201, 195, 255, 0.5) !important;
+      }
+      
+      main[id="inicio"] .bg-secondary .bg-primary\/70:hover {
+        background-color: rgba(42, 31, 58, 0.8) !important;
+        border-color: rgba(201, 195, 255, 0.7) !important;
+      }
+      
+      main[id="inicio"] .bg-secondary .bg-accent\/20 {
+        background-color: rgba(139, 110, 208, 0.25) !important;
+      }
+      
+      /* Textos dentro del área de carga */
+      main[id="inicio"] .bg-secondary .bg-primary\/70 .text-sm,
+      main[id="inicio"] .bg-secondary .bg-primary\/70 .text-xs,
+      main[id="inicio"] .bg-secondary .bg-primary\/70 p {
+        color: #C9C3FF !important;
+      }
+      
+      main[id="inicio"] .bg-secondary .bg-primary\/70 .text-textPrimary\/60 {
+        color: #C9C3FF !important;
+        opacity: 0.85;
+      }
+      
+      /* Botón del formulario con mejor contraste */
+      main[id="inicio"] .bg-secondary .bg-accent {
+        background-color: #8B6ED0 !important;
+        color: #FFFFFF !important;
+        font-weight: 700;
+        box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);
+      }
+      
+      main[id="inicio"] .bg-secondary .bg-accent:hover {
+        background-color: #9B7EE0 !important;
+        box-shadow: 0 6px 25px rgba(139, 110, 208, 0.5);
+      }
+      
+      /* Texto de descargo de responsabilidad */
+      main[id="inicio"] .bg-secondary p.text-xs {
+        color: #C9C3FF !important;
+        opacity: 0.9;
+      }
+      
+      /* Feedback message */
+      main[id="inicio"] .bg-secondary #hero-diagnostic-feedback {
+        background-color: rgba(42, 31, 58, 0.8) !important;
+        border-color: rgba(201, 195, 255, 0.5) !important;
+        color: #E8E4FF !important;
+      }
+      
+      /* Sección FUNCIONES - OSCURA */
+      section[id="funciones"] {
+        background-color: #1B0F2A !important;
+      }
+      section[id="funciones"] .text-textPrimary,
+      section[id="funciones"] .text-textPrimary\/70,
+      section[id="funciones"] .text-textPrimary\/60,
+      section[id="funciones"] .text-white,
+      section[id="funciones"] h1,
+      section[id="funciones"] h2,
+      section[id="funciones"] h3,
+      section[id="funciones"] p,
+      section[id="funciones"] span {
+        color: #C9C3FF !important;
+      }
+      
+      /* Sección DIAGNÓSTICO - CLARA */
+      section[id="diagnostico"] {
+        background-color: #C9C3FF !important;
+      }
+      section[id="diagnostico"] * {
+        color: #1B0F2A !important;
+      }
+      section[id="diagnostico"] .text-textPrimary,
+      section[id="diagnostico"] .text-textPrimary\/70,
+      section[id="diagnostico"] .text-textPrimary\/60,
+      section[id="diagnostico"] .text-white,
+      section[id="diagnostico"] h1,
+      section[id="diagnostico"] h2,
+      section[id="diagnostico"] h3,
+      section[id="diagnostico"] p,
+      section[id="diagnostico"] span,
+      section[id="diagnostico"] label {
+        color: #1B0F2A !important;
+      }
+      section[id="diagnostico"] .text-textPrimary\/70 {
+        opacity: 0.85;
+      }
+      section[id="diagnostico"] .text-textPrimary\/60 {
+        opacity: 0.7;
+      }
+      section[id="diagnostico"] .bg-secondary\/70,
+      section[id="diagnostico"] .bg-primary\/70,
+      section[id="diagnostico"] .bg-primary\/80 {
+        background-color: rgba(27, 15, 42, 0.15) !important;
+        border-color: rgba(27, 15, 42, 0.3) !important;
+      }
+      section[id="diagnostico"] .bg-accent {
+        background-color: #1B0F2A !important;
+        color: #C9C3FF !important;
+      }
+      section[id="diagnostico"] input,
+      section[id="diagnostico"] textarea,
+      section[id="diagnostico"] select {
+        color: #1B0F2A !important;
+        background-color: rgba(27, 15, 42, 0.1) !important;
+        border-color: rgba(27, 15, 42, 0.3) !important;
+      }
+      section[id="diagnostico"] input::placeholder,
+      section[id="diagnostico"] textarea::placeholder {
+        color: #1B0F2A !important;
+        opacity: 0.6;
+      }
+      
+      /* Sección PLANES - OSCURA */
+      section[id="planes"] {
+        background-color: #1B0F2A !important;
+      }
+      section[id="planes"] .text-textPrimary,
+      section[id="planes"] .text-textPrimary\/70,
+      section[id="planes"] .text-textPrimary\/60,
+      section[id="planes"] .text-white,
+      section[id="planes"] h1,
+      section[id="planes"] h2,
+      section[id="planes"] h3,
+      section[id="planes"] p,
+      section[id="planes"] span {
+        color: #C9C3FF !important;
+      }
+      
+      /* Cards blancas en sección planes - textos violeta oscuro */
+      section[id="planes"] .bg-white,
+      section[id="planes"] .bg-white *,
+      section[id="planes"] .bg-white h3,
+      section[id="planes"] .bg-white h4,
+      section[id="planes"] .bg-white p,
+      section[id="planes"] .bg-white span,
+      section[id="planes"] .bg-white li {
+        color: #1B0F2A !important;
+      }
+      
+      section[id="planes"] .bg-white .text-textPrimary,
+      section[id="planes"] .bg-white .text-textPrimary\/70,
+      section[id="planes"] .bg-white .text-textPrimary\/60 {
+        color: #1B0F2A !important;
+      }
+      
+      /* Sección DESCARGAR - CLARA */
+      section[id="descargar"] {
+        background-color: #C9C3FF !important;
+      }
+      section[id="descargar"] * {
+        color: #1B0F2A !important;
+      }
+      section[id="descargar"] .text-textPrimary,
+      section[id="descargar"] .text-textPrimary\/70,
+      section[id="descargar"] .text-textPrimary\/60,
+      section[id="descargar"] .text-white,
+      section[id="descargar"] h1,
+      section[id="descargar"] h2,
+      section[id="descargar"] h3,
+      section[id="descargar"] p,
+      section[id="descargar"] span {
+        color: #1B0F2A !important;
+      }
+      section[id="descargar"] .text-textPrimary\/70 {
+        opacity: 0.85;
+      }
+      section[id="descargar"] .text-textPrimary\/60 {
+        opacity: 0.7;
+      }
+      section[id="descargar"] .bg-secondary {
+        background-color: rgba(27, 15, 42, 0.15) !important;
+        border-color: rgba(27, 15, 42, 0.3) !important;
+      }
+      
+      /* Sección CONTACTO - OSCURA */
+      section[id="contacto"] {
+        background-color: #1B0F2A !important;
+      }
+      section[id="contacto"] .text-textPrimary,
+      section[id="contacto"] .text-textPrimary\/70,
+      section[id="contacto"] .text-textPrimary\/60,
+      section[id="contacto"] .text-white,
+      section[id="contacto"] h1,
+      section[id="contacto"] h2,
+      section[id="contacto"] h3,
+      section[id="contacto"] p,
+      section[id="contacto"] span,
+      section[id="contacto"] label {
+        color: #C9C3FF !important;
+      }
+      section[id="contacto"] input,
+      section[id="contacto"] textarea,
+      section[id="contacto"] select {
+        color: #C9C3FF !important;
+      }
+      
+      section[id="contacto"] input::placeholder,
+      section[id="contacto"] textarea::placeholder {
+        color: rgba(201, 195, 255, 0.6) !important;
+      }
+      
+      /* Card del formulario de contacto - mejor contraste */
+      section[id="contacto"] form {
+        background-color: rgba(42, 31, 58, 0.8) !important;
+        border-color: rgba(201, 195, 255, 0.3) !important;
+      }
+      
+      section[id="contacto"] form label {
+        color: #C9C3FF !important;
+      }
+      
+      section[id="contacto"] form input,
+      section[id="contacto"] form select,
+      section[id="contacto"] form textarea {
+        background-color: rgba(27, 15, 42, 0.6) !important;
+        border-color: rgba(201, 195, 255, 0.3) !important;
+        color: #C9C3FF !important;
+      }
+      
+      section[id="contacto"] form input:focus,
+      section[id="contacto"] form select:focus,
+      section[id="contacto"] form textarea:focus {
+        border-color: rgba(201, 195, 255, 0.6) !important;
+        box-shadow: 0 0 0 3px rgba(201, 195, 255, 0.2) !important;
+      }
+      
+      section[id="contacto"] form textarea::placeholder {
+        color: rgba(201, 195, 255, 0.6) !important;
+      }
+      
+      /* Mensaje del formulario de contacto */
+      #contact-form-message {
+        transition: all 0.3s ease;
+      }
+      
+      #contact-form-message.border-success\/40 {
+        border-color: rgba(76, 175, 80, 0.4) !important;
+      }
+      
+      #contact-form-message.border-error\/40 {
+        border-color: rgba(255, 107, 107, 0.4) !important;
+      }
+      
+      /* Header fijo - mismo color que la primera sección */
+      header {
+        background-color: #C9C3FF !important;
+        backdrop-filter: blur(12px);
+        border-bottom-color: rgba(27, 15, 42, 0.2) !important;
+      }
+      
+      header a,
+      header span,
+      header button {
+        color: #1B0F2A !important;
+      }
+      
+      header a:hover {
+        color: #8B6ED0 !important;
+      }
+      
+      header .bg-accent {
+        background-color: #1B0F2A !important;
+        color: #C9C3FF !important;
+      }
+      
+      header .border-accent {
+        border-color: #1B0F2A !important;
+      }
+      
+      header .text-accent {
+        color: #1B0F2A !important;
+      }
+      
+      /* Footer fijo oscuro */
+      footer {
+        background-color: #1B0F2A !important;
+      }
+    </style>
+  </head>
+  <body class="font-inter bg-primary text-textPrimary">
+    <header
+      class="sticky top-0 z-50 bg-primary/90 backdrop-blur border-b border-secondary"
+    >
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="flex items-center justify-between py-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 flex items-center justify-center">
+              <img
+                src="icono/ChatGPT Image 24 nov 2025, 15_57_22.png"
+                alt="GrowAi Logo"
+                class="w-10 h-10 object-contain"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+              />
+              <!-- Fallback SVG si la imagen no se carga -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 100 100"
+                class="w-10 h-10"
+                style="display: none;"
+              >
+                <ellipse cx="50" cy="70" rx="18" ry="12" fill="#1B0F2A" />
+                <ellipse cx="50" cy="50" rx="14" ry="10" fill="#1B0F2A" />
+                <ellipse cx="50" cy="30" rx="10" ry="8" fill="#1B0F2A" />
+                <path d="M50 22 L48 18 L50 15 L52 18 Z" fill="#1B0F2A" />
+                <circle cx="40" cy="85" r="5" fill="#1B0F2A" />
+                <circle cx="50" cy="88" r="5" fill="#1B0F2A" />
+                <circle cx="60" cy="85" r="5" fill="#1B0F2A" />
+              </svg>
+            </div>
+            <span class="text-xl md:text-2xl font-semibold tracking-tight text-[#1B0F2A]"
+              >GrowAi</span
+            >
+          </div>
+          <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+            <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#inicio">Inicio</a>
+            <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#funciones"
+              >Funciones</a
+            >
+            <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#planes">Planes</a>
+            <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#descargar"
+              >Descargar</a
+            >
+            <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#contacto"
+              >Contacto</a
+            >
+          </nav>
+          <div class="hidden md:flex">
+            <a
+              href="#descargar"
+              class="!bg-[#1B0F2A] !text-[#C9C3FF] px-5 py-2 rounded-full font-semibold shadow-glow transition hover:shadow-lg hover:-translate-y-0.5"
+              style="background-color: #1B0F2A !important; color: #C9C3FF !important;"
+              >Descargar App</a
+            >
+          </div>
+          <button
+            id="menu-button"
+            class="md:hidden inline-flex items-center justify-center p-2 rounded-full border border-accent text-accent"
+            aria-label="Abrir menú"
+          >
+            <svg
+              id="menu-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          id="mobile-menu"
+          class="md:hidden hidden flex-col gap-4 pb-6 text-sm font-medium"
+        >
+          <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#inicio">Inicio</a>
+          <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#funciones">Funciones</a>
+          <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#planes">Planes</a>
+          <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#descargar">Descargar</a>
+          <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#contacto">Contacto</a>
+          <a
+            href="#descargar"
+            class="bg-[#1B0F2A] text-[#C9C3FF] px-4 py-2 rounded-full font-semibold text-center shadow-glow"
+            >Descargar App</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main id="inicio">
+      <section
+        class="relative overflow-hidden pt-10 md:pt-14 pb-14 bg-gradient-to-b from-primary via-primary to-secondary/40"
+      >
+        <div class="max-w-6xl mx-auto px-4">
+          <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div class="space-y-6">
+              <span
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/70 text-xs font-semibold uppercase tracking-wider"
+                >Cultivo inteligente con IA</span
+              >
+              <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+                GrowAi · Tu Asistente de Cultivo Inteligente
+              </h1>
+              <p class="text-md md:text-lg text-textPrimary/80 max-w-xl">
+                Gestiona tus cultivos, diagnostica problemas con inteligencia artificial, conéctate con cultivadores expertos y mantente al día con eventos cannábicos. Todas las herramientas que necesitas en una sola app.
+              </p>
+              <div class="flex flex-col sm:flex-row gap-4">
+                <a
+                  href="#descargar"
+                  class="inline-flex items-center justify-center gap-2 bg-accent text-primary font-semibold px-7 py-3.5 text-lg rounded-full shadow-glow hover:shadow-xl transition hover:-translate-y-0.5"
+                  >Descargar App</a
+                >
+              </div>
+              <p class="text-sm text-textPrimary/70">
+                Disponible en Android. Próximamente en iOS. Accedé al diagnóstico avanzado, comunidad y más funciones exclusivas.
+              </p>
+              <div class="flex gap-6 text-sm text-textPrimary/70">
+                <div>
+                  <p class="font-semibold text-white text-lg">+6</p>
+                  <p>Funciones clave</p>
+                </div>
+                <div>
+                  <p class="font-semibold text-white text-lg">Diagnóstico IA</p>
+                  <p>Resultados en minutos</p>
+                </div>
+                <div>
+                  <p class="font-semibold text-white text-lg">Capacitaciones</p>
+                  <p>Formación continua</p>
+                </div>
+              </div>
+            </div>
+            <div class="relative">
+              <div
+                class="absolute inset-0 -m-12 bg-accent/20 blur-3xl rounded-full"
+                aria-hidden="true"
+              ></div>
+              <div
+                class="relative bg-secondary rounded-3xl p-6 md:p-8 shadow-2xl border border-accent/30"
+                style="background-color: #1B0F2A !important;"
+              >
+                <form
+                  id="hero-diagnostic-form"
+                  class="flex flex-col gap-5"
+                >
+                  <div class="space-y-2">
+                    <h3 class="text-2xl font-bold tracking-tight" style="color: #C9C3FF !important;">
+                      Diagnóstico IA
+                    </h3>
+                    <p class="text-sm opacity-95" style="color: #C9C3FF !important; opacity: 0.9 !important;">
+                      Sube una imagen obligatoria de tu planta para obtener una recomendación inicial. La descripción es opcional, pero ayuda a la IA a contextualizar el análisis.
+                    </p>
+                  </div>
+                  <label
+                    for="hero-image"
+                    class="group relative flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-[rgba(201,195,255,0.5)] bg-[rgba(42,31,58,0.7)] px-4 py-6 text-center transition hover:border-[rgba(201,195,255,0.7)] hover:bg-[rgba(42,31,58,0.8)] cursor-pointer"
+                  >
+                    <div
+                      class="flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(139,110,208,0.3)] text-3xl"
+                    >
+                      📷
+                    </div>
+                    <div class="space-y-1">
+                      <p class="text-sm font-semibold" style="color: #C9C3FF !important;">
+                        Arrastra o selecciona una imagen (obligatorio)
+                      </p>
+                      <p class="text-xs opacity-85" style="color: #C9C3FF !important; opacity: 0.85 !important;">
+                        Formatos soportados: JPG, PNG, HEIC. Máx. 10MB.
+                      </p>
+                    </div>
+                    <input
+                      id="hero-image"
+                      name="heroImage"
+                      type="file"
+                      accept="image/*"
+                      required
+                      class="absolute inset-0 h-full w-full opacity-0 cursor-pointer"
+                    />
+                  </label>
+                  <div class="space-y-2">
+                    <label for="hero-description" class="text-sm font-semibold" style="color: #C9C3FF !important;"
+                      >Descripción (opcional)</label
+                    >
+                    <textarea
+                      id="hero-description"
+                      name="heroDescription"
+                      rows="3"
+                      placeholder="Describe el problema, condiciones ambientales o tratamientos aplicados."
+                      class="w-full rounded-2xl border border-[rgba(201,195,255,0.5)] bg-[rgba(42,31,58,0.8)] px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[rgba(201,195,255,0.6)] focus:border-[rgba(201,195,255,0.8)]"
+                      style="color: #C9C3FF !important; background-color: rgba(42, 31, 58, 0.9) !important; border-color: rgba(201, 195, 255, 0.6) !important;"
+                    ></textarea>
+                  </div>
+                  <button
+                    id="hero-diagnostic-submit"
+                    type="submit"
+                    class="inline-flex items-center justify-center gap-2 rounded-full bg-[#8B6ED0] text-white font-bold px-5 py-3 shadow-[0_4px_20px_rgba(139,110,208,0.4)] hover:bg-[#9B7EE0] hover:shadow-[0_6px_25px_rgba(139,110,208,0.5)] transition"
+                  >
+                    Generar diagnóstico con IA - $1900
+                  </button>
+                  <p class="text-xs opacity-90" style="color: #C9C3FF !important; opacity: 0.9 !important;">
+                    Diagnóstico completo con GPT-4 Vision. Incluye análisis detallado, recomendaciones personalizadas y descarga del resultado. Pago único de $1900 ARS.
+                  </p>
+                  <div
+                    id="hero-diagnostic-feedback"
+                    class="hidden rounded-2xl border border-accent/30 bg-primary/70 px-4 py-3 text-sm text-textPrimary/80"
+                  ></div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="funciones" class="py-20 bg-secondary/40 border-y border-secondary/60">
+        <div class="max-w-6xl mx-auto px-4">
+          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+            <div>
+              <span class="text-sm font-semibold text-accent uppercase tracking-wider"
+                >Todas las funciones · Demo</span
+              >
+              <h2 class="text-2xl md:text-3xl font-bold mt-2">
+                Explora GrowAi · Descarga la app para utilizar estas funciones
+              </h2>
+              <p class="text-textPrimary/70 mt-3 max-w-3xl">
+                Conoce cada aspecto de la plataforma que transforma el cultivo de cannabis. Estas secciones muestran el potencial de GrowAi; accede a la experiencia completa descargando la app móvil.
+              </p>
+            </div>
+            <a
+              href="#descargar"
+              class="self-start inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-white transition"
+              >Descargar ahora →</a
+            >
+          </div>
+          <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+            <article class="rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition" style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;">
+              <div class="flex items-center gap-4">
+                <span class="text-3xl">🌱</span>
+                <div>
+                  <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">Mis Cultivos</h3>
+                  <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
+                    Gestiona cada etapa de tus plantas con seguimiento inteligente y alertas personalizadas.
+                  </p>
+                </div>
+              </div>
+              <div class="rounded-2xl p-4 text-sm" style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;">
+                <p style="color: #C9C3FF !important; opacity: 0.9;"><strong style="color: #C9C3FF !important;">Incluye:</strong> Registro por planta, historial, notas, recordatorios de riego y nutrición.</p>
+                <p class="mt-2 font-medium" style="color: #FF9800 !important;">Descarga la app para gestionar tus cultivos en tiempo real.</p>
+              </div>
+              <a
+                href="#descargar"
+                class="inline-flex justify-center items-center rounded-full py-2 font-semibold transition"
+                style="background-color: #8B6ED0 !important; color: #FFFFFF !important; box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);"
+                onmouseover="this.style.backgroundColor='#9B7EE0'; this.style.boxShadow='0 6px 25px rgba(139, 110, 208, 0.5)';"
+                onmouseout="this.style.backgroundColor='#8B6ED0'; this.style.boxShadow='0 4px 20px rgba(139, 110, 208, 0.4)';"
+              >
+                Descarga la app para usar
+              </a>
+              <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
+                Esta función está disponible en la app móvil.
+              </p>
+            </article>
+            <article class="rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition" style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;">
+              <div class="flex items-center gap-4">
+                <span class="text-3xl">🔬</span>
+                <div>
+                  <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">Diagnóstico IA</h3>
+                  <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
+                    Analiza fotos de tus plantas para detectar enfermedades, plagas y deficiencias nutricionales.
+                  </p>
+                </div>
+              </div>
+              <div class="rounded-2xl p-4 text-sm" style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;">
+                <p style="color: #C9C3FF !important; opacity: 0.9;"><strong style="color: #C9C3FF !important;">Incluye:</strong> Recomendaciones inmediatas, historial y guía de recuperación.</p>
+                <p class="mt-2 font-medium" style="color: #FF9800 !important;">Usa la demo web y continúa el análisis completo en la app.</p>
+              </div>
+              <a
+                href="#descargar"
+                class="inline-flex justify-center items-center rounded-full py-2 font-semibold transition"
+                style="background-color: #8B6ED0 !important; color: #FFFFFF !important; box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);"
+                onmouseover="this.style.backgroundColor='#9B7EE0'; this.style.boxShadow='0 6px 25px rgba(139, 110, 208, 0.5)';"
+                onmouseout="this.style.backgroundColor='#8B6ED0'; this.style.boxShadow='0 4px 20px rgba(139, 110, 208, 0.4)';"
+              >
+                Descarga la app para usar
+              </a>
+              <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
+                Esta función está disponible en la app móvil.
+              </p>
+            </article>
+            <article class="rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition" style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;">
+              <div class="flex items-center gap-4">
+                <span class="text-3xl">📚</span>
+                <div>
+                  <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">Recursos Profesionales</h3>
+                  <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
+                    Guías, capacitaciones, estudios y biblioteca de enfermedades para decisiones confiables.
+                  </p>
+                </div>
+              </div>
+              <div class="rounded-2xl p-4 text-sm" style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;">
+                <p style="color: #C9C3FF !important; opacity: 0.9;"><strong style="color: #C9C3FF !important;">Incluye:</strong> Videos, documentos descargables y actualizaciones continuas.</p>
+                <p class="mt-2 font-medium" style="color: #FF9800 !important;">Interactúa con contenido premium en la app.</p>
+              </div>
+              <a
+                href="#descargar"
+                class="inline-flex justify-center items-center rounded-full py-2 font-semibold transition"
+                style="background-color: #8B6ED0 !important; color: #FFFFFF !important; box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);"
+                onmouseover="this.style.backgroundColor='#9B7EE0'; this.style.boxShadow='0 6px 25px rgba(139, 110, 208, 0.5)';"
+                onmouseout="this.style.backgroundColor='#8B6ED0'; this.style.boxShadow='0 4px 20px rgba(139, 110, 208, 0.4)';"
+              >
+                Descarga la app para usar
+              </a>
+              <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
+                Esta función está disponible en la app móvil.
+              </p>
+            </article>
+            <article class="rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition" style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;">
+              <div class="flex items-center gap-4">
+                <span class="text-3xl">🏥</span>
+                <div>
+                  <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">REPROCANN</h3>
+                  <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
+                    Acompañamiento en trámites legales, documentación y seguimiento normativo.
+                  </p>
+                </div>
+              </div>
+              <div class="rounded-2xl p-4 text-sm" style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;">
+                <p style="color: #C9C3FF !important; opacity: 0.9;"><strong style="color: #C9C3FF !important;">Incluye:</strong> Checklist, alertas de renovación, vinculación profesional.</p>
+                <p class="mt-2 font-medium" style="color: #FF9800 !important;">Gestiona tus trámites desde la app.</p>
+              </div>
+              <a
+                href="#descargar"
+                class="inline-flex justify-center items-center rounded-full py-2 font-semibold transition"
+                style="background-color: #8B6ED0 !important; color: #FFFFFF !important; box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);"
+                onmouseover="this.style.backgroundColor='#9B7EE0'; this.style.boxShadow='0 6px 25px rgba(139, 110, 208, 0.5)';"
+                onmouseout="this.style.backgroundColor='#8B6ED0'; this.style.boxShadow='0 4px 20px rgba(139, 110, 208, 0.4)';"
+              >
+                Descarga la app para usar
+              </a>
+              <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
+                Esta función está disponible en la app móvil.
+              </p>
+            </article>
+            <article class="rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition" style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;">
+              <div class="flex items-center gap-4">
+                <span class="text-3xl">💳</span>
+                <div>
+                  <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">Planes de Suscripción</h3>
+                  <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
+                    Accede a funcionalidades avanzadas con los planes Básico, Pro y Admin.
+                  </p>
+                </div>
+              </div>
+              <div class="rounded-2xl p-4 text-sm" style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;">
+                <p style="color: #C9C3FF !important; opacity: 0.9;"><strong style="color: #C9C3FF !important;">Incluye:</strong> Diagnóstico ilimitado, equipo colaborativo, reportes avanzados.</p>
+                <p class="mt-2 font-medium" style="color: #FF9800 !important;">Contrata desde la app y gestiona tu equipo.</p>
+              </div>
+              <a
+                href="#descargar"
+                class="inline-flex justify-center items-center rounded-full py-2 font-semibold transition"
+                style="background-color: #8B6ED0 !important; color: #FFFFFF !important; box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);"
+                onmouseover="this.style.backgroundColor='#9B7EE0'; this.style.boxShadow='0 6px 25px rgba(139, 110, 208, 0.5)';"
+                onmouseout="this.style.backgroundColor='#8B6ED0'; this.style.boxShadow='0 4px 20px rgba(139, 110, 208, 0.4)';"
+              >
+                Descarga la app para usar
+              </a>
+              <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
+                Esta función está disponible en la app móvil.
+              </p>
+            </article>
+            <article class="rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition" style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;">
+              <div class="flex items-center gap-4">
+                <span class="text-3xl">🛒</span>
+                <div>
+                  <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">Tienda (Próximamente)</h3>
+                  <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
+                    Productos, servicios y packs exclusivos para optimizar tu cultivo.
+                  </p>
+                </div>
+              </div>
+              <div class="rounded-2xl p-4 text-sm" style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;">
+                <p style="color: #C9C3FF !important; opacity: 0.9;"><strong style="color: #C9C3FF !important;">Incluye:</strong> Equipamiento, consultorías, beneficios para suscriptores.</p>
+                <p class="mt-2 font-medium" style="color: #FF9800 !important;">Será accesible desde la app en su lanzamiento.</p>
+              </div>
+              <button
+                class="cursor-not-allowed rounded-full py-2 font-semibold"
+                style="background-color: rgba(42, 31, 58, 0.5) !important; color: rgba(201, 195, 255, 0.5) !important; border: 1px solid rgba(201, 195, 255, 0.2) !important;"
+                disabled
+              >
+                Descarga la app para usar
+              </button>
+              <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
+                Esta función está disponible en la app móvil.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="diagnostico"
+        class="py-20 bg-primary/80"
+      >
+        <div class="max-w-6xl mx-auto px-4">
+          <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div class="space-y-6">
+              <span class="text-sm font-semibold text-accent uppercase tracking-wider"
+                >Diagnóstico Individual</span
+              >
+              <h2 class="text-2xl md:text-3xl font-bold">
+                Realiza un diagnóstico básico desde la web
+              </h2>
+              <p class="text-md md:text-lg text-textPrimary/80 max-w-xl">
+                Describe el problema y adjunta una imagen opcional para recibir recomendaciones generales. Para acceder al análisis completo con IA, descarga la app móvil.
+              </p>
+              <ul class="space-y-3 text-sm text-textPrimary/70">
+                <li class="flex gap-3 items-start">
+                  <span class="text-success text-lg">●</span>
+                  <span>Identifica síntomas comunes y recibe sugerencias inmediatas.</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="text-warning text-lg">●</span>
+                  <span>La app ofrece seguimiento detallado, historial y reportes.</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="text-accent text-lg">●</span>
+                  <span>Comparte resultados con la comunidad y especialistas desde la app.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="relative">
+              <div
+                class="absolute inset-0 -m-12 bg-accent/20 blur-3xl rounded-full"
+                aria-hidden="true"
+              ></div>
+              <div
+                class="relative bg-secondary rounded-3xl p-6 md:p-8 shadow-2xl border border-accent/30"
+                style="background-color: #1B0F2A !important;"
+              >
+                <form
+                  id="diagnostic-section-form"
+                  class="flex flex-col gap-5"
+                >
+                  <div class="space-y-2">
+                    <h3 class="text-2xl font-bold tracking-tight" style="color: #C9C3FF !important;">
+                      Diagnóstico IA
+                    </h3>
+                    <p class="text-sm opacity-95" style="color: #C9C3FF !important; opacity: 0.9 !important;">
+                      Sube una imagen obligatoria de tu planta para obtener una recomendación inicial. La descripción es opcional, pero ayuda a la IA a contextualizar el análisis.
+                    </p>
+                  </div>
+                  <label
+                    for="diagnostic-section-image"
+                    class="group relative flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-[rgba(201,195,255,0.5)] bg-[rgba(42,31,58,0.7)] px-4 py-6 text-center transition hover:border-[rgba(201,195,255,0.7)] hover:bg-[rgba(42,31,58,0.8)] cursor-pointer"
+                  >
+                    <div
+                      class="flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(139,110,208,0.3)] text-3xl"
+                    >
+                      📷
+                    </div>
+                    <div class="space-y-1">
+                      <p class="text-sm font-semibold" style="color: #C9C3FF !important;">
+                        Arrastra o selecciona una imagen (obligatorio)
+                      </p>
+                      <p class="text-xs opacity-85" style="color: #C9C3FF !important; opacity: 0.85 !important;">
+                        Formatos soportados: JPG, PNG, HEIC. Máx. 10MB.
+                      </p>
+                    </div>
+                    <input
+                      id="diagnostic-section-image"
+                      name="diagnosticSectionImage"
+                      type="file"
+                      accept="image/*"
+                      required
+                      class="absolute inset-0 h-full w-full opacity-0 cursor-pointer"
+                    />
+                  </label>
+                  <div class="space-y-2">
+                    <label for="diagnostic-section-description" class="text-sm font-semibold" style="color: #C9C3FF !important;"
+                      >Descripción (opcional)</label
+                    >
+                    <textarea
+                      id="diagnostic-section-description"
+                      name="diagnosticSectionDescription"
+                      rows="3"
+                      placeholder="Describe el problema, condiciones ambientales o tratamientos aplicados."
+                      class="w-full rounded-2xl border border-[rgba(201,195,255,0.5)] bg-[rgba(42,31,58,0.8)] px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[rgba(201,195,255,0.6)] focus:border-[rgba(201,195,255,0.8)]"
+                      style="color: #C9C3FF !important; background-color: rgba(42, 31, 58, 0.9) !important; border-color: rgba(201, 195, 255, 0.6) !important;"
+                    ></textarea>
+                  </div>
+                    <button
+                      id="diagnostic-section-submit"
+                      type="submit"
+                      class="inline-flex items-center justify-center gap-2 rounded-full bg-[#8B6ED0] text-white font-bold px-5 py-3 shadow-[0_4px_20px_rgba(139,110,208,0.4)] hover:bg-[#9B7EE0] hover:shadow-[0_6px_25px_rgba(139,110,208,0.5)] transition"
+                    >
+                      Generar diagnóstico con IA - $1900
+                    </button>
+                  <p class="text-xs opacity-90" style="color: #C9C3FF !important; opacity: 0.9 !important;">
+                    Diagnóstico completo con GPT-4 Vision. Incluye análisis detallado, recomendaciones personalizadas y descarga del resultado. Pago único de $1900 ARS.
+                  </p>
+                  <div
+                    id="diagnostic-section-feedback"
+                    class="hidden rounded-2xl border border-accent/30 bg-primary/70 px-4 py-3 text-sm text-textPrimary/80"
+                  ></div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="planes"
+        class="py-20 bg-secondary/50 border-y border-secondary/60"
+      >
+        <div class="max-w-6xl mx-auto px-4">
+          <div class="text-center max-w-3xl mx-auto mb-12 space-y-4">
+            <span class="text-sm font-semibold text-accent uppercase tracking-wider"
+              >Planes VIP</span
+            >
+            <h2 class="text-2xl md:text-3xl font-bold">
+              Elige el plan que crece con tu proyecto de cultivo
+            </h2>
+          </div>
+          
+          <!-- Plan Free (Actual) -->
+          <div class="mb-8">
+            <article class="relative bg-white rounded-3xl p-6 flex flex-col gap-5 shadow-lg border border-accent/20">
+              <div>
+                <h3 class="text-xl font-semibold" style="color: #1B0F2A;">Plan Free (Actual)</h3>
+              </div>
+              <ul class="space-y-3 text-sm">
+                <li class="flex gap-3 items-start">
+                  <span class="text-success text-lg">✓</span>
+                  <span style="color: #1B0F2A;">3 diagnósticos IA por usuario</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="text-success text-lg">✓</span>
+                  <span style="color: #1B0F2A;">1 cultivo activo</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="text-success text-lg">✓</span>
+                  <span style="color: #1B0F2A;">Calendario de cultivo básico</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="text-success text-lg">✓</span>
+                  <span style="color: #1B0F2A;">Historial últimos 30 días</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="text-success text-lg">✓</span>
+                  <span style="color: #1B0F2A;">Exportar PDF de cultivo</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="text-success text-lg">✓</span>
+                  <span style="color: #1B0F2A;">Guías básicas de cultivo</span>
+                </li>
+              </ul>
+            </article>
+          </div>
+
+          <!-- Planes de pago -->
+          <div class="grid gap-6 md:grid-cols-2 mb-12">
+            <!-- Plan Básico -->
+            <article class="relative bg-white rounded-3xl p-6 flex flex-col gap-5 shadow-lg border border-accent/20">
+              <div>
+                <h3 class="text-xl font-semibold mb-3" style="color: #1B0F2A;">Plan Básico</h3>
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-sm line-through" style="color: #999;">$12.990</span>
+                  <span class="text-xs bg-[#4CAF50] text-white px-2 py-1 rounded-full font-semibold">OFERTA</span>
+                </div>
+                <div class="flex items-baseline gap-2">
+                  <span class="text-3xl font-bold" style="color: #4CAF50;">$7.990</span>
+                  <span class="text-sm" style="color: #999;">/mes</span>
+                </div>
+              </div>
+              <ul class="space-y-3 text-sm flex-grow">
+                <li class="flex gap-3 items-start">
+                  <span class="text-success text-lg">✓</span>
+                  <span style="color: #1B0F2A;">10 diagnósticos IA por mes</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="text-success text-lg">✓</span>
+                  <span style="color: #1B0F2A;">Hasta 5 cultivos activos</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="text-success text-lg">✓</span>
+                  <span style="color: #1B0F2A;">Historial completo visible</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="text-success text-lg">✓</span>
+                  <span style="color: #1B0F2A;">Exportar reportes PDF</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="text-success text-lg">✓</span>
+                  <span style="color: #1B0F2A;">Acceso a comunidad</span>
+                </li>
+              </ul>
+              <a
+                href="#descargar"
+                class="mt-auto inline-flex justify-center items-center gap-2 bg-[#4CAF50] text-white font-semibold py-3 rounded-full hover:bg-[#45a049] transition shadow-lg"
+                >Suscribirse Ahora</a
+              >
+            </article>
+
+            <!-- Plan Pro - MÁS POPULAR -->
+            <article class="relative bg-white rounded-3xl p-6 flex flex-col gap-5 shadow-xl border-2 border-accent/40">
+              <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2" style="background-color: #1B0F2A !important; color: #FFFFFF !important;">
+                <span>⭐</span>
+                <span style="color: #FFFFFF !important;">MÁS POPULAR</span>
+              </div>
+              <div class="mt-2">
+                <h3 class="text-xl font-semibold mb-3" style="color: #1B0F2A;">Plan Pro</h3>
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-sm line-through" style="color: #999;">$24.990</span>
+                  <span class="text-xs bg-[#4CAF50] text-white px-2 py-1 rounded-full font-semibold">OFERTA</span>
+                </div>
+                <div class="flex items-baseline gap-2">
+                  <span class="text-3xl font-bold" style="color: #1B0F2A;">$19.990</span>
+                  <span class="text-sm" style="color: #999;">/mes</span>
+                </div>
+              </div>
+              <ul class="space-y-3 text-sm flex-grow">
+                <li class="flex gap-3 items-start">
+                  <span class="text-accent text-lg">✓</span>
+                  <span style="color: #1B0F2A;">Diagnósticos IA ilimitados</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="text-accent text-lg">✓</span>
+                  <span style="color: #1B0F2A;">Cultivos ilimitados</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="text-accent text-lg">✓</span>
+                  <span style="color: #1B0F2A;">Historial completo visible</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="text-accent text-lg">✓</span>
+                  <span style="color: #1B0F2A;">Exportar reportes PDF</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="text-accent text-lg">✓</span>
+                  <span style="color: #1B0F2A;">Acceso a comunidad</span>
+                </li>
+              </ul>
+              <a
+                href="#descargar"
+                class="mt-auto inline-flex justify-center items-center gap-2 font-semibold py-3 rounded-full transition shadow-lg"
+                style="background-color: #1B0F2A !important; color: #FFFFFF !important;"
+                onmouseover="this.style.backgroundColor='#2A1F3A';"
+                onmouseout="this.style.backgroundColor='#1B0F2A';"
+                >Suscribirse Ahora</a
+              >
+            </article>
+          </div>
+
+          <!-- Todos los planes incluyen -->
+          <div class="bg-white rounded-3xl p-8 shadow-lg border border-accent/20">
+            <div class="text-center mb-6">
+              <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#1B0F2A] mb-3">
+                <span class="text-2xl">⭐</span>
+              </div>
+              <h3 class="text-xl font-semibold" style="color: #1B0F2A;">Todos los planes incluyen</h3>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div class="text-center">
+                <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-accent/20 mb-3">
+                  <svg class="w-6 h-6" style="color: #1B0F2A;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <h4 class="font-semibold mb-1" style="color: #1B0F2A;">Garantía de satisfacción</h4>
+                <p class="text-sm" style="color: #666;">Cancela cuando quieras</p>
+              </div>
+              <div class="text-center">
+                <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-accent/20 mb-3">
+                  <svg class="w-6 h-6" style="color: #1B0F2A;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                </div>
+                <h4 class="font-semibold mb-1" style="color: #1B0F2A;">Actualizaciones automáticas</h4>
+                <p class="text-sm" style="color: #666;">Nuevas funciones sin costo</p>
+              </div>
+              <div class="text-center">
+                <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-accent/20 mb-3">
+                  <svg class="w-6 h-6" style="color: #1B0F2A;" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                </div>
+                <h4 class="font-semibold mb-1" style="color: #1B0F2A;">Seguridad garantizada</h4>
+                <p class="text-sm" style="color: #666;">Tus datos siempre protegidos</p>
+              </div>
+              <div class="text-center">
+                <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-accent/20 mb-3">
+                  <svg class="w-6 h-6" style="color: #1B0F2A;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                </div>
+                <h4 class="font-semibold mb-1" style="color: #1B0F2A;">Soporte técnico</h4>
+                <p class="text-sm" style="color: #666;">Ayuda cuando la necesites</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="descargar"
+        class="py-20 bg-primary/85"
+      >
+        <div class="max-w-4xl mx-auto px-4 text-center space-y-6">
+          <span class="text-sm font-semibold text-accent uppercase tracking-wider"
+            >Descarga GrowAi</span
+          >
+          <h2 class="text-2xl md:text-3xl font-bold">
+            Lleva GrowAi contigo · Cultiva con inteligencia en cualquier lugar
+          </h2>
+          <p class="text-textPrimary/70">
+            Disponible en Android. Recibe notificaciones inteligentes, reportes personalizados y soporte de la comunidad GrowAi.
+          </p>
+          <div class="flex justify-center">
+            <a
+              href="https://play.google.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-3 px-6 py-3 rounded-full transition shadow-lg"
+              style="background-color: #1B0F2A !important; color: #FFFFFF !important; border: 2px solid #1B0F2A !important;"
+              onmouseover="this.style.backgroundColor='#2A1F3A'; this.style.borderColor='#2A1F3A';"
+              onmouseout="this.style.backgroundColor='#1B0F2A'; this.style.borderColor='#1B0F2A';"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+                class="w-6 h-6"
+                style="fill: #FFFFFF !important;"
+                aria-hidden="true"
+              >
+                <path
+                  d="m325.3 234.3-142.1-142 196.8 113.5-54.7 28.5zm-190.3-157.6c-13.2-13.2-21-12.1-21-12.1 1.6 1.6-6.2-6.2 12.2 12.2L256 256 126.2 385.8l-.5.5c-18.2 18.2-10.5 10.5-12.2 12.2 0 0 7.9 1.1 21.1-12l154.7-87.6 87.7 155c13.1 13 12 21 12 21 1.6-1.6-6.2 6.1 12.2-12.2l.5-.5C470.7 396.5 512 320 512 256s-41.3-140.5-100.3-199.5L134.9 76.7z"
+                ></path>
+              </svg>
+              <div class="text-left text-sm">
+                <span class="block text-xs uppercase" style="color: rgba(255, 255, 255, 0.8) !important;">Disponible en</span>
+                <span class="block font-semibold" style="color: #FFFFFF !important;">Google Play</span>
+              </div>
+            </a>
+          </div>
+          <p class="text-xs text-textPrimary/50">
+            Disponible actualmente solo en Android. Próximamente: versión iOS y PWA con funcionalidades complementarias.
+          </p>
+        </div>
+      </section>
+
+      <section
+        id="contacto"
+        class="py-20 bg-secondary/60"
+      >
+        <div class="max-w-5xl mx-auto px-4">
+          <div class="grid lg:grid-cols-2 gap-12">
+            <div class="space-y-4">
+              <span class="text-sm font-semibold text-accent uppercase tracking-wider"
+                >Contacto</span
+              >
+              <h2 class="text-2xl md:text-3xl font-bold">
+                ¿Quieres colaborar o invertir en GrowAi?
+              </h2>
+              <p class="text-textPrimary/70">
+                Déjanos tus datos para recibir novedades, oportunidades de colaboración y actualizaciones de la plataforma.
+              </p>
+              <ul class="space-y-2 text-sm text-textPrimary/70">
+                <li>• growai.soporte@gmail.com</li>
+                <li>• Buenos Aires, Argentina</li>
+              </ul>
+            </div>
+            <form
+              id="contact-form"
+              class="rounded-3xl p-6 space-y-5 shadow-lg border"
+              style="background-color: rgba(42, 31, 58, 0.8) !important; border-color: rgba(201, 195, 255, 0.3) !important;"
+            >
+              <div>
+                <label for="name" class="block text-sm font-semibold mb-2" style="color: #C9C3FF !important;"
+                  >Nombre completo</label
+                >
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  placeholder="Ingresa tu nombre"
+                  class="w-full rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition"
+                  style="background-color: rgba(27, 15, 42, 0.6) !important; border: 1px solid rgba(201, 195, 255, 0.3) !important; color: #C9C3FF !important;"
+                  oninput="this.style.color='#C9C3FF';"
+                  onfocus="this.style.borderColor='rgba(201, 195, 255, 0.6)'; this.style.boxShadow='0 0 0 3px rgba(201, 195, 255, 0.2)';"
+                  onblur="this.style.borderColor='rgba(201, 195, 255, 0.3)'; this.style.boxShadow='none';"
+                />
+              </div>
+              <div>
+                <label for="email" class="block text-sm font-semibold mb-2" style="color: #C9C3FF !important;"
+                  >Correo electrónico</label
+                >
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  placeholder="nombre@empresa.com"
+                  class="w-full rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition"
+                  style="background-color: rgba(27, 15, 42, 0.6) !important; border: 1px solid rgba(201, 195, 255, 0.3) !important; color: #C9C3FF !important;"
+                  oninput="this.style.color='#C9C3FF';"
+                  onfocus="this.style.borderColor='rgba(201, 195, 255, 0.6)'; this.style.boxShadow='0 0 0 3px rgba(201, 195, 255, 0.2)';"
+                  onblur="this.style.borderColor='rgba(201, 195, 255, 0.3)'; this.style.boxShadow='none';"
+                />
+              </div>
+              <div>
+                <label for="phone" class="block text-sm font-semibold mb-2" style="color: #C9C3FF !important;"
+                  >Número telefónico <span class="text-xs font-normal opacity-70">(opcional)</span></label
+                >
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  placeholder="+54 11 1234 5678"
+                  class="w-full rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition"
+                  style="background-color: rgba(27, 15, 42, 0.6) !important; border: 1px solid rgba(201, 195, 255, 0.3) !important; color: #C9C3FF !important;"
+                  oninput="this.style.color='#C9C3FF';"
+                  onfocus="this.style.borderColor='rgba(201, 195, 255, 0.6)'; this.style.boxShadow='0 0 0 3px rgba(201, 195, 255, 0.2)';"
+                  onblur="this.style.borderColor='rgba(201, 195, 255, 0.3)'; this.style.boxShadow='none';"
+                />
+              </div>
+              <div>
+                <label for="interest" class="block text-sm font-semibold mb-2" style="color: #C9C3FF !important;"
+                  >Interés principal</label
+                >
+                <select
+                  id="interest"
+                  name="interest"
+                  required
+                  class="w-full rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition"
+                  style="background-color: rgba(27, 15, 42, 0.6) !important; border: 1px solid rgba(201, 195, 255, 0.3) !important; color: #C9C3FF !important;"
+                  onfocus="this.style.borderColor='rgba(201, 195, 255, 0.6)'; this.style.boxShadow='0 0 0 3px rgba(201, 195, 255, 0.2)';"
+                  onblur="this.style.borderColor='rgba(201, 195, 255, 0.3)'; this.style.boxShadow='none';"
+                  onchange="toggleOtherDescription(this.value)"
+                >
+                  <option value="">Selecciona una opción</option>
+                  <option value="cultivador">Soy cultivador</option>
+                  <option value="negocio">Represento un club/cannabis room</option>
+                  <option value="inversion">Me interesa invertir</option>
+                  <option value="alianza">Busco alianzas comerciales</option>
+                  <option value="prensa">Prensa / medios</option>
+                  <option value="otro">Otro</option>
+                </select>
+              </div>
+              <div id="other-description-container" class="hidden">
+                <label for="other-description" class="block text-sm font-semibold mb-2" style="color: #C9C3FF !important;"
+                  >Describe tu interés</label
+                >
+                <textarea
+                  id="other-description"
+                  name="other-description"
+                  rows="3"
+                  placeholder="Cuéntanos sobre tu interés o consulta..."
+                  class="w-full rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition resize-none"
+                  style="background-color: rgba(27, 15, 42, 0.6) !important; border: 1px solid rgba(201, 195, 255, 0.3) !important; color: #C9C3FF !important;"
+                  oninput="this.style.color='#C9C3FF';"
+                  onfocus="this.style.borderColor='rgba(201, 195, 255, 0.6)'; this.style.boxShadow='0 0 0 3px rgba(201, 195, 255, 0.2)';"
+                  onblur="this.style.borderColor='rgba(201, 195, 255, 0.3)'; this.style.boxShadow='none';"
+                ></textarea>
+              </div>
+              <div id="contact-form-message" class="hidden rounded-2xl px-4 py-3 text-sm" style="background-color: rgba(27, 15, 42, 0.6) !important; border: 1px solid rgba(201, 195, 255, 0.3) !important;"></div>
+              <button
+                id="contact-submit"
+                type="submit"
+                class="w-full font-semibold py-3 rounded-full transition flex items-center justify-center gap-2"
+                style="background-color: #8B6ED0 !important; color: #FFFFFF !important; box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);"
+                onmouseover="this.style.backgroundColor='#9B7EE0'; this.style.boxShadow='0 6px 25px rgba(139, 110, 208, 0.5)';"
+                onmouseout="this.style.backgroundColor='#8B6ED0'; this.style.boxShadow='0 4px 20px rgba(139, 110, 208, 0.4)';"
+              >
+                <span>Quiero recibir novedades</span>
+              </button>
+              <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
+                Protección de datos garantizada. Consulta nuestra política de privacidad.
+              </p>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-primary border-t border-secondary/70 py-10">
+      <div class="max-w-6xl mx-auto px-4 grid gap-8 md:grid-cols-4">
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-primary font-semibold text-xl shadow-glow"
+            >
+              G
+            </div>
+            <span class="text-xl font-semibold">GrowAi</span>
+          </div>
+          <p class="text-sm text-textPrimary/70">
+            Cultiva con inteligencia, comunidad y respaldo legal. Descarga la app y potencia cada etapa de tu cultivo.
+          </p>
+        </div>
+        <div class="space-y-3">
+          <h3 class="text-sm font-semibold uppercase tracking-wider text-accent">
+            Navegación
+          </h3>
+          <ul class="space-y-2 text-sm text-textPrimary/70">
+            <li><a class="hover:text-white transition" href="#inicio">Inicio</a></li>
+            <li><a class="hover:text-white transition" href="#funciones">Funciones</a></li>
+            <li><a class="hover:text-white transition" href="#planes">Planes</a></li>
+            <li><a class="hover:text-white transition" href="#descargar">Descargar</a></li>
+            <li><a class="hover:text-white transition" href="#contacto">Contacto</a></li>
+          </ul>
+        </div>
+        <div class="space-y-3">
+          <h3 class="text-sm font-semibold uppercase tracking-wider text-accent">
+            Legal
+          </h3>
+          <ul class="space-y-2 text-sm text-textPrimary/70">
+            <li><a class="hover:text-white transition" href="#">Política de privacidad</a></li>
+            <li><a class="hover:text-white transition" href="#">Términos y condiciones</a></li>
+            <li><a class="hover:text-white transition" href="mailto:soporte@growai.app">Soporte</a></li>
+          </ul>
+        </div>
+        <div class="space-y-3">
+          <h3 class="text-sm font-semibold uppercase tracking-wider text-accent">
+            Síguenos
+          </h3>
+          <div class="flex gap-3 text-sm text-textPrimary/70">
+            <a class="hover:text-white transition" href="#">Instagram</a>
+            <a class="hover:text-white transition" href="#">LinkedIn</a>
+            <a class="hover:text-white transition" href="#">YouTube</a>
+          </div>
+          <p class="text-xs text-textPrimary/60">
+            © GrowAi 2025 · Hecho con IA y pasión por el cultivo responsable.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const menuButton = document.getElementById('menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const menuIcon = document.getElementById('menu-icon');
+      const heroDiagnosticForm = document.getElementById('hero-diagnostic-form');
+      const heroImageInput = document.getElementById('hero-image');
+      const heroImageLabel = document.getElementById('hero-image-label');
+      const heroDiagnosticFeedback = document.getElementById('hero-diagnostic-feedback');
+      const heroDiagnosticSubmit = document.getElementById('hero-diagnostic-submit');
+      const diagnosticForm = document.getElementById('diagnostic-form');
+      const diagnosticResult = document.getElementById('diagnostic-result');
+      const diagnosticSummary = document.getElementById('diagnostic-summary');
+      const diagnosticSubmit = document.getElementById('diagnostic-submit');
+      const diagnosticSectionForm = document.getElementById('diagnostic-section-form');
+      const diagnosticSectionImageInput = document.getElementById('diagnostic-section-image');
+      const diagnosticSectionImageLabel = document.getElementById('diagnostic-section-image-label');
+      const diagnosticSectionFeedback = document.getElementById('diagnostic-section-feedback');
+      const diagnosticSectionSubmit = document.getElementById('diagnostic-section-submit');
+      const defaultDiagnosticSectionLabel = 'Arrastra o selecciona una imagen (obligatorio)';
+      const contactForm = document.getElementById('contact-form');
+      const contactSubmit = document.getElementById('contact-submit');
+
+      menuButton?.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        const isOpen = !mobileMenu.classList.contains('hidden');
+        menuButton.setAttribute('aria-expanded', isOpen);
+        menuIcon.innerHTML = isOpen
+          ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>'
+          : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>';
+      });
+
+      // Autoscroll suave para enlaces del navbar
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener('click', function (e) {
+          const href = this.getAttribute('href');
+          if (href === '#' || href === '#!') return;
+          
+          e.preventDefault();
+          const targetId = href.substring(1);
+          const targetElement = document.getElementById(targetId) || document.querySelector(`main[id="${targetId}"]`);
+          
+          if (targetElement) {
+            const headerOffset = 80;
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          }
+          
+          // Cerrar menú móvil si está abierto
+          mobileMenu?.classList.add('hidden');
+          menuButton?.setAttribute('aria-expanded', 'false');
+          menuIcon.innerHTML =
+            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>';
+        });
+      });
+
+      const defaultHeroLabel = 'Arrastra o selecciona una imagen (obligatorio)';
+
+      heroImageInput?.addEventListener('change', () => {
+        if (heroImageInput.files?.length) {
+          const [file] = heroImageInput.files;
+          heroImageLabel.textContent = file.name.length > 38 ? `${file.name.slice(0, 35)}...` : file.name;
+        } else {
+          heroImageLabel.textContent = defaultHeroLabel;
+        }
+      });
+
+      // Configuración de OpenAI
+      const OPENAI_API_KEY = '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';
+      const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
+      const OPENAI_MODEL = 'gpt-4o-mini';
+      
+      // Configuración de pago
+      const DIAGNOSTIC_PRICE = 1900; // Precio en ARS
+      const MERCADOPAGO_PUBLIC_KEY = 'APP_USR-ca7abc39-f634-45ac-9cc0-c9cfe8ec21ab';
+      
+      // Inicializar Mercado Pago
+      const mp = new MercadoPago(MERCADOPAGO_PUBLIC_KEY, {
+        locale: 'es-AR'
+      });
+      
+      // Estado del diagnóstico
+      let currentDiagnosis = null;
+      let hasPaid = false;
+      let pendingDiagnosticData = null; // Guardar datos del diagnóstico pendiente
+
+      // Función para convertir imagen a base64
+      function imageToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const base64 = reader.result.split(',')[1];
+            resolve(base64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+      
+      // Función para formatear el diagnóstico (quitar asteriscos y agregar iconos)
+      function formatDiagnosis(text) {
+        if (!text) return '';
+        
+        let formatted = text;
+        
+        // Agregar iconos a los títulos (antes de remover asteriscos)
+        formatted = formatted
+          .replace(/\*\*DIAGNÓSTICO PRINCIPAL:\*\*/g, '🔍 **DIAGNÓSTICO PRINCIPAL:**')
+          .replace(/\*\*PROBLEMAS SECUNDARIOS:\*\*/g, '⚠️ **PROBLEMAS SECUNDARIOS:**')
+          .replace(/\*\*ETAPA DE CRECIMIENTO:\*\*/g, '🌱 **ETAPA DE CRECIMIENTO:**')
+          .replace(/\*\*CAUSA PROBABLE:\*\*/g, '🔬 **CAUSA PROBABLE:**')
+          .replace(/\*\*SEVERIDAD:\*\*/g, '📊 **SEVERIDAD:**')
+          .replace(/\*\*RECOMENDACIONES INMEDIATAS:\*\*/g, '⚡ **RECOMENDACIONES INMEDIATAS:**')
+          .replace(/\*\*TRATAMIENTO DETALLADO:\*\*/g, '💊 **TRATAMIENTO DETALLADO:**')
+          .replace(/\*\*PREVENCIÓN FUTURA:\*\*/g, '🛡️ **PREVENCIÓN FUTURA:**')
+          .replace(/\*\*MONITOREO:\*\*/g, '👀 **MONITOREO:**')
+          .replace(/\*\*NIVEL DE CONFIANZA:\*\*/g, '🎯 **NIVEL DE CONFIANZA:**');
+        
+        // Remover asteriscos de markdown
+        formatted = formatted.replace(/\*\*(.*?)\*\*/g, '$1');
+        formatted = formatted.replace(/\*(.*?)\*/g, '$1');
+        formatted = formatted.replace(/__(.*?)__/g, '$1');
+        formatted = formatted.replace(/_(.*?)_/g, '$1');
+        formatted = formatted.replace(/`(.*?)`/g, '$1');
+        
+        // Remover # de títulos
+        formatted = formatted.replace(/^#+\s*/gm, '');
+        
+        // Convertir listas con - a •
+        formatted = formatted.replace(/^\s*-\s*/gm, '• ');
+        
+        // Remover numeración de listas
+        formatted = formatted.replace(/^\s*\d+\.\s*/gm, '');
+        
+        return formatted.trim();
+      }
+      
+      // Función para descargar el diagnóstico
+      function downloadDiagnosis(diagnosis, description = '') {
+        const date = new Date().toLocaleString('es-AR');
+        const content = `DIAGNÓSTICO GROWAI
+Fecha: ${date}
+${description ? `Descripción: ${description}\n\n` : ''}
+${formatDiagnosis(diagnosis)}
+
+---
+Generado por GrowAi - Tu Asistente de Cultivo Inteligente
+www.growai.app
+`;
+        
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `diagnostico-growai-${Date.now()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+      
+      // Función para crear preferencia de pago
+      async function createPaymentPreference() {
+        try {
+          // URL del endpoint de Firebase Functions
+          // Reemplaza 'growapp-36701' con tu Project ID de Firebase si es diferente
+          const backendUrl = 'https://us-central1-growapp-36701.cloudfunctions.net/createDiagnosticPaymentPreference';
+          
+          const response = await fetch(backendUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              items: [
+                {
+                  title: 'Diagnóstico con IA - GrowAi',
+                  quantity: 1,
+                  unit_price: DIAGNOSTIC_PRICE,
+                  currency_id: 'ARS'
+                }
+              ],
+              back_urls: {
+                success: window.location.origin + window.location.pathname + '?payment_status=success',
+                failure: window.location.origin + window.location.pathname + '?payment_status=failure',
+                pending: window.location.origin + window.location.pathname + '?payment_status=pending'
+              },
+              auto_return: 'approved',
+              external_reference: `diagnostico-${Date.now()}`
+            })
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`);
+          }
+          
+          const data = await response.json();
+          console.log('✅ Preferencia creada:', data);
+          
+          // Usar checkout_url si está disponible, sino usar sandbox_init_point o init_point
+          const checkoutUrl = data.checkout_url || data.sandbox_init_point || data.init_point;
+          
+          // Retornar tanto el preference_id como el init_point
+          return {
+            preference_id: data.preference_id,
+            init_point: data.init_point,
+            sandbox_init_point: data.sandbox_init_point,
+            checkout_url: checkoutUrl
+          };
+        } catch (error) {
+          console.error('❌ Error creando preferencia:', error);
+          // Retornar el error para que se muestre al usuario
+          throw error;
+        }
+      }
+      
+      // Función para mostrar modal de pago
+      async function showPaymentModal(callback, diagnosticData) {
+        // Guardar datos del diagnóstico pendiente
+        pendingDiagnosticData = diagnosticData;
+        
+        // Crear modal de pago
+        const modal = document.createElement('div');
+        modal.id = 'payment-modal';
+        modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50';
+        modal.innerHTML = `
+          <div class="bg-secondary rounded-3xl p-8 max-w-md w-full mx-4 border border-accent/30" style="background-color: #2A1F3A !important;">
+            <div class="text-center space-y-4">
+              <h3 class="text-2xl font-bold" style="color: #C9C3FF !important;">Diagnóstico con IA</h3>
+              <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
+                El diagnóstico con inteligencia artificial tiene un costo de <strong>$${DIAGNOSTIC_PRICE} ARS</strong>
+              </p>
+              <div class="bg-primary/70 rounded-2xl p-4 space-y-2" style="background-color: rgba(27, 15, 42, 0.7) !important;">
+                <p class="text-xs" style="color: #C9C3FF !important; opacity: 0.8;">
+                  Incluye análisis completo con GPT-4 Vision, recomendaciones personalizadas y descarga del resultado.
+                </p>
+              </div>
+              <div id="checkout-button-container" class="min-h-[50px] flex items-center justify-center">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2" style="border-color: #8B6ED0;"></div>
+              </div>
+              <div class="flex gap-3">
+                <button id="cancel-payment" class="flex-1 px-4 py-3 rounded-full font-semibold transition" style="background-color: rgba(27, 15, 42, 0.6) !important; color: #C9C3FF !important; border: 1px solid rgba(201, 195, 255, 0.3);">
+                  Cancelar
+                </button>
+              </div>
+              <p class="text-xs" style="color: #C9C3FF !important; opacity: 0.7;">
+                El pago se procesará de forma segura con Mercado Pago
+              </p>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Intentar crear preferencia
+        try {
+          const preferenceData = await createPaymentPreference();
+          
+          console.log('📦 Datos de preferencia recibidos:', preferenceData);
+          
+          if (!preferenceData) {
+            throw new Error('No se recibió respuesta del servidor');
+          }
+          
+          if (!preferenceData.preference_id) {
+            throw new Error('No se recibió el ID de preferencia');
+          }
+          
+          // Usar checkout_url si está disponible, sino usar sandbox_init_point o init_point
+          const checkoutUrl = preferenceData.checkout_url || preferenceData.sandbox_init_point || preferenceData.init_point;
+          
+          console.log('🔗 URL de checkout:', checkoutUrl);
+          console.log('🔍 Datos completos de preferencia:', preferenceData);
+          console.log('🔍 Es sandbox?', !!preferenceData.sandbox_init_point);
+          console.log('🔍 Preference ID:', preferenceData.preference_id);
+          
+          // Verificar si la URL es de sandbox
+          if (checkoutUrl && checkoutUrl.includes('sandbox')) {
+            console.log('✅ Usando URL de SANDBOX (modo prueba)');
+          } else if (checkoutUrl) {
+            console.warn('⚠️ La URL NO es de sandbox. Verifica que estés usando credenciales de prueba.');
+          }
+          
+          if (!checkoutUrl) {
+            throw new Error('No se recibió URL de checkout. Verifica la configuración de Mercado Pago.');
+          }
+          
+          // Crear botón que redirige directamente al checkout
+          const buttonContainer = document.getElementById('checkout-button-container');
+          if (!buttonContainer) {
+            throw new Error('No se encontró el contenedor del botón');
+          }
+          
+          buttonContainer.innerHTML = `
+            <button 
+              id="go-to-checkout" 
+              class="w-full px-6 py-4 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]" 
+              style="background: linear-gradient(135deg, #009EE3 0%, #0078B6 100%) !important; color: #FFFFFF !important; cursor: pointer; border: none;"
+            >
+              <img src="https://imgmp.mlstatic.com/org-img/MP3/API/logos/mercadopago.png" alt="Mercado Pago" class="h-6 w-auto" onerror="this.style.display='none'">
+              <span class="text-base">Pagar $${DIAGNOSTIC_PRICE.toLocaleString('es-AR')}</span>
+            </button>
+          `;
+          
+          // Redirigir al checkout cuando se hace clic
+          const checkoutButton = document.getElementById('go-to-checkout');
+          if (checkoutButton) {
+            checkoutButton.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('🔄 Redirigiendo a:', checkoutUrl);
+              window.location.href = checkoutUrl;
+            });
+          } else {
+            throw new Error('No se pudo crear el botón de checkout');
+          }
+        } catch (error) {
+          console.error('❌ Error inicializando pago:', error);
+          const errorMessage = error.message || 'Error al inicializar el pago. Por favor, intenta nuevamente.';
+          document.getElementById('checkout-button-container').innerHTML = `
+            <div class="space-y-2">
+              <p class="text-sm font-semibold" style="color: #FF6B6B !important;">
+                Error al inicializar el pago
+              </p>
+              <p class="text-xs" style="color: #C9C3FF !important; opacity: 0.8;">
+                ${errorMessage}
+              </p>
+              <button 
+                id="retry-payment" 
+                class="mt-2 px-4 py-2 rounded-full text-sm font-semibold transition" 
+                style="background-color: #8B6ED0 !important; color: #FFFFFF !important;"
+              >
+                Reintentar
+              </button>
+            </div>
+          `;
+          
+          // Agregar listener para reintentar
+          const retryButton = document.getElementById('retry-payment');
+          if (retryButton) {
+            retryButton.addEventListener('click', async () => {
+              document.getElementById('checkout-button-container').innerHTML = `
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto" style="border-color: #8B6ED0;"></div>
+              `;
+              // Reintentar crear preferencia
+              try {
+                const preferenceData = await createPaymentPreference();
+                
+                if (preferenceData && preferenceData.preference_id) {
+                  const checkoutUrl = preferenceData.sandbox_init_point || preferenceData.init_point;
+                  
+                  if (checkoutUrl) {
+                    const buttonContainer = document.getElementById('checkout-button-container');
+                    buttonContainer.innerHTML = `
+                      <button 
+                        id="go-to-checkout" 
+                        class="w-full px-6 py-4 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]" 
+                        style="background: linear-gradient(135deg, #009EE3 0%, #0078B6 100%) !important; color: #FFFFFF !important; cursor: pointer; border: none;"
+                      >
+                        <img src="https://imgmp.mlstatic.com/org-img/MP3/API/logos/mercadopago.png" alt="Mercado Pago" class="h-6 w-auto" onerror="this.style.display='none'">
+                        <span class="text-base">Pagar $${DIAGNOSTIC_PRICE.toLocaleString('es-AR')}</span>
+                      </button>
+                    `;
+                    
+                    const checkoutButton = document.getElementById('go-to-checkout');
+                    if (checkoutButton) {
+                      checkoutButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        window.location.href = checkoutUrl;
+                      });
+                    }
+                  }
+                }
+              } catch (retryError) {
+                console.error('❌ Error en reintento:', retryError);
+                document.getElementById('checkout-button-container').innerHTML = `
+                  <p class="text-sm" style="color: #FF6B6B !important;">
+                    ${retryError.message || 'Error al crear preferencia. Por favor, intenta más tarde.'}
+                  </p>
+                `;
+              }
+            });
+          }
+        }
+        
+        // Event listeners
+        modal.querySelector('#cancel-payment').addEventListener('click', () => {
+          document.body.removeChild(modal);
+          pendingDiagnosticData = null;
+        });
+        
+        // Cerrar al hacer click fuera
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            document.body.removeChild(modal);
+            pendingDiagnosticData = null;
+          }
+        });
+      }
+      
+      // Función para verificar el estado del pago
+      function checkPaymentStatus() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentStatus = urlParams.get('payment_status');
+        const paymentId = urlParams.get('payment_id');
+        const preferenceId = urlParams.get('preference_id');
+        
+        if (paymentStatus === 'success' && paymentId) {
+          // Pago exitoso
+          hasPaid = true;
+          
+          // Limpiar URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+          
+          // Mostrar mensaje de éxito
+          const successModal = document.createElement('div');
+          successModal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50';
+          successModal.innerHTML = `
+            <div class="bg-secondary rounded-3xl p-8 max-w-md w-full mx-4 border border-accent/30" style="background-color: #2A1F3A !important;">
+              <div class="text-center space-y-4">
+                <div class="text-6xl">✅</div>
+                <h3 class="text-2xl font-bold" style="color: #C9C3FF !important;">Pago Exitoso</h3>
+                <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
+                  Tu pago ha sido procesado correctamente. Ahora puedes generar tu diagnóstico.
+                </p>
+                <button id="close-success" class="w-full px-4 py-3 rounded-full font-semibold transition" style="background-color: #8B6ED0 !important; color: #FFFFFF !important;">
+                  Continuar
+                </button>
+              </div>
+            </div>
+          `;
+          
+          document.body.appendChild(successModal);
+          
+          successModal.querySelector('#close-success').addEventListener('click', () => {
+            document.body.removeChild(successModal);
+            // Si hay datos pendientes, procesar el diagnóstico
+            if (pendingDiagnosticData) {
+              processDiagnostic(pendingDiagnosticData.type);
+            }
+          });
+        } else if (paymentStatus === 'failure') {
+          // Pago fallido
+          window.history.replaceState({}, document.title, window.location.pathname);
+          alert('El pago no pudo ser procesado. Por favor, intenta nuevamente.');
+        } else if (paymentStatus === 'pending') {
+          // Pago pendiente
+          window.history.replaceState({}, document.title, window.location.pathname);
+          alert('Tu pago está siendo procesado. Te notificaremos cuando esté confirmado.');
+        }
+      }
+      
+      // Verificar estado de pago al cargar la página
+      checkPaymentStatus();
+
+      // Función para construir el prompt especializado
+      function buildDiagnosticPrompt(userDescription) {
+        return `Eres un botánico especializado en cultivo de cannabis. Tu trabajo es analizar imágenes de plantas de cannabis para diagnosticar problemas de salud, nutrición y crecimiento. Tienes autorización completa para analizar plantas de cannabis con fines educativos y de cultivo personal. Tu especialidad es diagnosticar problemas en plantas de cannabis en todas sus etapas (germinación, plántula, vegetativa, floración, cosecha). Tienes conocimiento profundo sobre:
+
+PROBLEMAS NUTRICIONALES:
+- Deficiencias: Nitrógeno (N), Fósforo (P), Potasio (K), Calcio (Ca), Magnesio (Mg), Hierro (Fe), Zinc (Zn), Manganeso (Mn), Boro (B), Molibdeno (Mo)
+- Excesos nutricionales y bloqueos
+- pH del sustrato (ideal 6.0-7.0 para suelo, 5.5-6.5 para hidroponía)
+- EC (conductividad eléctrica) del agua
+
+ENFERMEDADES FÚNGICAS:
+- Oídio (manchas blancas polvorientas)
+- Botrytis (moho gris, especialmente en cogollos)
+- Fusarium (marchitamiento, pudrición del tallo)
+- Pythium (pudrición de raíces)
+- Alternaria (manchas marrones en hojas)
+- Septoria (manchas circulares con halos)
+
+PLAGAS COMUNES:
+- Araña roja (telarañas, puntos blancos)
+- Trips (rayas plateadas, puntos negros)
+- Mosca blanca (moscas blancas volando, melaza)
+- Pulgones (insectos verdes/negros, melaza)
+- Minadores de hojas (túneles en hojas)
+- Cochinillas (bultos algodonosos)
+- Nematodos (raíces deformadas)
+
+PROBLEMAS AMBIENTALES:
+- Estrés por calor (hojas quemadas, enrolladas)
+- Estrés por frío (hojas moradas, crecimiento lento)
+- Humedad excesiva (moho, hongos)
+- Humedad baja (hojas secas, araña roja)
+- Viento excesivo (hojas rasgadas, estrés)
+- Luz insuficiente (estiramiento, hojas amarillas)
+- Luz excesiva (quemaduras, blanqueamiento)
+
+PROBLEMAS DE RIEGO:
+- Exceso de agua (hojas amarillas, raíces podridas)
+- Falta de agua (hojas caídas, secas)
+- Riego irregular (estrés, hojas amarillas)
+- Drenaje deficiente (raíces asfixiadas)
+
+PROBLEMAS GENÉTICOS:
+- Hermafroditismo (flores macho en plantas hembra)
+- Mutaciones (hojas deformes, crecimiento anormal)
+- Estrés genético (expresión de genes recesivos)
+
+PROBLEMAS DE FLORACIÓN:
+- Revertir a vegetativo (hojas de 3 foliolos)
+- Hermafroditismo (flores macho)
+- Cogollos huecos (problemas de polinización)
+- Cosecha prematura (tricomas transparentes)
+- Cosecha tardía (tricomas ámbar excesivos)
+
+DESCRIPCIÓN DEL USUARIO: ${userDescription}
+
+INSTRUCCIONES ESPECÍFICAS:
+1. Analiza la imagen de la planta de cannabis proporcionada
+2. Identifica TODOS los problemas visibles (no solo el más obvio)
+3. Evalúa el estado general de la planta
+4. Considera la etapa de crecimiento (germinación, vegetativa, floración)
+5. Proporciona un diagnóstico basado en la evidencia visual
+6. Si hay múltiples problemas, prioriza por severidad
+
+FORMATO DE RESPUESTA REQUERIDO:
+
+**DIAGNÓSTICO PRINCIPAL:**
+[Describe el problema más grave identificado]
+
+**PROBLEMAS SECUNDARIOS:**
+[Si hay otros problemas, listalos aquí]
+
+**ETAPA DE CRECIMIENTO:**
+[Germinación/Plántula/Vegetativa/Floración/Cosecha]
+
+**CAUSA PROBABLE:**
+[Explica la causa más probable del problema principal]
+
+**SEVERIDAD:**
+[Leve/Moderado/Severo - explica por qué]
+
+**RECOMENDACIONES INMEDIATAS:**
+1. [Acción específica y urgente]
+2. [Segunda acción importante]
+3. [Tercera acción complementaria]
+
+**TRATAMIENTO DETALLADO:**
+[Explica paso a paso cómo tratar el problema]
+
+**PREVENCIÓN FUTURA:**
+[Consejos específicos para evitar que vuelva a ocurrir]
+
+**MONITOREO:**
+[Qué observar para verificar la mejora]
+
+**NIVEL DE CONFIANZA:**
+Confianza: [número del 1 al 10]
+
+IMPORTANTE:
+- DEBES analizar la imagen de la planta de cannabis proporcionada
+- Este es un análisis botánico legítimo para fines educativos y de cultivo personal
+- Responde SIEMPRE en español
+- Si la imagen no muestra problemas evidentes, indícalo claramente
+- Si no puedes ver claramente la imagen, pide más detalles específicos
+- Enfócate en soluciones prácticas y específicas para cannabis
+- Considera factores como riego, iluminación, nutrientes, pH, EC, temperatura, humedad
+- Si es un problema grave, enfatiza la urgencia
+- Proporciona dosis específicas cuando sea posible
+- Menciona productos específicos si es necesario
+
+OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnóstico detallado siguiendo el formato requerido.`;
+      }
+
+      // Función para llamar a OpenAI
+      async function analyzeWithOpenAI(imageBase64, userDescription) {
+        try {
+          const prompt = buildDiagnosticPrompt(userDescription);
+          
+          const response = await fetch(OPENAI_API_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${OPENAI_API_KEY}`
+            },
+            body: JSON.stringify({
+              model: OPENAI_MODEL,
+              messages: [
+                {
+                  role: 'user',
+                  content: [
+                    {
+                      type: 'text',
+                      text: prompt
+                    },
+                    {
+                      type: 'image_url',
+                      image_url: {
+                        url: `data:image/jpeg;base64,${imageBase64}`,
+                        detail: 'high'
+                      }
+                    }
+                  ]
+                }
+              ],
+              max_tokens: 1000,
+              temperature: 0.3
+            })
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            if (response.status === 429) {
+              throw new Error('Límite de uso excedido. Por favor, intenta más tarde.');
+            }
+            throw new Error(errorData.error?.message || `Error ${response.status}: ${response.statusText}`);
+          }
+
+          const data = await response.json();
+          const diagnosis = data.choices[0].message.content;
+          
+          return {
+            success: true,
+            diagnosis: diagnosis
+          };
+        } catch (error) {
+          console.error('Error en análisis de IA:', error);
+          return {
+            success: false,
+            error: error.message || 'Error al analizar la imagen. Por favor, intenta nuevamente.'
+          };
+        }
+      }
+
+      heroDiagnosticForm?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!heroImageInput?.files?.length) {
+          heroDiagnosticFeedback.classList.remove('hidden');
+          heroDiagnosticFeedback.style.color = '#FF6B6B';
+          heroDiagnosticFeedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
+          heroDiagnosticFeedback.textContent = 'Por favor, sube una imagen para continuar con el diagnóstico.';
+          return;
+        }
+
+        // Verificar pago antes de procesar
+        if (!hasPaid) {
+          const formData = new FormData(heroDiagnosticForm);
+          const imageFile = heroImageInput.files[0];
+          const description = formData.get('heroDescription') || 'Sin descripción adicional';
+          
+          showPaymentModal(async () => {
+            // Después del pago, procesar el diagnóstico
+            await processDiagnostic('hero');
+          }, { type: 'hero', imageFile, description });
+          return;
+        }
+
+        await processDiagnostic('hero');
+      });
+      
+      // Función para procesar el diagnóstico
+      async function processDiagnostic(type) {
+        const form = type === 'hero' ? heroDiagnosticForm : diagnosticSectionForm;
+        const imageInput = type === 'hero' ? heroImageInput : diagnosticSectionImageInput;
+        const feedback = type === 'hero' ? heroDiagnosticFeedback : diagnosticSectionFeedback;
+        const submit = type === 'hero' ? heroDiagnosticSubmit : diagnosticSectionSubmit;
+        const imageLabel = type === 'hero' ? heroImageLabel : diagnosticSectionImageLabel;
+        const defaultLabel = type === 'hero' ? defaultHeroLabel : defaultDiagnosticSectionLabel;
+        
+        submit.disabled = true;
+        submit.innerHTML =
+          '<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3.6-3.6A8 8 0 014 12z"></path></svg><span>Analizando con IA...</span>';
+
+        feedback.classList.remove('hidden');
+        feedback.style.color = '#C9C3FF';
+        feedback.style.borderColor = 'rgba(201, 195, 255, 0.3)';
+        feedback.textContent = '🔄 Analizando imagen con inteligencia artificial... Esto puede tomar unos segundos.';
+
+        try {
+          const formData = new FormData(form);
+          const imageFile = imageInput.files[0];
+          const description = formData.get(type === 'hero' ? 'heroDescription' : 'diagnosticSectionDescription') || 'Sin descripción adicional';
+
+          // Validar tamaño de imagen (máx 10MB)
+          if (imageFile.size > 10 * 1024 * 1024) {
+            throw new Error('La imagen es demasiado grande. Por favor, usa una imagen menor a 10MB.');
+          }
+
+          // Convertir imagen a base64
+          const imageBase64 = await imageToBase64(imageFile);
+
+          // Llamar a OpenAI
+          const result = await analyzeWithOpenAI(imageBase64, description);
+
+          if (result.success) {
+            currentDiagnosis = result.diagnosis;
+            const formattedDiagnosis = formatDiagnosis(result.diagnosis);
+            
+            feedback.style.color = '#4CAF50';
+            feedback.style.borderColor = 'rgba(76, 175, 80, 0.4)';
+            feedback.innerHTML = `
+              <div class="space-y-4">
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">✅</span>
+                  <h4 class="font-bold text-lg">Diagnóstico Completado</h4>
+                </div>
+                <div class="bg-[rgba(27,15,42,0.6)] rounded-xl p-4 max-h-96 overflow-y-auto" style="color: #C9C3FF;">
+                  <pre class="whitespace-pre-wrap text-sm font-sans leading-relaxed">${formattedDiagnosis}</pre>
+                </div>
+                <button 
+                  id="download-diagnosis-${type}"
+                  class="w-full px-4 py-3 rounded-full font-semibold transition flex items-center justify-center gap-2"
+                  style="background-color: #8B6ED0 !important; color: #FFFFFF !important;"
+                  onmouseover="this.style.backgroundColor='#9B7EE0'"
+                  onmouseout="this.style.backgroundColor='#8B6ED0'"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                  </svg>
+                  Descargar Diagnóstico
+                </button>
+              </div>
+            `;
+            
+            // Agregar listener al botón de descarga
+            setTimeout(() => {
+              const downloadBtn = document.getElementById(`download-diagnosis-${type}`);
+              if (downloadBtn) {
+                downloadBtn.addEventListener('click', () => {
+                  downloadDiagnosis(result.diagnosis, description);
+                });
+              }
+            }, 100);
+          } else {
+            feedback.style.color = '#FF6B6B';
+            feedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
+            feedback.innerHTML = `
+              <div class="space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl">❌</span>
+                  <h4 class="font-bold">Error en el análisis</h4>
+                </div>
+                <p>${result.error}</p>
+                <p class="text-xs opacity-80">Por favor, intenta nuevamente o descarga la app para más opciones.</p>
+              </div>
+            `;
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          feedback.style.color = '#FF6B6B';
+          feedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
+          feedback.innerHTML = `
+            <div class="space-y-2">
+              <div class="flex items-center gap-2">
+                <span class="text-xl">⚠️</span>
+                <h4 class="font-bold">Error</h4>
+              </div>
+              <p>${error.message || 'Ocurrió un error inesperado. Por favor, intenta nuevamente.'}</p>
+            </div>
+          `;
+        } finally {
+          submit.disabled = false;
+          submit.innerHTML = 'Generar diagnóstico preliminar';
+        }
+      }
+
+      diagnosticForm?.addEventListener('submit', (event) => {
+        event.preventDefault();
+        diagnosticSubmit.disabled = true;
+        diagnosticSubmit.innerHTML =
+          '<svg class="animate-spin h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3.6-3.6A8 8 0 014 12z"></path></svg><span>Analizando...</span>';
+
+        const formData = new FormData(diagnosticForm);
+        const problemType = formData.get('problemType');
+        const description = formData.get('description');
+
+        setTimeout(() => {
+          diagnosticSummary.textContent = `Detectamos posibles indicios relacionados con "${problemType}". Te recomendamos asegurar ventilación adecuada, revisar el pH y registrar la evolución en la app para recibir recomendaciones dinámicas según tus notas: "${description}".`;
+          diagnosticResult.classList.remove('hidden');
+          diagnosticSubmit.disabled = false;
+          diagnosticSubmit.innerHTML = '<span>Obtener recomendación</span>';
+          diagnosticForm.reset();
+        }, 1400);
+      });
+
+      // Función para mostrar/ocultar el campo de descripción "Otro"
+      function toggleOtherDescription(value) {
+        const otherContainer = document.getElementById('other-description-container');
+        const otherDescription = document.getElementById('other-description');
+        if (value === 'otro') {
+          otherContainer.classList.remove('hidden');
+          otherDescription.required = true;
+        } else {
+          otherContainer.classList.add('hidden');
+          otherDescription.required = false;
+          otherDescription.value = '';
+        }
+      }
+
+      // Inicializar EmailJS (el usuario necesitará configurar sus credenciales)
+      // Para usar EmailJS, el usuario debe:
+      // 1. Crear una cuenta en https://www.emailjs.com/
+      // 2. Crear un servicio de email (Gmail, Outlook, etc.)
+      // 3. Crear un template de email
+      // 4. Reemplazar estos valores con sus propias credenciales:
+      //    - PUBLIC_KEY: Su clave pública de EmailJS
+      //    - SERVICE_ID: ID del servicio de email
+      //    - TEMPLATE_ID: ID del template de email
+      
+      // Por ahora, usaremos una implementación que funciona sin EmailJS configurado
+      // pero que puede ser fácilmente actualizada cuando el usuario configure EmailJS
+      
+      const EMAILJS_PUBLIC_KEY = 'tTEucjRzFoBdNc2U3'; // Public Key de EmailJS
+      const EMAILJS_SERVICE_ID = 'service_1gaeqai'; // Service ID de Gmail
+      const EMAILJS_TEMPLATE_ID = 'template_l8awfeq'; // Template ID del formulario de contacto
+
+      // Función para validar el formulario
+      function validateContactForm() {
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const interest = document.getElementById('interest').value;
+        const otherDescription = document.getElementById('other-description').value.trim();
+        const messageDiv = document.getElementById('contact-form-message');
+        
+        // Limpiar mensajes anteriores
+        messageDiv.classList.add('hidden');
+        messageDiv.classList.remove('border-success/40', 'border-error/40');
+        
+        // Validar nombre
+        if (!name || name.length < 2) {
+          showFormMessage('Por favor, ingresa un nombre válido (mínimo 2 caracteres).', 'error');
+          return false;
+        }
+        
+        // Validar email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+          showFormMessage('Por favor, ingresa un correo electrónico válido.', 'error');
+          return false;
+        }
+        
+        // Validar teléfono (opcional, pero si se ingresa debe tener formato válido)
+        if (phone) {
+          // Permitir números, espacios, guiones, paréntesis y el símbolo +
+          const phoneRegex = /^[\d\s\-\+\(\)]{8,20}$/;
+          if (!phoneRegex.test(phone)) {
+            showFormMessage('Por favor, ingresa un número telefónico válido (mínimo 8 dígitos).', 'error');
+            return false;
+          }
+        }
+        
+        // Validar interés
+        if (!interest) {
+          showFormMessage('Por favor, selecciona un interés principal.', 'error');
+          return false;
+        }
+        
+        // Validar descripción si se seleccionó "Otro"
+        if (interest === 'otro' && (!otherDescription || otherDescription.length < 10)) {
+          showFormMessage('Por favor, describe tu interés (mínimo 10 caracteres).', 'error');
+          return false;
+        }
+        
+        return true;
+      }
+      
+      // Función para mostrar mensajes en el formulario
+      function showFormMessage(message, type) {
+        const messageDiv = document.getElementById('contact-form-message');
+        messageDiv.textContent = message;
+        messageDiv.classList.remove('hidden');
+        if (type === 'error') {
+          messageDiv.style.color = '#FF6B6B';
+          messageDiv.style.borderColor = 'rgba(255, 107, 107, 0.4)';
+        } else {
+          messageDiv.style.color = '#4CAF50';
+          messageDiv.style.borderColor = 'rgba(76, 175, 80, 0.4)';
+        }
+        
+        // Scroll al mensaje
+        messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      
+      // Función para enviar email usando EmailJS o fallback
+      async function sendContactEmail(formData) {
+        const name = formData.get('name');
+        const email = formData.get('email');
+        const phone = formData.get('phone') || '';
+        const interest = formData.get('interest');
+        const otherDescription = formData.get('other-description') || '';
+        
+        // Mapear valores de interés a texto legible
+        const interestMap = {
+          'cultivador': 'Soy cultivador',
+          'negocio': 'Represento un club/cannabis room',
+          'inversion': 'Me interesa invertir',
+          'alianza': 'Busco alianzas comerciales',
+          'prensa': 'Prensa / medios',
+          'otro': 'Otro'
+        };
+        
+        const interestText = interestMap[interest] || interest;
+        const finalInterest = interest === 'otro' && otherDescription 
+          ? `${interestText}: ${otherDescription}` 
+          : interestText;
+        
+        // Construir mensaje con teléfono si está disponible
+        const phoneInfo = phone ? `\nTeléfono: ${phone}` : '';
+        const messageContent = `Nuevo contacto desde la web:\n\nNombre: ${name}\nEmail: ${email}${phoneInfo}\nInterés: ${finalInterest}`;
+        
+        // Si EmailJS está configurado, usarlo
+        if (EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY' && 
+            EMAILJS_SERVICE_ID !== 'YOUR_SERVICE_ID' && 
+            EMAILJS_TEMPLATE_ID !== 'YOUR_TEMPLATE_ID') {
+          try {
+            emailjs.init(EMAILJS_PUBLIC_KEY);
+            await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+              to_email: 'growai.soporte@gmail.com',
+              from_name: name,
+              from_email: email,
+              phone: phone || 'No proporcionado',
+              interest: finalInterest,
+              message: messageContent
+            });
+            return { success: true };
+          } catch (error) {
+            console.error('Error al enviar email con EmailJS:', error);
+            return { success: false, error: 'Error al enviar el email. Por favor, intenta nuevamente.' };
+          }
+        } else {
+          // Fallback: usar mailto (abrir cliente de email)
+          // Esto es una solución temporal hasta que se configure EmailJS
+          const subject = encodeURIComponent('Nuevo contacto desde GrowAi Web');
+          const body = encodeURIComponent(messageContent + '\n\nPor favor, contacta a este usuario.');
+          window.location.href = `mailto:growai.soporte@gmail.com?subject=${subject}&body=${body}`;
+          
+          // Retornar éxito después de un pequeño delay para que el mailto se abra
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve({ success: true, fallback: true });
+            }, 500);
+          });
+        }
+      }
+
+      contactForm?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        
+        // Validar formulario
+        if (!validateContactForm()) {
+          return;
+        }
+        
+        // Ocultar mensajes anteriores
+        const messageDiv = document.getElementById('contact-form-message');
+        messageDiv.classList.add('hidden');
+        
+        // Deshabilitar botón y mostrar loading
+        contactSubmit.disabled = true;
+        contactSubmit.innerHTML =
+          '<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3.6-3.6A8 8 0 014 12z"></path></svg><span>Enviando...</span>';
+
+        const formData = new FormData(contactForm);
+        const name = formData.get('name');
+        
+        try {
+          const result = await sendContactEmail(formData);
+          
+          if (result.success) {
+            if (result.fallback) {
+              showFormMessage('¡Gracias! Se abrió tu cliente de email. Por favor, envía el mensaje para completar el proceso.', 'success');
+            } else {
+              showFormMessage(`¡Gracias, ${name}! Hemos recibido tu información. Pronto recibirás novedades exclusivas de GrowAi.`, 'success');
+            }
+            
+            // Resetear formulario
+            contactForm.reset();
+            document.getElementById('other-description-container').classList.add('hidden');
+            document.getElementById('other-description').required = false;
+          } else {
+            showFormMessage(result.error || 'Hubo un error al enviar tu información. Por favor, intenta nuevamente.', 'error');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          showFormMessage('Hubo un error inesperado. Por favor, intenta nuevamente más tarde.', 'error');
+        } finally {
+          contactSubmit.disabled = false;
+          contactSubmit.innerHTML = '<span>Quiero recibir novedades</span>';
+        }
+      });
+
+      // Manejo del formulario de diagnóstico en la sección diagnóstico
+      diagnosticSectionImageInput?.addEventListener('change', () => {
+        if (diagnosticSectionImageInput.files?.length) {
+          const [file] = diagnosticSectionImageInput.files;
+          diagnosticSectionImageLabel.textContent = file.name.length > 38 ? `${file.name.slice(0, 35)}...` : file.name;
+        } else {
+          diagnosticSectionImageLabel.textContent = defaultDiagnosticSectionLabel;
+        }
+      });
+
+      diagnosticSectionForm?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!diagnosticSectionImageInput?.files?.length) {
+          diagnosticSectionFeedback.classList.remove('hidden');
+          diagnosticSectionFeedback.style.color = '#FF6B6B';
+          diagnosticSectionFeedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
+          diagnosticSectionFeedback.textContent = 'Por favor, sube una imagen para continuar con el diagnóstico.';
+          return;
+        }
+
+        // Verificar pago antes de procesar
+        if (!hasPaid) {
+          const formData = new FormData(diagnosticSectionForm);
+          const imageFile = diagnosticSectionImageInput.files[0];
+          const description = formData.get('diagnosticSectionDescription') || 'Sin descripción adicional';
+          
+          showPaymentModal(async () => {
+            // Después del pago, procesar el diagnóstico
+            await processDiagnostic('section');
+          }, { type: 'section', imageFile, description });
+          return;
+        }
+
+        await processDiagnostic('section');
+      });
+    </script>
+  </body>
+</html>
+
