@@ -8,6 +8,9 @@
       name="description"
       content="GrowAi es la plataforma inteligente para el cultivo de cannabis. Gestiona tus plantas, diagnostica problemas con IA y conéctate con la comunidad."
     />
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="icono/favicon.png" />
+    <link rel="apple-touch-icon" href="icono/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -484,7 +487,7 @@
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 flex items-center justify-center">
               <img
-                src="icono/ChatGPT Image 24 nov 2025, 15_57_22.png"
+                src="icono/favicon.png"
                 alt="GrowAi Logo"
                 class="w-10 h-10 object-contain"
                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
@@ -1489,10 +1492,8 @@
         }
       });
 
-      // Configuración de OpenAI
-      const OPENAI_API_KEY = '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';
-      const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
-      const OPENAI_MODEL = 'gpt-4o-mini';
+      // Configuración de OpenAI (ahora se maneja en el backend)
+      const OPENAI_BACKEND_URL = 'https://us-central1-growapp-36701.cloudfunctions.net/analyzeDiagnostic';
       
       // Configuración de pago
       const DIAGNOSTIC_PRICE = 1900; // Precio en ARS
@@ -1991,56 +1992,40 @@ IMPORTANTE:
 OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnóstico detallado siguiendo el formato requerido.`;
       }
 
-      // Función para llamar a OpenAI
+      // Función para llamar a OpenAI a través del backend
       async function analyzeWithOpenAI(imageBase64, userDescription) {
         try {
           const prompt = buildDiagnosticPrompt(userDescription);
           
-          const response = await fetch(OPENAI_API_URL, {
+          const response = await fetch(OPENAI_BACKEND_URL, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${OPENAI_API_KEY}`
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              model: OPENAI_MODEL,
-              messages: [
-                {
-                  role: 'user',
-                  content: [
-                    {
-                      type: 'text',
-                      text: prompt
-                    },
-                    {
-                      type: 'image_url',
-                      image_url: {
-                        url: `data:image/jpeg;base64,${imageBase64}`,
-                        detail: 'high'
-                      }
-                    }
-                  ]
-                }
-              ],
-              max_tokens: 1000,
-              temperature: 0.3
+              imageBase64: imageBase64,
+              userDescription: userDescription,
+              prompt: prompt
             })
           });
 
           if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            if (response.status === 429) {
-              throw new Error('Límite de uso excedido. Por favor, intenta más tarde.');
-            }
-            throw new Error(errorData.error?.message || `Error ${response.status}: ${response.statusText}`);
+            throw new Error(errorData.error || `Error ${response.status}: ${response.statusText}`);
           }
 
           const data = await response.json();
-          const diagnosis = data.choices[0].message.content;
+          
+          if (!data.success) {
+            return {
+              success: false,
+              error: data.error || 'Error al analizar la imagen.'
+            };
+          }
           
           return {
             success: true,
-            diagnosis: diagnosis
+            diagnosis: data.diagnosis
           };
         } catch (error) {
           console.error('Error en análisis de IA:', error);
