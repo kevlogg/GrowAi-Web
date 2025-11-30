@@ -597,11 +597,11 @@
                 >Cultivo inteligente con IA</span
               >
               <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-                <span class="inline-flex items-center gap-1">
-                  <img src="icono/favicon.png" alt="GrowAi" class="w-10 h-10 md:w-12 md:h-12 object-contain" onerror="this.style.display='none';">
+                <span class="inline-flex items-center gap-2">
                   <span>GrowAi</span>
+                  <img src="icono/favicon.png" alt="GrowAi" class="w-8 h-8 md:w-10 md:h-10 object-contain" onerror="this.style.display='none';">
                 </span>
-                <span class="text-textPrimary/90"> · Tu Asistente de Cultivo Inteligente</span>
+                <span class="text-textPrimary/90"> Tu Asistente de Cultivo Inteligente</span>
               </h1>
               <p class="text-md md:text-lg text-textPrimary/80 max-w-xl">
                 Gestiona tus cultivos, diagnostica problemas con inteligencia artificial, conéctate con cultivadores expertos y mantente al día con eventos cannábicos. Todas las herramientas que necesitas en una sola app.
@@ -653,16 +653,21 @@
                     </p>
                   </div>
                   <label
+                    id="hero-image-label"
                     for="hero-image"
                     class="group relative flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-[rgba(201,195,255,0.5)] bg-[rgba(42,31,58,0.7)] px-4 py-6 text-center transition hover:border-[rgba(201,195,255,0.7)] hover:bg-[rgba(42,31,58,0.8)] cursor-pointer"
                   >
+                    <div id="hero-image-preview" class="hidden w-full mb-2">
+                      <img id="hero-image-preview-img" src="" alt="Vista previa" class="max-h-48 w-auto mx-auto rounded-lg object-contain" />
+                    </div>
                     <div
+                      id="hero-image-icon"
                       class="flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(139,110,208,0.3)] text-3xl"
                     >
                       📷
                     </div>
                     <div class="space-y-1">
-                      <p class="text-sm font-semibold" style="color: #C9C3FF !important;">
+                      <p id="hero-image-label-text" class="text-sm font-semibold" style="color: #C9C3FF !important;">
                         Arrastra o selecciona una imagen (obligatorio)
                       </p>
                       <p class="text-xs opacity-85" style="color: #C9C3FF !important; opacity: 0.85 !important;">
@@ -950,16 +955,21 @@
                     </p>
                   </div>
                   <label
+                    id="diagnostic-section-image-label"
                     for="diagnostic-section-image"
                     class="group relative flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-[rgba(201,195,255,0.5)] bg-[rgba(42,31,58,0.7)] px-4 py-6 text-center transition hover:border-[rgba(201,195,255,0.7)] hover:bg-[rgba(42,31,58,0.8)] cursor-pointer"
                   >
+                    <div id="diagnostic-section-image-preview" class="hidden w-full mb-2">
+                      <img id="diagnostic-section-image-preview-img" src="" alt="Vista previa" class="max-h-48 w-auto mx-auto rounded-lg object-contain" />
+                    </div>
                     <div
+                      id="diagnostic-section-image-icon"
                       class="flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(139,110,208,0.3)] text-3xl"
                     >
                       📷
                     </div>
                     <div class="space-y-1">
-                      <p class="text-sm font-semibold" style="color: #C9C3FF !important;">
+                      <p id="diagnostic-section-image-label-text" class="text-sm font-semibold" style="color: #C9C3FF !important;">
                         Arrastra o selecciona una imagen (obligatorio)
                       </p>
                       <p class="text-xs opacity-85" style="color: #C9C3FF !important; opacity: 0.85 !important;">
@@ -1462,11 +1472,29 @@
       const defaultHeroLabel = 'Arrastra o selecciona una imagen (obligatorio)';
 
       heroImageInput?.addEventListener('change', () => {
+        const preview = document.getElementById('hero-image-preview');
+        const previewImg = document.getElementById('hero-image-preview-img');
+        const icon = document.getElementById('hero-image-icon');
+        const labelText = document.getElementById('hero-image-label-text');
+        
         if (heroImageInput.files?.length) {
           const [file] = heroImageInput.files;
-          heroImageLabel.textContent = file.name.length > 38 ? `${file.name.slice(0, 35)}...` : file.name;
+          
+          // Mostrar vista previa
+          if (preview && previewImg) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              previewImg.src = e.target.result;
+              preview.classList.remove('hidden');
+              if (icon) icon.classList.add('hidden');
+              if (labelText) labelText.textContent = file.name.length > 38 ? `${file.name.slice(0, 35)}...` : file.name;
+            };
+            reader.readAsDataURL(file);
+          }
         } else {
-          heroImageLabel.textContent = defaultHeroLabel;
+          if (preview) preview.classList.add('hidden');
+          if (icon) icon.classList.remove('hidden');
+          if (labelText) labelText.textContent = defaultHeroLabel;
         }
       });
 
@@ -2366,11 +2394,29 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
 
       // Manejo del formulario de diagnóstico en la sección diagnóstico
       diagnosticSectionImageInput?.addEventListener('change', () => {
+        const preview = document.getElementById('diagnostic-section-image-preview');
+        const previewImg = document.getElementById('diagnostic-section-image-preview-img');
+        const icon = document.getElementById('diagnostic-section-image-icon');
+        const labelText = document.getElementById('diagnostic-section-image-label-text');
+        
         if (diagnosticSectionImageInput.files?.length) {
           const [file] = diagnosticSectionImageInput.files;
-          diagnosticSectionImageLabel.textContent = file.name.length > 38 ? `${file.name.slice(0, 35)}...` : file.name;
+          
+          // Mostrar vista previa
+          if (preview && previewImg) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              previewImg.src = e.target.result;
+              preview.classList.remove('hidden');
+              if (icon) icon.classList.add('hidden');
+              if (labelText) labelText.textContent = file.name.length > 38 ? `${file.name.slice(0, 35)}...` : file.name;
+            };
+            reader.readAsDataURL(file);
+          }
         } else {
-          diagnosticSectionImageLabel.textContent = defaultDiagnosticSectionLabel;
+          if (preview) preview.classList.add('hidden');
+          if (icon) icon.classList.remove('hidden');
+          if (labelText) labelText.textContent = defaultDiagnosticSectionLabel;
         }
       });
 
