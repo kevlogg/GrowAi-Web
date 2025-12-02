@@ -32,6 +32,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
       tailwind.config = {
         theme: {
@@ -1566,10 +1567,166 @@
         return formatted.trim();
       }
       
-      // Función para descargar el diagnóstico
+      // Función para descargar el diagnóstico como PDF con estilo GrowAi
       function downloadDiagnosis(diagnosis, description = '') {
-        const date = new Date().toLocaleString('es-AR');
-        const content = `DIAGNÓSTICO GROWAI
+        try {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+          });
+          
+          const pageWidth = doc.internal.pageSize.getWidth();
+          const pageHeight = doc.internal.pageSize.getHeight();
+          const margin = 20;
+          const maxWidth = pageWidth - (margin * 2);
+          
+          // Fondo oscuro (simulado con rectángulo)
+          doc.setFillColor(27, 15, 42); // #1B0F2A
+          doc.rect(0, 0, pageWidth, pageHeight, 'F');
+          
+          // Color de texto principal
+          doc.setTextColor(201, 195, 255); // #C9C3FF
+          
+          let yPos = margin;
+          
+          // Título principal
+          doc.setFontSize(24);
+          doc.setFont('helvetica', 'bold');
+          doc.text('GrowAi', margin, yPos);
+          
+          yPos += 10;
+          
+          // Subtítulo
+          doc.setFontSize(12);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(201, 195, 255, 0.8);
+          doc.text('Tu Asistente de Cultivo Inteligente', margin, yPos);
+          
+          yPos += 15;
+          
+          // Línea separadora
+          doc.setDrawColor(139, 110, 208); // #8B6ED0
+          doc.setLineWidth(0.5);
+          doc.line(margin, yPos, pageWidth - margin, yPos);
+          
+          yPos += 10;
+          
+          // Título del diagnóstico
+          doc.setFontSize(18);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(201, 195, 255);
+          doc.text('DIAGNÓSTICO', margin, yPos);
+          
+          yPos += 8;
+          
+          // Fecha
+          const date = new Date().toLocaleString('es-AR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(201, 195, 255, 0.7);
+          doc.text(`Fecha: ${date}`, margin, yPos);
+          
+          yPos += 10;
+          
+          // Descripción si existe
+          if (description && description.trim() !== '' && description !== 'Sin descripción adicional') {
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(201, 195, 255);
+            doc.text('Descripción:', margin, yPos);
+            yPos += 7;
+            
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(201, 195, 255, 0.9);
+            const descriptionLines = doc.splitTextToSize(description, maxWidth);
+            doc.text(descriptionLines, margin, yPos);
+            yPos += (descriptionLines.length * 5) + 8;
+          }
+          
+          yPos += 5;
+          
+          // Contenido del diagnóstico
+          doc.setFontSize(12);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(201, 195, 255);
+          doc.text('Análisis:', margin, yPos);
+          yPos += 8;
+          
+          // Formatear diagnóstico
+          const formattedDiagnosis = formatDiagnosis(diagnosis);
+          
+          // Dividir el texto en líneas que quepan en la página
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(201, 195, 255, 0.95);
+          
+          // Procesar el texto línea por línea para mantener formato
+          const lines = formattedDiagnosis.split('\n');
+          lines.forEach(line => {
+            if (yPos > pageHeight - margin - 20) {
+              doc.addPage();
+              doc.setFillColor(27, 15, 42);
+              doc.rect(0, 0, pageWidth, pageHeight, 'F');
+              yPos = margin;
+            }
+            
+            if (line.trim() === '') {
+              yPos += 4;
+            } else {
+              // Detectar si es un título (líneas que empiezan con emoji o están en mayúsculas)
+              const isTitle = /^[🌱🔍💡⚠️✅❌]/.test(line) || /^[A-ZÁÉÍÓÚÑ\s]+:?$/.test(line.trim());
+              
+              if (isTitle && line.length < 50) {
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(11);
+                doc.setTextColor(139, 110, 208); // #8B6ED0 para títulos
+              } else {
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(10);
+                doc.setTextColor(201, 195, 255, 0.95);
+              }
+              
+              const textLines = doc.splitTextToSize(line, maxWidth);
+              doc.text(textLines, margin, yPos);
+              yPos += textLines.length * 5;
+            }
+          });
+          
+          yPos += 10;
+          
+          // Línea separadora final
+          if (yPos < pageHeight - margin - 20) {
+            doc.setDrawColor(139, 110, 208);
+            doc.line(margin, yPos, pageWidth - margin, yPos);
+            yPos += 10;
+            
+            // Footer
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'italic');
+            doc.setTextColor(201, 195, 255, 0.6);
+            doc.text('Generado por GrowAi - www.growai.app', margin, yPos);
+          }
+          
+          // Descargar PDF
+          const fileName = `diagnostico-growai-${Date.now()}.pdf`;
+          doc.save(fileName);
+          
+          // No afectar el diagnóstico mostrado en la página
+          return true;
+        } catch (error) {
+          console.error('Error al generar PDF:', error);
+          // Fallback a descarga de texto si falla el PDF
+          const date = new Date().toLocaleString('es-AR');
+          const content = `DIAGNÓSTICO GROWAI
 Fecha: ${date}
 ${description ? `Descripción: ${description}\n\n` : ''}
 ${formatDiagnosis(diagnosis)}
@@ -1578,16 +1735,17 @@ ${formatDiagnosis(diagnosis)}
 Generado por GrowAi - Tu Asistente de Cultivo Inteligente
 www.growai.app
 `;
-        
-        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `diagnostico-growai-${Date.now()}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+          
+          const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `diagnostico-growai-${Date.now()}.txt`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }
       }
       
       // Función para crear preferencia de pago
@@ -1833,45 +1991,91 @@ www.growai.app
           // Pago exitoso
           hasPaid = true;
           
+          // Guardar estado de pago en localStorage
+          localStorage.setItem('hasPaid', 'true');
+          
           // Limpiar URL
           window.history.replaceState({}, document.title, window.location.pathname);
           
-          // Mostrar mensaje de éxito
-          const successModal = document.createElement('div');
-          successModal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50';
-          successModal.innerHTML = `
-            <div class="bg-secondary rounded-3xl p-8 max-w-md w-full mx-4 border border-accent/30" style="background-color: #2A1F3A !important;">
-              <div class="text-center space-y-4">
-                <div class="text-6xl">✅</div>
-                <h3 class="text-2xl font-bold" style="color: #C9C3FF !important;">Pago Exitoso</h3>
-                <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
-                  Tu pago ha sido procesado correctamente. Ahora puedes generar tu diagnóstico.
-                </p>
-                <button id="close-success" class="w-full px-4 py-3 rounded-full font-semibold transition" style="background-color: #8B6ED0 !important; color: #FFFFFF !important;">
-                  Continuar
-                </button>
-              </div>
-            </div>
-          `;
-          
-          document.body.appendChild(successModal);
-          
-          successModal.querySelector('#close-success').addEventListener('click', () => {
-            document.body.removeChild(successModal);
-            // Si hay datos pendientes, procesar el diagnóstico
-            if (pendingDiagnosticData) {
-              processDiagnostic(pendingDiagnosticData.type);
+          // Recuperar datos del diagnóstico desde localStorage
+          const savedDiagnosticData = localStorage.getItem('pendingDiagnosticData');
+          if (savedDiagnosticData) {
+            try {
+              const diagnosticData = JSON.parse(savedDiagnosticData);
+              pendingDiagnosticData = diagnosticData;
+              
+              // Mostrar mensaje de éxito breve y procesar automáticamente
+              const successModal = document.createElement('div');
+              successModal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50';
+              successModal.innerHTML = `
+                <div class="bg-secondary rounded-3xl p-8 max-w-md w-full mx-4 border border-accent/30" style="background-color: #2A1F3A !important;">
+                  <div class="text-center space-y-4">
+                    <div class="text-6xl">✅</div>
+                    <h3 class="text-2xl font-bold" style="color: #C9C3FF !important;">Pago Exitoso</h3>
+                    <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
+                      Generando tu diagnóstico...
+                    </p>
+                    <div class="flex justify-center">
+                      <div class="animate-spin rounded-full h-8 w-8 border-b-2" style="border-color: #8B6ED0;"></div>
+                    </div>
+                  </div>
+                </div>
+              `;
+              
+              document.body.appendChild(successModal);
+              
+              // Procesar diagnóstico automáticamente después de un breve delay
+              setTimeout(async () => {
+                document.body.removeChild(successModal);
+                await processDiagnostic(diagnosticData.type);
+                // Limpiar datos guardados después de procesar
+                localStorage.removeItem('pendingDiagnosticData');
+              }, 500);
+            } catch (error) {
+              console.error('Error al recuperar datos del diagnóstico:', error);
+              localStorage.removeItem('pendingDiagnosticData');
             }
-          });
+          } else {
+            // Si no hay datos guardados, solo mostrar mensaje de éxito
+            const successModal = document.createElement('div');
+            successModal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50';
+            successModal.innerHTML = `
+              <div class="bg-secondary rounded-3xl p-8 max-w-md w-full mx-4 border border-accent/30" style="background-color: #2A1F3A !important;">
+                <div class="text-center space-y-4">
+                  <div class="text-6xl">✅</div>
+                  <h3 class="text-2xl font-bold" style="color: #C9C3FF !important;">Pago Exitoso</h3>
+                  <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
+                    Tu pago ha sido procesado correctamente. Ahora puedes generar tu diagnóstico.
+                  </p>
+                  <button id="close-success" class="w-full px-4 py-3 rounded-full font-semibold transition" style="background-color: #8B6ED0 !important; color: #FFFFFF !important;">
+                    Continuar
+                  </button>
+                </div>
+              </div>
+            `;
+            
+            document.body.appendChild(successModal);
+            
+            successModal.querySelector('#close-success').addEventListener('click', () => {
+              document.body.removeChild(successModal);
+            });
+          }
         } else if (paymentStatus === 'failure') {
           // Pago fallido
           window.history.replaceState({}, document.title, window.location.pathname);
+          localStorage.removeItem('pendingDiagnosticData');
           alert('El pago no pudo ser procesado. Por favor, intenta nuevamente.');
         } else if (paymentStatus === 'pending') {
           // Pago pendiente
           window.history.replaceState({}, document.title, window.location.pathname);
           alert('Tu pago está siendo procesado. Te notificaremos cuando esté confirmado.');
         }
+      }
+      
+      // Verificar estado de pago guardado al cargar la página
+      const savedHasPaid = localStorage.getItem('hasPaid');
+      if (savedHasPaid === 'true') {
+        hasPaid = true;
       }
       
       // Verificar estado de pago al cargar la página
@@ -2050,10 +2254,26 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
           const imageFile = heroImageInput.files[0];
           const description = formData.get('heroDescription') || 'Sin descripción adicional';
           
-          showPaymentModal(async () => {
-            // Después del pago, procesar el diagnóstico
-            await processDiagnostic('hero');
-          }, { type: 'hero', imageFile, description });
+          // Convertir imagen a base64 y guardar en localStorage antes de redirigir al pago
+          imageToBase64(imageFile).then(imageBase64 => {
+            const diagnosticData = { 
+              type: 'hero', 
+              description,
+              imageBase64: imageBase64 // Guardar imagen en base64
+            };
+            localStorage.setItem('pendingDiagnosticData', JSON.stringify(diagnosticData));
+            
+            showPaymentModal(async () => {
+              // Después del pago, procesar el diagnóstico
+              await processDiagnostic('hero');
+            }, diagnosticData);
+          }).catch(error => {
+            console.error('Error al convertir imagen:', error);
+            heroDiagnosticFeedback.classList.remove('hidden');
+            heroDiagnosticFeedback.style.color = '#FF6B6B';
+            heroDiagnosticFeedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
+            heroDiagnosticFeedback.textContent = 'Error al procesar la imagen. Por favor, intenta nuevamente.';
+          });
           return;
         }
 
@@ -2079,17 +2299,54 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
         feedback.textContent = '🔄 Analizando imagen con inteligencia artificial... Esto puede tomar unos segundos.';
 
         try {
-          const formData = new FormData(form);
-          const imageFile = imageInput.files[0];
-          const description = formData.get(type === 'hero' ? 'heroDescription' : 'diagnosticSectionDescription') || 'Sin descripción adicional';
-
-          // Validar tamaño de imagen (máx 10MB)
-          if (imageFile.size > 10 * 1024 * 1024) {
-            throw new Error('La imagen es demasiado grande. Por favor, usa una imagen menor a 10MB.');
+          let imageBase64;
+          let description;
+          
+          // Verificar si hay datos guardados en localStorage (después del pago)
+          const savedDiagnosticData = localStorage.getItem('pendingDiagnosticData');
+          if (savedDiagnosticData) {
+            try {
+              const diagnosticData = JSON.parse(savedDiagnosticData);
+              if (diagnosticData.imageBase64) {
+                // Usar imagen guardada
+                imageBase64 = diagnosticData.imageBase64;
+                description = diagnosticData.description || 'Sin descripción adicional';
+              } else {
+                throw new Error('No se encontró imagen guardada');
+              }
+            } catch (error) {
+              console.error('Error al recuperar datos guardados:', error);
+              // Fallback: usar imagen del input
+              const formData = new FormData(form);
+              const imageFile = imageInput.files[0];
+              if (!imageFile) {
+                throw new Error('No se encontró imagen. Por favor, sube una imagen nuevamente.');
+              }
+              description = formData.get(type === 'hero' ? 'heroDescription' : 'diagnosticSectionDescription') || 'Sin descripción adicional';
+              
+              // Validar tamaño de imagen (máx 10MB)
+              if (imageFile.size > 10 * 1024 * 1024) {
+                throw new Error('La imagen es demasiado grande. Por favor, usa una imagen menor a 10MB.');
+              }
+              
+              imageBase64 = await imageToBase64(imageFile);
+            }
+          } else {
+            // Usar imagen del input (flujo normal sin pago)
+            const formData = new FormData(form);
+            const imageFile = imageInput.files[0];
+            if (!imageFile) {
+              throw new Error('Por favor, sube una imagen para continuar con el diagnóstico.');
+            }
+            description = formData.get(type === 'hero' ? 'heroDescription' : 'diagnosticSectionDescription') || 'Sin descripción adicional';
+            
+            // Validar tamaño de imagen (máx 10MB)
+            if (imageFile.size > 10 * 1024 * 1024) {
+              throw new Error('La imagen es demasiado grande. Por favor, usa una imagen menor a 10MB.');
+            }
+            
+            imageBase64 = await imageToBase64(imageFile);
           }
-
-          // Convertir imagen a base64
-          const imageBase64 = await imageToBase64(imageFile);
 
           // Llamar a OpenAI
           const result = await analyzeWithOpenAI(imageBase64, description);
@@ -2124,7 +2381,12 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
               </div>
             `;
             
-            // Agregar listener al botón de descarga
+            // Descargar PDF automáticamente después de un breve delay
+            setTimeout(() => {
+              downloadDiagnosis(result.diagnosis, description);
+            }, 1000);
+            
+            // Agregar listener al botón de descarga (para descargar nuevamente si se desea)
             setTimeout(() => {
               const downloadBtn = document.getElementById(`download-diagnosis-${type}`);
               if (downloadBtn) {
@@ -2436,10 +2698,26 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
           const imageFile = diagnosticSectionImageInput.files[0];
           const description = formData.get('diagnosticSectionDescription') || 'Sin descripción adicional';
           
-          showPaymentModal(async () => {
-            // Después del pago, procesar el diagnóstico
-            await processDiagnostic('section');
-          }, { type: 'section', imageFile, description });
+          // Convertir imagen a base64 y guardar en localStorage antes de redirigir al pago
+          imageToBase64(imageFile).then(imageBase64 => {
+            const diagnosticData = { 
+              type: 'section', 
+              description,
+              imageBase64: imageBase64 // Guardar imagen en base64
+            };
+            localStorage.setItem('pendingDiagnosticData', JSON.stringify(diagnosticData));
+            
+            showPaymentModal(async () => {
+              // Después del pago, procesar el diagnóstico
+              await processDiagnostic('section');
+            }, diagnosticData);
+          }).catch(error => {
+            console.error('Error al convertir imagen:', error);
+            diagnosticSectionFeedback.classList.remove('hidden');
+            diagnosticSectionFeedback.style.color = '#FF6B6B';
+            diagnosticSectionFeedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
+            diagnosticSectionFeedback.textContent = 'Error al procesar la imagen. Por favor, intenta nuevamente.';
+          });
           return;
         }
 
