@@ -57,9 +57,47 @@
       };
     </script>
     <style>
+      html, body {
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100%;
+      }
       body {
         scroll-behavior: smooth;
         background-color: #1B0F2A;
+        position: relative;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      
+      /* Prevenir overflow horizontal */
+      img, video, iframe {
+        max-width: 100%;
+        height: auto;
+      }
+      
+      section, main, header, footer {
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+      
+      .max-w-6xl, .max-w-4xl, .max-w-2xl {
+        max-width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      
+      @media (min-width: 768px) {
+        .max-w-6xl {
+          max-width: 72rem;
+        }
+        .max-w-4xl {
+          max-width: 56rem;
+        }
+        .max-w-2xl {
+          max-width: 42rem;
+        }
       }
       ::selection {
         background-color: #8b6ed0;
@@ -485,6 +523,74 @@
         color: #1B0F2A !important;
       }
       
+      /* Drawer móvil - Menú lateral */
+      #mobile-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(27, 15, 42, 0.8);
+        backdrop-filter: blur(4px);
+        z-index: 40;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+      
+      #mobile-menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+      
+      #mobile-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 320px;
+        height: 100vh;
+        background-color: #1B0F2A;
+        border-left: 1px solid rgba(201, 195, 255, 0.2);
+        z-index: 50;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        overflow-y: auto;
+        transition: right 0.3s ease;
+        box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+      }
+      
+      #mobile-menu:not(.hidden) {
+        right: 0;
+      }
+      
+      #mobile-menu a {
+        color: #C9C3FF !important;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        transition: background-color 0.2s ease;
+        font-weight: 500;
+      }
+      
+      #mobile-menu a:hover {
+        background-color: rgba(201, 195, 255, 0.1);
+        color: #E8E4FF !important;
+      }
+      
+      #mobile-menu a:last-child {
+        background-color: #8B6ED0 !important;
+        color: #1B0F2A !important;
+        font-weight: 600;
+        margin-top: 0.5rem;
+        text-align: center;
+      }
+      
+      #mobile-menu a:last-child:hover {
+        background-color: #9B7EE0 !important;
+      }
+      
       /* Footer fijo oscuro */
       footer {
         background-color: #1B0F2A !important;
@@ -568,21 +674,46 @@
             </svg>
           </button>
         </div>
-        <div
-          id="mobile-menu"
-          class="md:hidden hidden flex-col gap-4 pb-6 text-sm font-medium"
-        >
-          <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#inicio">Inicio</a>
-          <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#funciones">Funciones</a>
-          <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#planes">Planes</a>
-          <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#descargar">Descargar</a>
-          <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#contacto">Contacto</a>
-          <a
-            href="#descargar"
-            class="bg-[#1B0F2A] text-[#C9C3FF] px-4 py-2 rounded-full font-semibold text-center shadow-glow"
-            >Descargar App</a
+      </div>
+      <!-- Overlay para el drawer móvil -->
+      <div id="mobile-menu-overlay"></div>
+      <!-- Drawer móvil -->
+      <div
+        id="mobile-menu"
+        class="md:hidden hidden"
+      >
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-semibold text-[#C9C3FF]">Menú</h2>
+          <button
+            id="close-menu-button"
+            class="p-2 rounded-full hover:bg-secondary/50 transition"
+            aria-label="Cerrar menú"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-[#C9C3FF]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </div>
+        <nav class="flex flex-col gap-2">
+          <a href="#inicio">Inicio</a>
+          <a href="#funciones">Funciones</a>
+          <a href="#planes">Planes</a>
+          <a href="#descargar">Descargar</a>
+          <a href="#contacto">Contacto</a>
+          <a href="#descargar">Descargar App</a>
+        </nav>
+      </div>
       </div>
     </header>
 
@@ -1413,8 +1544,26 @@
     <script>
       const menuButton = document.getElementById('menu-button');
       const mobileMenu = document.getElementById('mobile-menu');
+      const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+      const closeMenuButton = document.getElementById('close-menu-button');
       const menuIcon = document.getElementById('menu-icon');
       const heroDiagnosticForm = document.getElementById('hero-diagnostic-form');
+      
+      function openMobileMenu() {
+        mobileMenu.classList.remove('hidden');
+        mobileMenuOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        menuButton.setAttribute('aria-expanded', 'true');
+        menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>';
+      }
+      
+      function closeMobileMenu() {
+        mobileMenu.classList.add('hidden');
+        mobileMenuOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+        menuButton.setAttribute('aria-expanded', 'false');
+        menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>';
+      }
       const heroImageInput = document.getElementById('hero-image');
       const heroImageLabel = document.getElementById('hero-image-label');
       const heroDiagnosticFeedback = document.getElementById('hero-diagnostic-feedback');
@@ -1433,12 +1582,19 @@
       const contactSubmit = document.getElementById('contact-submit');
 
       menuButton?.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-        const isOpen = !mobileMenu.classList.contains('hidden');
-        menuButton.setAttribute('aria-expanded', isOpen);
-        menuIcon.innerHTML = isOpen
-          ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>'
-          : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>';
+        if (mobileMenu.classList.contains('hidden')) {
+          openMobileMenu();
+        } else {
+          closeMobileMenu();
+        }
+      });
+      
+      closeMenuButton?.addEventListener('click', () => {
+        closeMobileMenu();
+      });
+      
+      mobileMenuOverlay?.addEventListener('click', () => {
+        closeMobileMenu();
       });
 
       // Autoscroll suave para enlaces del navbar
@@ -1463,10 +1619,7 @@
           }
           
           // Cerrar menú móvil si está abierto
-          mobileMenu?.classList.add('hidden');
-          menuButton?.setAttribute('aria-expanded', 'false');
-          menuIcon.innerHTML =
-            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>';
+          closeMobileMenu();
         });
       });
 
