@@ -532,7 +532,7 @@
         bottom: 0;
         background-color: rgba(27, 15, 42, 0.8);
         backdrop-filter: blur(4px);
-        z-index: 40;
+        z-index: 9998;
         opacity: 0;
         visibility: hidden;
         transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -550,9 +550,10 @@
         width: 80%;
         max-width: 320px;
         height: 100vh;
+        height: 100dvh; /* Soporte para viewport dinámico en móviles */
         background-color: #1B0F2A;
         border-left: 1px solid rgba(201, 195, 255, 0.2);
-        z-index: 50;
+        z-index: 9999;
         padding: 1.5rem;
         display: flex;
         flex-direction: column;
@@ -675,47 +676,47 @@
           </button>
         </div>
       </div>
-      <!-- Overlay para el drawer móvil -->
-      <div id="mobile-menu-overlay"></div>
-      <!-- Drawer móvil -->
-      <div
-        id="mobile-menu"
-        class="md:hidden hidden"
-      >
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-semibold text-[#C9C3FF]">Menú</h2>
-          <button
-            id="close-menu-button"
-            class="p-2 rounded-full hover:bg-secondary/50 transition"
-            aria-label="Cerrar menú"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-[#C9C3FF]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-        <nav class="flex flex-col gap-2">
-          <a href="#inicio">Inicio</a>
-          <a href="#funciones">Funciones</a>
-          <a href="#planes">Planes</a>
-          <a href="#descargar">Descargar</a>
-          <a href="#contacto">Contacto</a>
-          <a href="#descargar">Descargar App</a>
-        </nav>
-      </div>
-      </div>
     </header>
+    
+    <!-- Overlay para el drawer móvil -->
+    <div id="mobile-menu-overlay"></div>
+    <!-- Drawer móvil -->
+    <div
+      id="mobile-menu"
+      class="md:hidden hidden"
+    >
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold text-[#C9C3FF]">Menú</h2>
+        <button
+          id="close-menu-button"
+          class="p-2 rounded-full hover:bg-secondary/50 transition"
+          aria-label="Cerrar menú"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-[#C9C3FF]"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <nav class="flex flex-col gap-2">
+        <a href="#inicio">Inicio</a>
+        <a href="#funciones">Funciones</a>
+        <a href="#planes">Planes</a>
+        <a href="#descargar">Descargar</a>
+        <a href="#contacto">Contacto</a>
+        <a href="#descargar">Descargar App</a>
+      </nav>
+    </div>
 
     <main id="inicio">
       <section
