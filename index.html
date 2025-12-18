@@ -1941,14 +1941,14 @@ www.growai.app
           const data = await response.json();
           console.log('✅ Preferencia creada:', data);
           
-          // Usar checkout_url si está disponible, sino usar sandbox_init_point o init_point
-          const checkoutUrl = data.checkout_url || data.sandbox_init_point || data.init_point;
+          // Usar checkout_url si está disponible, sino usar init_point (producción)
+          // NO usar sandbox_init_point en producción
+          const checkoutUrl = data.checkout_url || data.init_point;
           
           // Retornar tanto el preference_id como el init_point
           return {
             preference_id: data.preference_id,
             init_point: data.init_point,
-            sandbox_init_point: data.sandbox_init_point,
             checkout_url: checkoutUrl
           };
         } catch (error) {
