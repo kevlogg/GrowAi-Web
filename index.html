@@ -1941,9 +1941,9 @@ www.growai.app
           const data = await response.json();
           console.log('✅ Preferencia creada:', data);
           
-          // Usar checkout_url si está disponible, sino usar init_point (producción)
+          // Usar init_point (producción) primero, sino usar checkout_url
           // NO usar sandbox_init_point en producción
-          const checkoutUrl = data.checkout_url || data.init_point;
+          const checkoutUrl = data.init_point || data.checkout_url;
           
           // Retornar tanto el preference_id como el init_point
           return {
@@ -2010,8 +2010,8 @@ www.growai.app
             throw new Error('No se recibió el ID de preferencia');
           }
           
-          // Usar checkout_url si está disponible, sino usar init_point (producción)
-          const checkoutUrl = preferenceData.checkout_url || preferenceData.init_point;
+          // Usar init_point (producción) primero, sino usar checkout_url
+          const checkoutUrl = preferenceData.init_point || preferenceData.checkout_url;
           
           console.log('🔗 URL de checkout:', checkoutUrl);
           console.log('🔍 Datos completos de preferencia:', preferenceData);
@@ -2083,7 +2083,7 @@ www.growai.app
                 const preferenceData = await createPaymentPreference();
                 
                 if (preferenceData && preferenceData.preference_id) {
-                  const checkoutUrl = preferenceData.checkout_url || preferenceData.init_point;
+                  const checkoutUrl = preferenceData.init_point || preferenceData.checkout_url;
                   
                   if (checkoutUrl) {
                     const buttonContainer = document.getElementById('checkout-button-container');
