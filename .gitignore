@@ -27,5 +27,9 @@ package-lock.json
 dowload/
 *.apk
 
+# Archivos con credenciales sensibles
+MIS_CREDENCIALES_ACTUALES.md
+VERIFICAR_CREDENCIALES_MP.md
+
 
 
