@@ -782,7 +782,7 @@
                       Diagnóstico IA
                     </h3>
                     <p class="text-sm opacity-95" style="color: #C9C3FF !important; opacity: 0.9 !important;">
-                      Sube una imagen obligatoria de tu planta para obtener una recomendación inicial. La descripción es opcional, pero ayuda a la IA a contextualizar el análisis.
+                      Sube una imagen de tu planta para obtener un diagnóstico con IA.
                     </p>
                   </div>
                   <label
@@ -1049,7 +1049,7 @@
                 Realiza un diagnóstico básico desde la web
               </h2>
               <p class="text-md md:text-lg text-textPrimary/80 max-w-xl">
-                Describe el problema y adjunta una imagen opcional para recibir recomendaciones generales. Para acceder al análisis completo con IA, descarga la app móvil.
+                Sube una imagen de tu planta para un diagnóstico con IA desde la web ($1900). Para más funciones y seguimiento, descarga la app móvil.
               </p>
               <ul class="space-y-3 text-sm text-textPrimary/70">
                 <li class="flex gap-3 items-start">
@@ -1084,7 +1084,7 @@
                       Diagnóstico IA
                     </h3>
                     <p class="text-sm opacity-95" style="color: #C9C3FF !important; opacity: 0.9 !important;">
-                      Sube una imagen obligatoria de tu planta para obtener una recomendación inicial. La descripción es opcional, pero ayuda a la IA a contextualizar el análisis.
+                      Sube una imagen de tu planta para obtener un diagnóstico con IA.
                     </p>
                   </div>
                   <label
@@ -1118,19 +1118,6 @@
                       class="absolute inset-0 h-full w-full opacity-0 cursor-pointer"
                     />
                   </label>
-                  <div class="space-y-2">
-                    <label for="diagnostic-section-description" class="text-sm font-semibold" style="color: #C9C3FF !important;"
-                      >Descripción (opcional)</label
-                    >
-                    <textarea
-                      id="diagnostic-section-description"
-                      name="diagnosticSectionDescription"
-                      rows="3"
-                      placeholder="Describe el problema, condiciones ambientales o tratamientos aplicados."
-                      class="w-full rounded-2xl border border-[rgba(201,195,255,0.5)] bg-[rgba(42,31,58,0.8)] px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[rgba(201,195,255,0.6)] focus:border-[rgba(201,195,255,0.8)]"
-                      style="color: #C9C3FF !important; background-color: rgba(42, 31, 58, 0.9) !important; border-color: rgba(201, 195, 255, 0.6) !important;"
-                    ></textarea>
-                  </div>
                     <button
                       id="diagnostic-section-submit"
                       type="submit"
@@ -1323,8 +1310,9 @@
           </p>
           <div class="flex justify-center">
             <a
-              href="https://github.com/kevlogg/GrowAi-Web/releases/latest/download/GrowAi.apk"
-              download="GrowAi.apk"
+              href="https://play.google.com/"
+              target="_blank"
+              rel="noopener noreferrer"
               class="inline-flex items-center gap-3 px-6 py-3 rounded-full transition shadow-lg"
               style="background-color: #1B0F2A !important; color: #FFFFFF !important; border: 2px solid #1B0F2A !important;"
               onmouseover="this.style.backgroundColor='#2A1F3A'; this.style.borderColor='#2A1F3A';"
@@ -1332,18 +1320,18 @@
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
+                viewBox="0 0 512 512"
                 class="w-6 h-6"
                 style="fill: #FFFFFF !important;"
                 aria-hidden="true"
               >
                 <path
-                  d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z"
+                  d="m325.3 234.3-142.1-142 196.8 113.5-54.7 28.5zm-190.3-157.6c-13.2-13.2-21-12.1-21-12.1 1.6 1.6-6.2-6.2 12.2 12.2L256 256 126.2 385.8l-.5.5c-18.2 18.2-10.5 10.5-12.2 12.2 0 0 7.9 1.1 21.1-12l154.7-87.6 87.7 155c13.1 13 12 21 12 21 1.6-1.6-6.2 6.1 12.2-12.2l.5-.5C470.7 396.5 512 320 512 256s-41.3-140.5-100.3-199.5L134.9 76.7z"
                 ></path>
               </svg>
               <div class="text-left text-sm">
-                <span class="block text-xs uppercase" style="color: rgba(255, 255, 255, 0.8) !important;">Descargar para</span>
-                <span class="block font-semibold" style="color: #FFFFFF !important;">Android</span>
+                <span class="block text-xs uppercase" style="color: rgba(255, 255, 255, 0.8) !important;">Disponible en</span>
+                <span class="block font-semibold" style="color: #FFFFFF !important;">Google Play</span>
               </div>
             </a>
           </div>
@@ -1667,7 +1655,8 @@
       // Estado del diagnóstico
       let currentDiagnosis = null;
       let hasPaid = false;
-      let pendingDiagnosticData = null; // Guardar datos del diagnóstico pendiente
+      let pendingDiagnosticData = null; // Datos pendientes (tipo, etc.)
+      const PENDING_RESULT_KEY = 'pendingDiagnosticResult'; // Diagnóstico ya realizado, oculto hasta confirmar pago
 
       // Función para convertir imagen a base64
       function imageToBase64(file) {
@@ -2109,6 +2098,7 @@ www.growai.app
               document.body.removeChild(modal);
               pendingDiagnosticData = null;
               localStorage.removeItem('pendingDiagnosticData');
+              localStorage.removeItem(PENDING_RESULT_KEY);
             });
           }
           
@@ -2119,6 +2109,7 @@ www.growai.app
               document.body.removeChild(modal);
               pendingDiagnosticData = null;
               localStorage.removeItem('pendingDiagnosticData');
+              localStorage.removeItem(PENDING_RESULT_KEY);
             }
           });
         } catch (error) {
@@ -2188,6 +2179,7 @@ www.growai.app
         modal.querySelector('#cancel-payment').addEventListener('click', () => {
           document.body.removeChild(modal);
           pendingDiagnosticData = null;
+          localStorage.removeItem(PENDING_RESULT_KEY);
         });
         
         // Cerrar al hacer click fuera
@@ -2195,6 +2187,7 @@ www.growai.app
           if (e.target === modal) {
             document.body.removeChild(modal);
             pendingDiagnosticData = null;
+            localStorage.removeItem(PENDING_RESULT_KEY);
           }
         });
       }
@@ -2312,10 +2305,12 @@ www.growai.app
           // Pago fallido
           window.history.replaceState({}, document.title, window.location.pathname);
           localStorage.removeItem('pendingDiagnosticData');
+          localStorage.removeItem(PENDING_RESULT_KEY);
           alert('El pago no pudo ser procesado. Por favor, intenta nuevamente.');
         } else if (paymentStatus === 'pending') {
           // Pago pendiente
           window.history.replaceState({}, document.title, window.location.pathname);
+          localStorage.removeItem(PENDING_RESULT_KEY);
           alert('Tu pago está siendo procesado. Te notificaremos cuando esté confirmado.');
         }
       }
@@ -2528,6 +2523,46 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
         await processDiagnostic('hero');
       });
       
+      // Función para mostrar un diagnóstico ya obtenido (tras pago exitoso)
+      function displayStoredDiagnosis(type, diagnosis, description) {
+        const feedback = type === 'hero' ? heroDiagnosticFeedback : diagnosticSectionFeedback;
+        const submit = type === 'hero' ? heroDiagnosticSubmit : diagnosticSectionSubmit;
+        const formattedDiagnosis = formatDiagnosis(diagnosis);
+        currentDiagnosis = diagnosis;
+        feedback.classList.remove('hidden');
+        feedback.style.color = '#4CAF50';
+        feedback.style.borderColor = 'rgba(76, 175, 80, 0.4)';
+        feedback.innerHTML = `
+          <div class="space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="text-2xl">✅</span>
+              <h4 class="font-bold text-lg">Diagnóstico Completado</h4>
+            </div>
+            <div class="bg-[rgba(27,15,42,0.6)] rounded-xl p-4 max-h-96 overflow-y-auto" style="color: #C9C3FF;">
+              <pre class="whitespace-pre-wrap text-sm font-sans leading-relaxed">${formattedDiagnosis}</pre>
+            </div>
+            <button 
+              id="download-diagnosis-${type}"
+              class="w-full px-4 py-3 rounded-full font-semibold transition flex items-center justify-center gap-2"
+              style="background-color: #8B6ED0 !important; color: #FFFFFF !important;"
+              onmouseover="this.style.backgroundColor='#9B7EE0'"
+              onmouseout="this.style.backgroundColor='#8B6ED0'"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+              </svg>
+              Descargar Diagnóstico
+            </button>
+          </div>
+        `;
+        const downloadBtn = document.getElementById(`download-diagnosis-${type}`);
+        if (downloadBtn) {
+          downloadBtn.addEventListener('click', () => downloadDiagnosis(diagnosis, description || ''));
+        }
+        submit.disabled = false;
+        submit.innerHTML = type === 'section' ? 'Generar diagnóstico con IA - $1900' : 'Generar diagnóstico preliminar';
+      }
+
       // Función para procesar el diagnóstico
       async function processDiagnostic(type) {
         const form = type === 'hero' ? heroDiagnosticForm : diagnosticSectionForm;
@@ -2536,6 +2571,19 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
         const submit = type === 'hero' ? heroDiagnosticSubmit : diagnosticSectionSubmit;
         const imageLabel = type === 'hero' ? heroImageLabel : diagnosticSectionImageLabel;
         const defaultLabel = type === 'hero' ? defaultHeroLabel : defaultDiagnosticSectionLabel;
+
+        // Si hay diagnóstico ya realizado y guardado (tras pago), mostrarlo sin llamar a la API
+        const storedResult = localStorage.getItem(PENDING_RESULT_KEY);
+        if (storedResult) {
+          try {
+            const parsed = JSON.parse(storedResult);
+            if (parsed.type === type && parsed.diagnosis) {
+              localStorage.removeItem(PENDING_RESULT_KEY);
+              displayStoredDiagnosis(type, parsed.diagnosis, parsed.description || '');
+              return;
+            }
+          } catch (e) { /* ignore */ }
+        }
         
         submit.disabled = true;
         submit.innerHTML =
@@ -2672,7 +2720,7 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
           `;
         } finally {
           submit.disabled = false;
-          submit.innerHTML = 'Generar diagnóstico preliminar';
+          submit.innerHTML = type === 'section' ? 'Generar diagnóstico con IA - $1900' : 'Generar diagnóstico preliminar';
         }
       }
 
@@ -2940,32 +2988,47 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
           return;
         }
 
-        // Verificar pago antes de procesar
+        // Flujo: primero hacer el diagnóstico, guardarlo oculto, luego mostrar pago. Tras pago exitoso se muestra el resultado.
         if (!hasPaid) {
-          const formData = new FormData(diagnosticSectionForm);
           const imageFile = diagnosticSectionImageInput.files[0];
-          const description = formData.get('diagnosticSectionDescription') || 'Sin descripción adicional';
-          
-          // Convertir imagen a base64 y guardar en localStorage antes de redirigir al pago
-          imageToBase64(imageFile).then(imageBase64 => {
-            const diagnosticData = { 
-              type: 'section', 
-              description,
-              imageBase64: imageBase64 // Guardar imagen en base64
-            };
-            localStorage.setItem('pendingDiagnosticData', JSON.stringify(diagnosticData));
-            
-            showPaymentModal(async () => {
-              // Después del pago, procesar el diagnóstico
-              await processDiagnostic('section');
-            }, diagnosticData);
-          }).catch(error => {
-            console.error('Error al convertir imagen:', error);
+          if (imageFile.size > 10 * 1024 * 1024) {
             diagnosticSectionFeedback.classList.remove('hidden');
             diagnosticSectionFeedback.style.color = '#FF6B6B';
             diagnosticSectionFeedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
-            diagnosticSectionFeedback.textContent = 'Error al procesar la imagen. Por favor, intenta nuevamente.';
-          });
+            diagnosticSectionFeedback.textContent = 'La imagen es demasiado grande. Usa una imagen menor a 10MB.';
+            return;
+          }
+          diagnosticSectionSubmit.disabled = true;
+          diagnosticSectionFeedback.classList.remove('hidden');
+          diagnosticSectionFeedback.style.color = '#C9C3FF';
+          diagnosticSectionFeedback.style.borderColor = 'rgba(201, 195, 255, 0.3)';
+          diagnosticSectionFeedback.textContent = '🔄 Analizando imagen con IA... En cuanto termine deberás abonar $1900 para ver el resultado.';
+          diagnosticSectionSubmit.innerHTML = '<svg class="animate-spin h-5 w-5 text-white inline-block mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3.6-3.6A8 8 0 014 12z"></path></svg><span>Analizando con IA...</span>';
+          try {
+            const imageBase64 = await imageToBase64(imageFile);
+            const result = await analyzeWithOpenAI(imageBase64, '');
+            if (result.success) {
+              const diagnosticData = { type: 'section' };
+              const resultToStore = { type: 'section', diagnosis: result.diagnosis, description: '' };
+              localStorage.setItem('pendingDiagnosticData', JSON.stringify(diagnosticData));
+              localStorage.setItem(PENDING_RESULT_KEY, JSON.stringify(resultToStore));
+              pendingDiagnosticData = diagnosticData;
+              showPaymentModal(async () => {
+                await processDiagnostic('section');
+              }, diagnosticData);
+            } else {
+              diagnosticSectionFeedback.style.color = '#FF6B6B';
+              diagnosticSectionFeedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
+              diagnosticSectionFeedback.innerHTML = '<span class="font-semibold">Error en el análisis</span><br><span>' + (result.error || 'Intenta nuevamente.') + '</span>';
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            diagnosticSectionFeedback.style.color = '#FF6B6B';
+            diagnosticSectionFeedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
+            diagnosticSectionFeedback.textContent = error.message || 'Error al analizar. Por favor, intenta nuevamente.';
+          }
+          diagnosticSectionSubmit.disabled = false;
+          diagnosticSectionSubmit.innerHTML = 'Generar diagnóstico con IA - $1900';
           return;
         }
 
