@@ -816,19 +816,6 @@
                       class="absolute inset-0 h-full w-full opacity-0 cursor-pointer"
                     />
                   </label>
-                  <div class="space-y-2">
-                    <label for="hero-description" class="text-sm font-semibold" style="color: #C9C3FF !important;"
-                      >Descripción (opcional)</label
-                    >
-                    <textarea
-                      id="hero-description"
-                      name="heroDescription"
-                      rows="3"
-                      placeholder="Describe el problema, condiciones ambientales o tratamientos aplicados."
-                      class="w-full rounded-2xl border border-[rgba(201,195,255,0.5)] bg-[rgba(42,31,58,0.8)] px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[rgba(201,195,255,0.6)] focus:border-[rgba(201,195,255,0.8)]"
-                      style="color: #C9C3FF !important; background-color: rgba(42, 31, 58, 0.9) !important; border-color: rgba(201, 195, 255, 0.6) !important;"
-                    ></textarea>
-                  </div>
                   <button
                     id="hero-diagnostic-submit"
                     type="submit"
@@ -2495,7 +2482,7 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
         if (!hasPaid) {
           const formData = new FormData(heroDiagnosticForm);
           const imageFile = heroImageInput.files[0];
-          const description = formData.get('heroDescription') || 'Sin descripción adicional';
+          const description = '';
           
           // Convertir imagen a base64 y guardar en localStorage antes de redirigir al pago
           imageToBase64(imageFile).then(imageBase64 => {
@@ -2618,7 +2605,7 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
               if (!imageFile) {
                 throw new Error('No se encontró imagen. Por favor, sube una imagen nuevamente.');
               }
-              description = formData.get(type === 'hero' ? 'heroDescription' : 'diagnosticSectionDescription') || 'Sin descripción adicional';
+              description = '';
               
               // Validar tamaño de imagen (máx 10MB)
               if (imageFile.size > 10 * 1024 * 1024) {
@@ -2634,7 +2621,7 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
             if (!imageFile) {
               throw new Error('Por favor, sube una imagen para continuar con el diagnóstico.');
             }
-            description = formData.get(type === 'hero' ? 'heroDescription' : 'diagnosticSectionDescription') || 'Sin descripción adicional';
+            description = '';
             
             // Validar tamaño de imagen (máx 10MB)
             if (imageFile.size > 10 * 1024 * 1024) {
