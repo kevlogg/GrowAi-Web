@@ -2423,7 +2423,7 @@ IMPORTANTE:
 OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnóstico detallado siguiendo el formato requerido.`;
       }
 
-      // Función para llamar a OpenAI a través del backend
+      // Función para llamar a OpenAI a través del backend (Cloud Function analyzeDiagnostic)
       async function analyzeWithOpenAI(imageBase64, userDescription) {
         try {
           const prompt = buildDiagnosticPrompt(userDescription);
@@ -2440,17 +2440,34 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
             })
           });
 
-          if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.error || `Error ${response.status}: ${response.statusText}`);
+          let data;
+          const contentType = response.headers.get('content-type');
+          try {
+            data = contentType && contentType.includes('application/json')
+              ? await response.json()
+              : {};
+          } catch (_) {
+            data = {};
           }
 
-          const data = await response.json();
+          if (!response.ok) {
+            const msg = data.error || data.message || (response.status === 404
+              ? 'El servicio de diagnóstico no está disponible. Por favor, intenta más tarde o descarga la app.'
+              : `Error del servidor (${response.status}). Intenta más tarde.`);
+            return { success: false, error: msg };
+          }
           
           if (!data.success) {
             return {
               success: false,
               error: data.error || 'Error al analizar la imagen.'
+            };
+          }
+          
+          if (!data.diagnosis) {
+            return {
+              success: false,
+              error: 'El servicio no devolvió un diagnóstico. Intenta de nuevo.'
             };
           }
           
@@ -2460,9 +2477,12 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
           };
         } catch (error) {
           console.error('Error en análisis de IA:', error);
+          const isNetwork = error.message && (error.message.includes('fetch') || error.message.includes('Failed to fetch') || error.message.includes('NetworkError'));
           return {
             success: false,
-            error: error.message || 'Error al analizar la imagen. Por favor, intenta nuevamente.'
+            error: isNetwork
+              ? 'No se pudo conectar con el servicio. Revisa tu conexión e intenta de nuevo.'
+              : (error.message || 'Error inesperado. Por favor, intenta nuevamente.')
           };
         }
       }
