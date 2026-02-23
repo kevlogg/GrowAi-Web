@@ -2503,36 +2503,31 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
           return;
         }
 
-        // Verificar pago antes de procesar
-        if (!hasPaid) {
-          const formData = new FormData(heroDiagnosticForm);
-          const imageFile = heroImageInput.files[0];
-          const description = '';
-          
-          // Convertir imagen a base64 y guardar en localStorage antes de redirigir al pago
-          imageToBase64(imageFile).then(imageBase64 => {
-            const diagnosticData = { 
-              type: 'hero', 
-              description,
-              imageBase64: imageBase64 // Guardar imagen en base64
-            };
-            localStorage.setItem('pendingDiagnosticData', JSON.stringify(diagnosticData));
-            
-            showPaymentModal(async () => {
-              // Después del pago, procesar el diagnóstico
-              await processDiagnostic('hero');
-            }, diagnosticData);
-          }).catch(error => {
-            console.error('Error al convertir imagen:', error);
-            heroDiagnosticFeedback.classList.remove('hidden');
-            heroDiagnosticFeedback.style.color = '#FF6B6B';
-            heroDiagnosticFeedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
-            heroDiagnosticFeedback.textContent = 'Error al procesar la imagen. Por favor, intenta nuevamente.';
-          });
-          return;
-        }
+        // Evitar mostrar un diagnóstico antiguo guardado; forzar flujo de pago o análisis nuevo
+        localStorage.removeItem(PENDING_RESULT_KEY);
 
-        await processDiagnostic('hero');
+        // Hero: siempre mostrar pago primero cuando hay imagen (cada diagnóstico requiere pago)
+        const imageFile = heroImageInput.files[0];
+        const description = '';
+        
+        imageToBase64(imageFile).then(imageBase64 => {
+          const diagnosticData = { 
+            type: 'hero', 
+            description,
+            imageBase64: imageBase64
+          };
+          localStorage.setItem('pendingDiagnosticData', JSON.stringify(diagnosticData));
+          
+          showPaymentModal(async () => {
+            await processDiagnostic('hero');
+          }, diagnosticData);
+        }).catch(error => {
+          console.error('Error al convertir imagen:', error);
+          heroDiagnosticFeedback.classList.remove('hidden');
+          heroDiagnosticFeedback.style.color = '#FF6B6B';
+          heroDiagnosticFeedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
+          heroDiagnosticFeedback.textContent = 'Error al procesar la imagen. Por favor, intenta nuevamente.';
+        });
       });
       
       // Función para mostrar un diagnóstico ya obtenido (tras pago exitoso)
@@ -2999,6 +2994,9 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
           diagnosticSectionFeedback.textContent = 'Por favor, sube una imagen para continuar con el diagnóstico.';
           return;
         }
+
+        // Evitar mostrar un diagnóstico antiguo guardado
+        localStorage.removeItem(PENDING_RESULT_KEY);
 
         // Flujo: primero hacer el diagnóstico, guardarlo oculto, luego mostrar pago. Tras pago exitoso se muestra el resultado.
         if (!hasPaid) {
