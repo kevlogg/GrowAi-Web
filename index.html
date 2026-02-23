@@ -291,11 +291,16 @@
         opacity: 0.9;
       }
       
-      /* Feedback message */
+      /* Feedback message y caja de resultado (texto claro sobre fondo oscuro) */
       main[id="inicio"] .bg-secondary #hero-diagnostic-feedback {
         background-color: rgba(42, 31, 58, 0.8) !important;
         border-color: rgba(201, 195, 255, 0.5) !important;
-        color: #E8E4FF !important;
+        color: #F0EEFF !important;
+      }
+      main[id="inicio"] #hero-diagnostic-feedback .diagnosis-result-box,
+      main[id="inicio"] #hero-diagnostic-feedback .diagnosis-result-box *,
+      main[id="inicio"] #hero-diagnostic-feedback .diagnosis-result-box pre {
+        color: #F0EEFF !important;
       }
       
       /* Sección FUNCIONES - OSCURA */
@@ -361,11 +366,16 @@
         color: #1B0F2A !important;
         opacity: 0.6;
       }
-      /* Caja del resultado del diagnóstico: fondo oscuro, texto claro para buena legibilidad */
+      /* Caja del resultado del diagnóstico: fondo oscuro, texto claro (hero está en main#inicio, sección en #diagnostico) */
+      .diagnosis-result-box,
+      .diagnosis-result-box *,
+      .diagnosis-result-box pre {
+        color: #F0EEFF !important;
+      }
       section[id="diagnostico"] .diagnosis-result-box,
       section[id="diagnostico"] .diagnosis-result-box *,
       section[id="diagnostico"] .diagnosis-result-box pre {
-        color: #E8E4FF !important;
+        color: #F0EEFF !important;
       }
       
       /* Sección PLANES - OSCURA */
@@ -1663,31 +1673,31 @@
         });
       }
       
-      // Función para formatear el diagnóstico (quitar asteriscos y agregar iconos)
+      // Función para formatear el diagnóstico: quitar markdown y agregar iconos (sin dejar ** que se ven mal)
       function formatDiagnosis(text) {
         if (!text) return '';
         
         let formatted = text;
         
-        // Agregar iconos a los títulos (antes de remover asteriscos)
-        formatted = formatted
-          .replace(/\*\*DIAGNÓSTICO PRINCIPAL:\*\*/g, '🔍 **DIAGNÓSTICO PRINCIPAL:**')
-          .replace(/\*\*PROBLEMAS SECUNDARIOS:\*\*/g, '⚠️ **PROBLEMAS SECUNDARIOS:**')
-          .replace(/\*\*ETAPA DE CRECIMIENTO:\*\*/g, '🌱 **ETAPA DE CRECIMIENTO:**')
-          .replace(/\*\*CAUSA PROBABLE:\*\*/g, '🔬 **CAUSA PROBABLE:**')
-          .replace(/\*\*SEVERIDAD:\*\*/g, '📊 **SEVERIDAD:**')
-          .replace(/\*\*RECOMENDACIONES INMEDIATAS:\*\*/g, '⚡ **RECOMENDACIONES INMEDIATAS:**')
-          .replace(/\*\*TRATAMIENTO DETALLADO:\*\*/g, '💊 **TRATAMIENTO DETALLADO:**')
-          .replace(/\*\*PREVENCIÓN FUTURA:\*\*/g, '🛡️ **PREVENCIÓN FUTURA:**')
-          .replace(/\*\*MONITOREO:\*\*/g, '👀 **MONITOREO:**')
-          .replace(/\*\*NIVEL DE CONFIANZA:\*\*/g, '🎯 **NIVEL DE CONFIANZA:**');
+        // Primero quitar TODOS los asteriscos de markdown para evitar "inscripciones raras" (**, *)
+        formatted = formatted.replace(/\*\*/g, '');
+        formatted = formatted.replace(/\*([^*]+)\*/g, '$1');
+        formatted = formatted.replace(/__/g, '');
+        formatted = formatted.replace(/_([^_]+)_/g, '$1');
+        formatted = formatted.replace(/`([^`]+)`/g, '$1');
         
-        // Remover asteriscos de markdown
-        formatted = formatted.replace(/\*\*(.*?)\*\*/g, '$1');
-        formatted = formatted.replace(/\*(.*?)\*/g, '$1');
-        formatted = formatted.replace(/__(.*?)__/g, '$1');
-        formatted = formatted.replace(/_(.*?)_/g, '$1');
-        formatted = formatted.replace(/`(.*?)`/g, '$1');
+        // Agregar iconos a los títulos (ya sin asteriscos)
+        formatted = formatted
+          .replace(/DIAGNÓSTICO PRINCIPAL:\s*/g, '🔍 DIAGNÓSTICO PRINCIPAL:\n')
+          .replace(/PROBLEMAS SECUNDARIOS:\s*/g, '⚠️ PROBLEMAS SECUNDARIOS:\n')
+          .replace(/ETAPA DE CRECIMIENTO:\s*/g, '🌱 ETAPA DE CRECIMIENTO:\n')
+          .replace(/CAUSA PROBABLE:\s*/g, '🔬 CAUSA PROBABLE:\n')
+          .replace(/SEVERIDAD:\s*/g, '📊 SEVERIDAD:\n')
+          .replace(/RECOMENDACIONES INMEDIATAS:\s*/g, '⚡ RECOMENDACIONES INMEDIATAS:\n')
+          .replace(/TRATAMIENTO DETALLADO:\s*/g, '💊 TRATAMIENTO DETALLADO:\n')
+          .replace(/PREVENCIÓN FUTURA:\s*/g, '🛡️ PREVENCIÓN FUTURA:\n')
+          .replace(/MONITOREO:\s*/g, '👀 MONITOREO:\n')
+          .replace(/NIVEL DE CONFIANZA:\s*/g, '🎯 NIVEL DE CONFIANZA:\n');
         
         // Remover # de títulos
         formatted = formatted.replace(/^#+\s*/gm, '');
