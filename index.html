@@ -361,6 +361,12 @@
         color: #1B0F2A !important;
         opacity: 0.6;
       }
+      /* Caja del resultado del diagnóstico: fondo oscuro, texto claro para buena legibilidad */
+      section[id="diagnostico"] .diagnosis-result-box,
+      section[id="diagnostico"] .diagnosis-result-box *,
+      section[id="diagnostico"] .diagnosis-result-box pre {
+        color: #E8E4FF !important;
+      }
       
       /* Sección PLANES - OSCURA */
       section[id="planes"] {
@@ -2544,7 +2550,7 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
               <span class="text-2xl">✅</span>
               <h4 class="font-bold text-lg">Diagnóstico Completado</h4>
             </div>
-            <div class="bg-[rgba(27,15,42,0.6)] rounded-xl p-4 max-h-96 overflow-y-auto" style="color: #C9C3FF;">
+            <div class="diagnosis-result-box bg-[rgba(27,15,42,0.6)] rounded-xl p-4 max-h-96 overflow-y-auto">
               <pre class="whitespace-pre-wrap text-sm font-sans leading-relaxed">${formattedDiagnosis}</pre>
             </div>
             <button 
@@ -2665,7 +2671,7 @@ OBLIGATORIO: Analiza la imagen de la planta de cannabis y proporciona un diagnó
                   <span class="text-2xl">✅</span>
                   <h4 class="font-bold text-lg">Diagnóstico Completado</h4>
                 </div>
-                <div class="bg-[rgba(27,15,42,0.6)] rounded-xl p-4 max-h-96 overflow-y-auto" style="color: #C9C3FF;">
+                <div class="diagnosis-result-box bg-[rgba(27,15,42,0.6)] rounded-xl p-4 max-h-96 overflow-y-auto">
                   <pre class="whitespace-pre-wrap text-sm font-sans leading-relaxed">${formattedDiagnosis}</pre>
                 </div>
                 <button 
