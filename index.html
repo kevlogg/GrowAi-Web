@@ -164,6 +164,11 @@
         font-weight: 800;
       }
       
+      /* Marcas ✔ de beneficios (excepción al color global de span) */
+      main[id="inicio"] > section > div > div:first-child .hero-benefit-mark {
+        color: #4CAF50 !important;
+      }
+      
       /* Panel derecho - Formulario oscuro con textos claros */
       main[id="inicio"] .bg-secondary {
         background-color: #1B0F2A !important;
@@ -727,83 +732,44 @@
 
     <main id="inicio">
       <section
-        class="relative overflow-hidden pt-10 md:pt-14 pb-14 bg-gradient-to-b from-primary via-primary to-secondary/40"
+        class="relative overflow-hidden pt-10 md:pt-16 pb-16 md:pb-20 bg-gradient-to-b from-primary via-primary to-secondary/40"
       >
-        <div class="max-w-6xl mx-auto px-4">
-          <div class="grid md:grid-cols-2 gap-8 items-center">
-            <div class="space-y-6">
-              <span
-                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/70 text-xs font-semibold uppercase tracking-wider"
-                >Cultivo inteligente con IA</span
+        <div class="max-w-3xl mx-auto px-4">
+          <div class="space-y-8">
+            <span
+              class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/70 text-[11px] md:text-xs font-semibold uppercase tracking-[0.12em] text-textPrimary"
+              >Cultivo inteligente con IA</span
+            >
+            <h1 class="text-3xl md:text-4xl lg:text-[2.75rem] font-extrabold leading-[1.15] tracking-tight text-textPrimary">
+              Tu cultivo, ordenado con IA
+            </h1>
+            <p class="text-base md:text-lg text-textPrimary/85 max-w-2xl leading-relaxed">
+              Gestioná tus plantas, diagnosticá problemas y mejorá tus resultados desde una sola app.
+            </p>
+            <div class="flex flex-col items-start gap-3 pt-1">
+              <a
+                href="#descargar"
+                class="inline-flex items-center justify-center gap-2 bg-accent text-primary font-bold px-9 py-4 text-lg md:text-xl rounded-full shadow-[0_8px_32px_rgba(139,110,208,0.45)] ring-2 ring-accent/40 hover:ring-accent/70 hover:shadow-[0_12px_40px_rgba(139,110,208,0.55)] hover:-translate-y-0.5 active:translate-y-0 transition duration-200"
+                >Descargar App</a
               >
-              <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-                <span class="inline-flex items-center gap-2">
-                  <span>GrowAi</span>
-                  <img src="icono/favicon.png" alt="GrowAi" class="w-8 h-8 md:w-10 md:h-10 object-contain" onerror="this.style.display='none';">
-                </span>
-                <span class="text-textPrimary/90"> Tu Asistente de Cultivo Inteligente</span>
-              </h1>
-              <p class="text-md md:text-lg text-textPrimary/80 max-w-xl">
-                Gestiona tus cultivos, chateá con Sensei (asistente IA) desde la app, conéctate con cultivadores expertos y mantente al día con eventos cannábicos. Todas las herramientas que necesitas en una sola app.
+              <p class="text-xs md:text-sm text-textPrimary/60 pl-1">
+                Disponible en Android
               </p>
-              <div class="flex flex-col sm:flex-row gap-4">
-                <a
-                  href="#descargar"
-                  class="inline-flex items-center justify-center gap-2 bg-accent text-primary font-semibold px-7 py-3.5 text-lg rounded-full shadow-glow hover:shadow-xl transition hover:-translate-y-0.5"
-                  >Descargar App</a
-                >
-              </div>
-              <p class="text-sm text-textPrimary/70">
-                Disponible en Android. Próximamente en iOS. Sensei, comunidad y más funciones exclusivas están en la app.
-              </p>
-              <div class="flex gap-6 text-sm text-textPrimary/70">
-                <div>
-                  <p class="font-semibold text-white text-lg">+6</p>
-                  <p>Funciones clave</p>
-                </div>
-                <div>
-                  <p class="font-semibold text-white text-lg">Sensei</p>
-                  <p>Tu asistente por chat</p>
-                </div>
-                <div>
-                  <p class="font-semibold text-white text-lg">Capacitaciones</p>
-                  <p>Formación continua</p>
-                </div>
-              </div>
             </div>
-            <div class="relative">
-              <div
-                class="absolute inset-0 -m-12 bg-accent/20 blur-3xl rounded-full"
-                aria-hidden="true"
-              ></div>
-              <div
-                class="relative bg-secondary rounded-3xl p-6 md:p-8 shadow-2xl border border-accent/30"
-                style="background-color: #1B0F2A !important;"
-              >
-                <div class="flex flex-col gap-5">
-                  <div class="space-y-2">
-                    <h3 class="text-2xl font-bold tracking-tight" style="color: #C9C3FF !important;">
-                      Sensei
-                    </h3>
-                    <p class="text-sm opacity-95" style="color: #C9C3FF !important; opacity: 0.9 !important;">
-                      Tu asistente por chat con IA para el cultivo: podés describir síntomas o subir fotos y Sensei orienta con calma y precisión. No reemplaza un diagnóstico profesional.
-                    </p>
-                  </div>
-                  <div class="preloader-inline" aria-hidden="true">
-                    <img src="https://s3.ca-central-1.amazonaws.com/test-public-420/loader.png" alt="" width="120" height="120" />
-                  </div>
-                  <p class="text-xs opacity-90" style="color: #C9C3FF !important; opacity: 0.85 !important;">
-                    El chat con Sensei está solo en la app: iniciá sesión y usalo desde la sección Sensei.
-                  </p>
-                  <a
-                    href="#descargar"
-                    class="inline-flex items-center justify-center gap-2 rounded-full bg-[#8B6ED0] text-white font-bold px-5 py-3 shadow-[0_4px_20px_rgba(139,110,208,0.4)] hover:bg-[#9B7EE0] hover:shadow-[0_6px_25px_rgba(139,110,208,0.5)] transition text-center"
-                  >
-                    Descargar la app para usar Sensei
-                  </a>
-                </div>
-              </div>
-            </div>
+            <ul class="space-y-3 pt-2 text-base md:text-lg text-textPrimary/90 max-w-xl" role="list">
+              <li class="flex gap-3 items-start">
+                <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
+                <span>Diagnóstico con IA</span>
+              </li>
+              <li class="flex gap-3 items-start">
+                <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
+                <span>Seguimiento completo</span>
+              </li>
+              <li class="flex gap-3 items-start">
+                <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
+                <span>Recomendaciones en tiempo real</span>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
