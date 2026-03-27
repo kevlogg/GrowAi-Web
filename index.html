@@ -6,7 +6,7 @@
     <title>GrowAi | Tu Asistente de Cultivo Inteligente</title>
     <meta
       name="description"
-      content="GrowAi es la plataforma inteligente para el cultivo de cannabis. Gestiona tus plantas, diagnostica problemas con IA y conéctate con la comunidad."
+      content="GrowAi es la plataforma inteligente para el cultivo de cannabis. Sensei, tu asistente por chat con IA, te orienta desde la app. Comunidad y más."
     />
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="icono/favicon.png" />
@@ -17,7 +17,7 @@
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="GrowAi | Tu Asistente de Cultivo Inteligente" />
-    <meta property="og:description" content="GrowAi es la plataforma inteligente para el cultivo de cannabis. Gestiona tus plantas, diagnostica problemas con IA y conéctate con la comunidad." />
+    <meta property="og:description" content="GrowAi es la plataforma inteligente para el cultivo de cannabis. Sensei, tu asistente por chat con IA, te orienta desde la app. Comunidad y más." />
     <meta property="og:url" content="https://growai.com.ar" />
     <meta property="og:image" content="https://growai.com.ar/icono/favicon.png" />
     <meta name="twitter:card" content="summary" />
@@ -31,8 +31,6 @@
     />
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script src="https://sdk.mercadopago.com/js/v2"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
       tailwind.config = {
         theme: {
@@ -291,16 +289,30 @@
         opacity: 0.9;
       }
       
-      /* Feedback message y caja de resultado (texto claro sobre fondo oscuro) */
-      main[id="inicio"] .bg-secondary #hero-diagnostic-feedback {
-        background-color: rgba(42, 31, 58, 0.8) !important;
-        border-color: rgba(201, 195, 255, 0.5) !important;
-        color: #F0EEFF !important;
+      /* Preloader decorativo (hero): imagen con rotación */
+      .preloader-inline {
+        position: relative;
+        background-color: #c3c3c3;
+        width: 100%;
+        min-height: 180px;
+        border-radius: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
       }
-      main[id="inicio"] #hero-diagnostic-feedback .diagnosis-result-box,
-      main[id="inicio"] #hero-diagnostic-feedback .diagnosis-result-box *,
-      main[id="inicio"] #hero-diagnostic-feedback .diagnosis-result-box pre {
-        color: #F0EEFF !important;
+      .preloader-inline img {
+        animation: sensei-loader-rotation 2s infinite linear;
+        max-width: 120px;
+        height: auto;
+      }
+      @keyframes sensei-loader-rotation {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      @-webkit-keyframes sensei-loader-rotation {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
       }
       
       /* Sección FUNCIONES - OSCURA */
@@ -319,67 +331,40 @@
         color: #C9C3FF !important;
       }
       
-      /* Sección DIAGNÓSTICO - CLARA */
-      section[id="diagnostico"] {
+      /* Sección SENSEI - CLARA */
+      section[id="sensei"] {
         background-color: #C9C3FF !important;
       }
-      section[id="diagnostico"] * {
+      section[id="sensei"] * {
         color: #1B0F2A !important;
       }
-      section[id="diagnostico"] .text-textPrimary,
-      section[id="diagnostico"] .text-textPrimary\/70,
-      section[id="diagnostico"] .text-textPrimary\/60,
-      section[id="diagnostico"] .text-white,
-      section[id="diagnostico"] h1,
-      section[id="diagnostico"] h2,
-      section[id="diagnostico"] h3,
-      section[id="diagnostico"] p,
-      section[id="diagnostico"] span,
-      section[id="diagnostico"] label {
+      section[id="sensei"] .text-textPrimary,
+      section[id="sensei"] .text-textPrimary\/70,
+      section[id="sensei"] .text-textPrimary\/60,
+      section[id="sensei"] .text-white,
+      section[id="sensei"] h1,
+      section[id="sensei"] h2,
+      section[id="sensei"] h3,
+      section[id="sensei"] p,
+      section[id="sensei"] span,
+      section[id="sensei"] label {
         color: #1B0F2A !important;
       }
-      section[id="diagnostico"] .text-textPrimary\/70 {
+      section[id="sensei"] .text-textPrimary\/70 {
         opacity: 0.85;
       }
-      section[id="diagnostico"] .text-textPrimary\/60 {
+      section[id="sensei"] .text-textPrimary\/60 {
         opacity: 0.7;
       }
-      section[id="diagnostico"] .bg-secondary\/70,
-      section[id="diagnostico"] .bg-primary\/70,
-      section[id="diagnostico"] .bg-primary\/80 {
+      section[id="sensei"] .bg-secondary\/70,
+      section[id="sensei"] .bg-primary\/70,
+      section[id="sensei"] .bg-primary\/80 {
         background-color: rgba(27, 15, 42, 0.15) !important;
         border-color: rgba(27, 15, 42, 0.3) !important;
       }
-      section[id="diagnostico"] .bg-accent {
+      section[id="sensei"] .bg-accent {
         background-color: #1B0F2A !important;
         color: #C9C3FF !important;
-      }
-      section[id="diagnostico"] input,
-      section[id="diagnostico"] textarea,
-      section[id="diagnostico"] select {
-        color: #1B0F2A !important;
-        background-color: rgba(27, 15, 42, 0.1) !important;
-        border-color: rgba(27, 15, 42, 0.3) !important;
-      }
-      section[id="diagnostico"] input::placeholder,
-      section[id="diagnostico"] textarea::placeholder {
-        color: #1B0F2A !important;
-        opacity: 0.6;
-      }
-      /* Caja del diagnóstico: texto SIEMPRE claro (ID gana sobre section * y cualquier otra regla) */
-      #diagnosis-result-text,
-      #diagnosis-result-text *,
-      .diagnosis-result-box,
-      .diagnosis-result-box *,
-      .diagnosis-result-box pre {
-        color: #F0EEFF !important;
-      }
-      section[id="diagnostico"] #diagnosis-result-text,
-      section[id="diagnostico"] #diagnosis-result-text *,
-      section[id="diagnostico"] .diagnosis-result-box,
-      section[id="diagnostico"] .diagnosis-result-box *,
-      section[id="diagnostico"] .diagnosis-result-box pre {
-        color: #F0EEFF !important;
       }
       
       /* Sección PLANES - OSCURA */
@@ -657,6 +642,7 @@
             <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#funciones"
               >Funciones</a
             >
+            <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#sensei">Sensei</a>
             <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#planes">Planes</a>
             <a class="text-[#1B0F2A] hover:text-[#8B6ED0] transition font-medium" href="#descargar"
               >Descargar</a
@@ -731,6 +717,7 @@
       <nav class="flex flex-col gap-2">
         <a href="#inicio">Inicio</a>
         <a href="#funciones">Funciones</a>
+        <a href="#sensei">Sensei</a>
         <a href="#planes">Planes</a>
         <a href="#descargar">Descargar</a>
         <a href="#contacto">Contacto</a>
@@ -757,7 +744,7 @@
                 <span class="text-textPrimary/90"> Tu Asistente de Cultivo Inteligente</span>
               </h1>
               <p class="text-md md:text-lg text-textPrimary/80 max-w-xl">
-                Gestiona tus cultivos, diagnostica problemas con inteligencia artificial, conéctate con cultivadores expertos y mantente al día con eventos cannábicos. Todas las herramientas que necesitas en una sola app.
+                Gestiona tus cultivos, chateá con Sensei (asistente IA) desde la app, conéctate con cultivadores expertos y mantente al día con eventos cannábicos. Todas las herramientas que necesitas en una sola app.
               </p>
               <div class="flex flex-col sm:flex-row gap-4">
                 <a
@@ -767,7 +754,7 @@
                 >
               </div>
               <p class="text-sm text-textPrimary/70">
-                Disponible en Android. Próximamente en iOS. Accedé al diagnóstico avanzado, comunidad y más funciones exclusivas.
+                Disponible en Android. Próximamente en iOS. Sensei, comunidad y más funciones exclusivas están en la app.
               </p>
               <div class="flex gap-6 text-sm text-textPrimary/70">
                 <div>
@@ -775,8 +762,8 @@
                   <p>Funciones clave</p>
                 </div>
                 <div>
-                  <p class="font-semibold text-white text-lg">Diagnóstico IA</p>
-                  <p>Resultados en minutos</p>
+                  <p class="font-semibold text-white text-lg">Sensei</p>
+                  <p>Tu asistente por chat</p>
                 </div>
                 <div>
                   <p class="font-semibold text-white text-lg">Capacitaciones</p>
@@ -793,64 +780,28 @@
                 class="relative bg-secondary rounded-3xl p-6 md:p-8 shadow-2xl border border-accent/30"
                 style="background-color: #1B0F2A !important;"
               >
-                <form
-                  id="hero-diagnostic-form"
-                  class="flex flex-col gap-5"
-                >
+                <div class="flex flex-col gap-5">
                   <div class="space-y-2">
                     <h3 class="text-2xl font-bold tracking-tight" style="color: #C9C3FF !important;">
-                      Diagnóstico IA
+                      Sensei
                     </h3>
                     <p class="text-sm opacity-95" style="color: #C9C3FF !important; opacity: 0.9 !important;">
-                      Sube una imagen de tu planta para obtener un diagnóstico con IA.
+                      Tu asistente por chat con IA para el cultivo: podés describir síntomas o subir fotos y Sensei orienta con calma y precisión. No reemplaza un diagnóstico profesional.
                     </p>
                   </div>
-                  <label
-                    id="hero-image-label"
-                    for="hero-image"
-                    class="group relative flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-[rgba(201,195,255,0.5)] bg-[rgba(42,31,58,0.7)] px-4 py-6 text-center transition hover:border-[rgba(201,195,255,0.7)] hover:bg-[rgba(42,31,58,0.8)] cursor-pointer"
-                  >
-                    <div id="hero-image-preview" class="hidden w-full mb-2">
-                      <img id="hero-image-preview-img" src="" alt="Vista previa" class="max-h-48 w-auto mx-auto rounded-lg object-contain" />
-                    </div>
-                    <div
-                      id="hero-image-icon"
-                      class="flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(139,110,208,0.3)] text-3xl"
-                    >
-                      📷
-                    </div>
-                    <div class="space-y-1">
-                      <p id="hero-image-label-text" class="text-sm font-semibold" style="color: #C9C3FF !important;">
-                        Arrastra o selecciona una imagen (obligatorio)
-                      </p>
-                      <p class="text-xs opacity-85" style="color: #C9C3FF !important; opacity: 0.85 !important;">
-                        Formatos soportados: JPG, PNG, HEIC. Máx. 10MB.
-                      </p>
-                    </div>
-                    <input
-                      id="hero-image"
-                      name="heroImage"
-                      type="file"
-                      accept="image/*"
-                      required
-                      class="absolute inset-0 h-full w-full opacity-0 cursor-pointer"
-                    />
-                  </label>
-                  <button
-                    id="hero-diagnostic-submit"
-                    type="submit"
-                    class="inline-flex items-center justify-center gap-2 rounded-full bg-[#8B6ED0] text-white font-bold px-5 py-3 shadow-[0_4px_20px_rgba(139,110,208,0.4)] hover:bg-[#9B7EE0] hover:shadow-[0_6px_25px_rgba(139,110,208,0.5)] transition"
-                  >
-                    Generar diagnóstico con IA - $1900
-                  </button>
-                  <p class="text-xs opacity-90" style="color: #C9C3FF !important; opacity: 0.9 !important;">
-                    Diagnóstico completo con GPT-4 Vision. Incluye análisis detallado, recomendaciones personalizadas y descarga del resultado. Pago único de $1900 ARS.
+                  <div class="preloader-inline" aria-hidden="true">
+                    <img src="https://s3.ca-central-1.amazonaws.com/test-public-420/loader.png" alt="" width="120" height="120" />
+                  </div>
+                  <p class="text-xs opacity-90" style="color: #C9C3FF !important; opacity: 0.85 !important;">
+                    El chat con Sensei está solo en la app: iniciá sesión y usalo desde la sección Sensei.
                   </p>
-                  <div
-                    id="hero-diagnostic-feedback"
-                    class="hidden rounded-2xl border border-accent/30 bg-primary/70 px-4 py-3 text-sm text-textPrimary/80"
-                  ></div>
-                </form>
+                  <a
+                    href="#descargar"
+                    class="inline-flex items-center justify-center gap-2 rounded-full bg-[#8B6ED0] text-white font-bold px-5 py-3 shadow-[0_4px_20px_rgba(139,110,208,0.4)] hover:bg-[#9B7EE0] hover:shadow-[0_6px_25px_rgba(139,110,208,0.5)] transition text-center"
+                  >
+                    Descargar la app para usar Sensei
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -907,17 +858,17 @@
             </article>
             <article class="rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition" style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;">
               <div class="flex items-center gap-4">
-                <span class="text-3xl">🔬</span>
+                <span class="text-3xl">🧘</span>
                 <div>
-                  <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">Diagnóstico IA</h3>
+                  <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">Sensei</h3>
                   <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
-                    Analiza fotos de tus plantas para detectar enfermedades, plagas y deficiencias nutricionales.
+                    Chateá con tu asistente de IA: describí síntomas o compartí fotos y recibí orientación clara sobre tu cultivo.
                   </p>
                 </div>
               </div>
               <div class="rounded-2xl p-4 text-sm" style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;">
-                <p style="color: #C9C3FF !important; opacity: 0.9;"><strong style="color: #C9C3FF !important;">Incluye:</strong> Recomendaciones inmediatas, historial y guía de recuperación.</p>
-                <p class="mt-2 font-medium" style="color: #FF9800 !important;">Usa la demo web y continúa el análisis completo en la app.</p>
+                <p style="color: #C9C3FF !important; opacity: 0.9;"><strong style="color: #C9C3FF !important;">Incluye:</strong> Conversaciones con contexto, seguimiento por chat y respuestas pensadas para cultivadores.</p>
+                <p class="mt-2 font-medium" style="color: #FF9800 !important;">Disponible en la app; la web solo muestra información.</p>
               </div>
               <a
                 href="#descargar"
@@ -997,7 +948,7 @@
                 </div>
               </div>
               <div class="rounded-2xl p-4 text-sm" style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;">
-                <p style="color: #C9C3FF !important; opacity: 0.9;"><strong style="color: #C9C3FF !important;">Incluye:</strong> Diagnóstico ilimitado, equipo colaborativo, reportes avanzados.</p>
+                <p style="color: #C9C3FF !important; opacity: 0.9;"><strong style="color: #C9C3FF !important;">Incluye:</strong> Sensei y funciones avanzadas según plan, equipo colaborativo, reportes.</p>
                 <p class="mt-2 font-medium" style="color: #FF9800 !important;">Contrata desde la app y gestiona tu equipo.</p>
               </div>
               <a
@@ -1043,33 +994,33 @@
       </section>
 
       <section
-        id="diagnostico"
+        id="sensei"
         class="py-20 bg-primary/80"
       >
         <div class="max-w-6xl mx-auto px-4">
           <div class="grid md:grid-cols-2 gap-8 items-center">
             <div class="space-y-6">
               <span class="text-sm font-semibold text-accent uppercase tracking-wider"
-                >Diagnóstico Individual</span
+                >Sensei</span
               >
               <h2 class="text-2xl md:text-3xl font-bold">
-                Realiza un diagnóstico básico desde la web
+                Tu espacio con Sensei está en la app
               </h2>
               <p class="text-md md:text-lg text-textPrimary/80 max-w-xl">
-                Sube una imagen de tu planta para un diagnóstico con IA desde la web ($1900). Para más funciones y seguimiento, descarga la app móvil.
+                Sensei es el asistente por chat con IA de GrowAi: describí síntomas o subí fotos y recibí orientación con calma y precisión. No hay cobro por diagnóstico en la web; el uso completo está en la aplicación móvil.
               </p>
               <ul class="space-y-3 text-sm text-textPrimary/70">
                 <li class="flex gap-3 items-start">
                   <span class="text-success text-lg">●</span>
-                  <span>Identifica síntomas comunes y recibe sugerencias inmediatas.</span>
+                  <span>Conversaciones con contexto de cultivo y respuestas claras.</span>
                 </li>
                 <li class="flex gap-3 items-start">
                   <span class="text-warning text-lg">●</span>
-                  <span>La app ofrece seguimiento detallado, historial y reportes.</span>
+                  <span>La app guarda tus chats y te permite profundizar cuando quieras.</span>
                 </li>
                 <li class="flex gap-3 items-start">
                   <span class="text-accent text-lg">●</span>
-                  <span>Comparte resultados con la comunidad y especialistas desde la app.</span>
+                  <span>Iniciá sesión en la app para abrir Sensei; desde la web solo mostramos esta información.</span>
                 </li>
               </ul>
             </div>
@@ -1082,64 +1033,28 @@
                 class="relative bg-secondary rounded-3xl p-6 md:p-8 shadow-2xl border border-accent/30"
                 style="background-color: #1B0F2A !important;"
               >
-                <form
-                  id="diagnostic-section-form"
-                  class="flex flex-col gap-5"
-                >
+                <div class="flex flex-col gap-5">
                   <div class="space-y-2">
                     <h3 class="text-2xl font-bold tracking-tight" style="color: #C9C3FF !important;">
-                      Diagnóstico IA
+                      Sensei
                     </h3>
                     <p class="text-sm opacity-95" style="color: #C9C3FF !important; opacity: 0.9 !important;">
-                      Sube una imagen de tu planta para obtener un diagnóstico con IA.
+                      Describí síntomas o subí fotos: Sensei orienta con calma y precisión. No reemplaza un diagnóstico profesional.
                     </p>
                   </div>
-                  <label
-                    id="diagnostic-section-image-label"
-                    for="diagnostic-section-image"
-                    class="group relative flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-[rgba(201,195,255,0.5)] bg-[rgba(42,31,58,0.7)] px-4 py-6 text-center transition hover:border-[rgba(201,195,255,0.7)] hover:bg-[rgba(42,31,58,0.8)] cursor-pointer"
-                  >
-                    <div id="diagnostic-section-image-preview" class="hidden w-full mb-2">
-                      <img id="diagnostic-section-image-preview-img" src="" alt="Vista previa" class="max-h-48 w-auto mx-auto rounded-lg object-contain" />
-                    </div>
-                    <div
-                      id="diagnostic-section-image-icon"
-                      class="flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(139,110,208,0.3)] text-3xl"
-                    >
-                      📷
-                    </div>
-                    <div class="space-y-1">
-                      <p id="diagnostic-section-image-label-text" class="text-sm font-semibold" style="color: #C9C3FF !important;">
-                        Arrastra o selecciona una imagen (obligatorio)
-                      </p>
-                      <p class="text-xs opacity-85" style="color: #C9C3FF !important; opacity: 0.85 !important;">
-                        Formatos soportados: JPG, PNG, HEIC. Máx. 10MB.
-                      </p>
-                    </div>
-                    <input
-                      id="diagnostic-section-image"
-                      name="diagnosticSectionImage"
-                      type="file"
-                      accept="image/*"
-                      required
-                      class="absolute inset-0 h-full w-full opacity-0 cursor-pointer"
-                    />
-                  </label>
-                    <button
-                      id="diagnostic-section-submit"
-                      type="submit"
-                      class="inline-flex items-center justify-center gap-2 rounded-full bg-[#8B6ED0] text-white font-bold px-5 py-3 shadow-[0_4px_20px_rgba(139,110,208,0.4)] hover:bg-[#9B7EE0] hover:shadow-[0_6px_25px_rgba(139,110,208,0.5)] transition"
-                    >
-                      Generar diagnóstico con IA - $1900
-                    </button>
-                  <p class="text-xs opacity-90" style="color: #C9C3FF !important; opacity: 0.9 !important;">
-                    Diagnóstico completo con GPT-4 Vision. Incluye análisis detallado, recomendaciones personalizadas y descarga del resultado. Pago único de $1900 ARS.
+                  <div class="preloader-inline" aria-hidden="true">
+                    <img src="https://s3.ca-central-1.amazonaws.com/test-public-420/loader.png" alt="" width="120" height="120" />
+                  </div>
+                  <p class="text-xs opacity-90" style="color: #C9C3FF !important; opacity: 0.85 !important;">
+                    Para chatear con Sensei necesitás la app GrowAi. No se ofrece pago por diagnóstico en este sitio.
                   </p>
-                  <div
-                    id="diagnostic-section-feedback"
-                    class="hidden rounded-2xl border border-accent/30 bg-primary/70 px-4 py-3 text-sm text-textPrimary/80"
-                  ></div>
-                </form>
+                  <a
+                    href="#descargar"
+                    class="inline-flex items-center justify-center gap-2 rounded-full bg-[#8B6ED0] text-white font-bold px-5 py-3 shadow-[0_4px_20px_rgba(139,110,208,0.4)] hover:bg-[#9B7EE0] hover:shadow-[0_6px_25px_rgba(139,110,208,0.5)] transition text-center"
+                  >
+                    Ir a descargar la app
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -1175,7 +1090,7 @@
               <ul class="space-y-3 text-sm flex-grow">
                 <li class="flex gap-3 items-start">
                   <span class="text-success text-lg">✓</span>
-                  <span style="color: #1B0F2A;">10 diagnósticos IA por mes</span>
+                  <span style="color: #1B0F2A;">10 chats con Sensei por mes</span>
                 </li>
                 <li class="flex gap-3 items-start">
                   <span class="text-success text-lg">✓</span>
@@ -1221,7 +1136,7 @@
               <ul class="space-y-3 text-sm flex-grow">
                 <li class="flex gap-3 items-start">
                   <span class="text-accent text-lg">✓</span>
-                  <span style="color: #1B0F2A;">Diagnósticos IA ilimitados</span>
+                  <span style="color: #1B0F2A;">Chats con Sensei ilimitados</span>
                 </li>
                 <li class="flex gap-3 items-start">
                   <span class="text-accent text-lg">✓</span>
@@ -1501,6 +1416,7 @@
           <ul class="space-y-2 text-sm text-textPrimary/70">
             <li><a class="hover:text-white transition" href="#inicio">Inicio</a></li>
             <li><a class="hover:text-white transition" href="#funciones">Funciones</a></li>
+            <li><a class="hover:text-white transition" href="#sensei">Sensei</a></li>
             <li><a class="hover:text-white transition" href="#planes">Planes</a></li>
             <li><a class="hover:text-white transition" href="#descargar">Descargar</a></li>
             <li><a class="hover:text-white transition" href="#contacto">Contacto</a></li>
@@ -1538,7 +1454,6 @@
       const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
       const closeMenuButton = document.getElementById('close-menu-button');
       const menuIcon = document.getElementById('menu-icon');
-      const heroDiagnosticForm = document.getElementById('hero-diagnostic-form');
       
       function openMobileMenu() {
         mobileMenu.classList.remove('hidden');
@@ -1555,20 +1470,6 @@
         menuButton.setAttribute('aria-expanded', 'false');
         menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>';
       }
-      const heroImageInput = document.getElementById('hero-image');
-      const heroImageLabel = document.getElementById('hero-image-label');
-      const heroDiagnosticFeedback = document.getElementById('hero-diagnostic-feedback');
-      const heroDiagnosticSubmit = document.getElementById('hero-diagnostic-submit');
-      const diagnosticForm = document.getElementById('diagnostic-form');
-      const diagnosticResult = document.getElementById('diagnostic-result');
-      const diagnosticSummary = document.getElementById('diagnostic-summary');
-      const diagnosticSubmit = document.getElementById('diagnostic-submit');
-      const diagnosticSectionForm = document.getElementById('diagnostic-section-form');
-      const diagnosticSectionImageInput = document.getElementById('diagnostic-section-image');
-      const diagnosticSectionImageLabel = document.getElementById('diagnostic-section-image-label');
-      const diagnosticSectionFeedback = document.getElementById('diagnostic-section-feedback');
-      const diagnosticSectionSubmit = document.getElementById('diagnostic-section-submit');
-      const defaultDiagnosticSectionLabel = 'Arrastra o selecciona una imagen (obligatorio)';
       const contactForm = document.getElementById('contact-form');
       const contactSubmit = document.getElementById('contact-submit');
 
@@ -1612,1103 +1513,6 @@
           // Cerrar menú móvil si está abierto
           closeMobileMenu();
         });
-      });
-
-      const defaultHeroLabel = 'Arrastra o selecciona una imagen (obligatorio)';
-
-      heroImageInput?.addEventListener('change', () => {
-        const preview = document.getElementById('hero-image-preview');
-        const previewImg = document.getElementById('hero-image-preview-img');
-        const icon = document.getElementById('hero-image-icon');
-        const labelText = document.getElementById('hero-image-label-text');
-        
-        if (heroImageInput.files?.length) {
-          const [file] = heroImageInput.files;
-          
-          // Mostrar vista previa
-          if (preview && previewImg) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              previewImg.src = e.target.result;
-              preview.classList.remove('hidden');
-              if (icon) icon.classList.add('hidden');
-              if (labelText) labelText.textContent = file.name.length > 38 ? `${file.name.slice(0, 35)}...` : file.name;
-            };
-            reader.readAsDataURL(file);
-          }
-        } else {
-          if (preview) preview.classList.add('hidden');
-          if (icon) icon.classList.remove('hidden');
-          if (labelText) labelText.textContent = defaultHeroLabel;
-        }
-      });
-
-      // Configuración de OpenAI (ahora se maneja en el backend)
-      const OPENAI_BACKEND_URL = 'https://us-central1-growapp-36701.cloudfunctions.net/analyzeDiagnostic';
-      
-      // Configuración de pago
-      const DIAGNOSTIC_PRICE = 1900; // Precio en ARS
-      const MERCADOPAGO_PUBLIC_KEY = 'APP_USR-3389cfc1-43fb-4b1c-9fa8-58a1d332403a';
-      
-      // Inicializar Mercado Pago
-      const mp = new MercadoPago(MERCADOPAGO_PUBLIC_KEY, {
-        locale: 'es-AR'
-      });
-      
-      // Estado del diagnóstico
-      let currentDiagnosis = null;
-      let hasPaid = false;
-      let pendingDiagnosticData = null; // Datos pendientes (tipo, etc.)
-      const PENDING_RESULT_KEY = 'pendingDiagnosticResult'; // Diagnóstico ya realizado, oculto hasta confirmar pago
-
-      // Función para convertir imagen a base64
-      function imageToBase64(file) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const base64 = reader.result.split(',')[1];
-            resolve(base64);
-          };
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
-      }
-      
-      // Función para formatear el diagnóstico: quitar markdown y agregar iconos (sin dejar ** que se ven mal)
-      function formatDiagnosis(text) {
-        if (!text) return '';
-        
-        let formatted = text;
-        
-        // Primero quitar TODOS los asteriscos de markdown para evitar "inscripciones raras" (**, *)
-        formatted = formatted.replace(/\*\*/g, '');
-        formatted = formatted.replace(/\*([^*]+)\*/g, '$1');
-        formatted = formatted.replace(/__/g, '');
-        formatted = formatted.replace(/_([^_]+)_/g, '$1');
-        formatted = formatted.replace(/`([^`]+)`/g, '$1');
-        
-        // Agregar iconos a los títulos (ya sin asteriscos)
-        formatted = formatted
-          .replace(/DIAGNÓSTICO PRINCIPAL:\s*/g, '🔍 DIAGNÓSTICO PRINCIPAL:\n')
-          .replace(/PROBLEMAS SECUNDARIOS:\s*/g, '⚠️ PROBLEMAS SECUNDARIOS:\n')
-          .replace(/ETAPA DE CRECIMIENTO:\s*/g, '🌱 ETAPA DE CRECIMIENTO:\n')
-          .replace(/CAUSA PROBABLE:\s*/g, '🔬 CAUSA PROBABLE:\n')
-          .replace(/SEVERIDAD:\s*/g, '📊 SEVERIDAD:\n')
-          .replace(/RECOMENDACIONES INMEDIATAS:\s*/g, '⚡ RECOMENDACIONES INMEDIATAS:\n')
-          .replace(/TRATAMIENTO DETALLADO:\s*/g, '💊 TRATAMIENTO DETALLADO:\n')
-          .replace(/PREVENCIÓN FUTURA:\s*/g, '🛡️ PREVENCIÓN FUTURA:\n')
-          .replace(/MONITOREO:\s*/g, '👀 MONITOREO:\n')
-          .replace(/NIVEL DE CONFIANZA:\s*/g, '🎯 NIVEL DE CONFIANZA:\n');
-        
-        // Remover # de títulos
-        formatted = formatted.replace(/^#+\s*/gm, '');
-        
-        // Convertir listas con - a •
-        formatted = formatted.replace(/^\s*-\s*/gm, '• ');
-        
-        // Remover numeración de listas
-        formatted = formatted.replace(/^\s*\d+\.\s*/gm, '');
-        
-        return formatted.trim();
-      }
-      
-      // Función para descargar el diagnóstico como PDF con estilo GrowAi
-      function downloadDiagnosis(diagnosis, description = '') {
-        try {
-          const { jsPDF } = window.jspdf;
-          const doc = new jsPDF({
-            orientation: 'portrait',
-            unit: 'mm',
-            format: 'a4'
-          });
-          
-          const pageWidth = doc.internal.pageSize.getWidth();
-          const pageHeight = doc.internal.pageSize.getHeight();
-          const margin = 20;
-          const maxWidth = pageWidth - (margin * 2);
-          
-          // Fondo oscuro (simulado con rectángulo)
-          doc.setFillColor(27, 15, 42); // #1B0F2A
-          doc.rect(0, 0, pageWidth, pageHeight, 'F');
-          
-          // Color de texto principal
-          doc.setTextColor(201, 195, 255); // #C9C3FF
-          
-          let yPos = margin;
-          
-          // Título principal
-          doc.setFontSize(24);
-          doc.setFont('helvetica', 'bold');
-          doc.text('GrowAi', margin, yPos);
-          
-          yPos += 10;
-          
-          // Subtítulo
-          doc.setFontSize(12);
-          doc.setFont('helvetica', 'normal');
-          doc.setTextColor(201, 195, 255, 0.8);
-          doc.text('Tu Asistente de Cultivo Inteligente', margin, yPos);
-          
-          yPos += 15;
-          
-          // Línea separadora
-          doc.setDrawColor(139, 110, 208); // #8B6ED0
-          doc.setLineWidth(0.5);
-          doc.line(margin, yPos, pageWidth - margin, yPos);
-          
-          yPos += 10;
-          
-          // Título del diagnóstico
-          doc.setFontSize(18);
-          doc.setFont('helvetica', 'bold');
-          doc.setTextColor(201, 195, 255);
-          doc.text('DIAGNÓSTICO', margin, yPos);
-          
-          yPos += 8;
-          
-          // Fecha
-          const date = new Date().toLocaleString('es-AR', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          });
-          doc.setFontSize(10);
-          doc.setFont('helvetica', 'normal');
-          doc.setTextColor(201, 195, 255, 0.7);
-          doc.text(`Fecha: ${date}`, margin, yPos);
-          
-          yPos += 10;
-          
-          // Descripción si existe
-          if (description && description.trim() !== '' && description !== 'Sin descripción adicional') {
-            doc.setFontSize(12);
-            doc.setFont('helvetica', 'bold');
-            doc.setTextColor(201, 195, 255);
-            doc.text('Descripción:', margin, yPos);
-            yPos += 7;
-            
-            doc.setFontSize(10);
-            doc.setFont('helvetica', 'normal');
-            doc.setTextColor(201, 195, 255, 0.9);
-            const descriptionLines = doc.splitTextToSize(description, maxWidth);
-            doc.text(descriptionLines, margin, yPos);
-            yPos += (descriptionLines.length * 5) + 8;
-          }
-          
-          yPos += 5;
-          
-          // Contenido del diagnóstico
-          doc.setFontSize(12);
-          doc.setFont('helvetica', 'bold');
-          doc.setTextColor(201, 195, 255);
-          doc.text('Análisis:', margin, yPos);
-          yPos += 8;
-          
-          // Formatear diagnóstico
-          const formattedDiagnosis = formatDiagnosis(diagnosis);
-          
-          // Dividir el texto en líneas que quepan en la página
-          doc.setFontSize(10);
-          doc.setFont('helvetica', 'normal');
-          doc.setTextColor(201, 195, 255, 0.95);
-          
-          // Procesar el texto línea por línea para mantener formato
-          const lines = formattedDiagnosis.split('\n');
-          lines.forEach(line => {
-            if (yPos > pageHeight - margin - 20) {
-              doc.addPage();
-              doc.setFillColor(27, 15, 42);
-              doc.rect(0, 0, pageWidth, pageHeight, 'F');
-              yPos = margin;
-            }
-            
-            if (line.trim() === '') {
-              yPos += 4;
-            } else {
-              // Detectar si es un título (líneas que empiezan con emoji o están en mayúsculas)
-              const isTitle = /^[🌱🔍💡⚠️✅❌]/.test(line) || /^[A-ZÁÉÍÓÚÑ\s]+:?$/.test(line.trim());
-              
-              if (isTitle && line.length < 50) {
-                doc.setFont('helvetica', 'bold');
-                doc.setFontSize(11);
-                doc.setTextColor(139, 110, 208); // #8B6ED0 para títulos
-              } else {
-                doc.setFont('helvetica', 'normal');
-                doc.setFontSize(10);
-                doc.setTextColor(201, 195, 255, 0.95);
-              }
-              
-              const textLines = doc.splitTextToSize(line, maxWidth);
-              doc.text(textLines, margin, yPos);
-              yPos += textLines.length * 5;
-            }
-          });
-          
-          yPos += 10;
-          
-          // Línea separadora final
-          if (yPos < pageHeight - margin - 20) {
-            doc.setDrawColor(139, 110, 208);
-            doc.line(margin, yPos, pageWidth - margin, yPos);
-            yPos += 10;
-            
-            // Footer
-            doc.setFontSize(8);
-            doc.setFont('helvetica', 'italic');
-            doc.setTextColor(201, 195, 255, 0.6);
-            doc.text('Generado por GrowAi - www.growai.app', margin, yPos);
-          }
-          
-          // Descargar PDF
-          const fileName = `diagnostico-growai-${Date.now()}.pdf`;
-          doc.save(fileName);
-          
-          // No afectar el diagnóstico mostrado en la página
-          return true;
-        } catch (error) {
-          console.error('Error al generar PDF:', error);
-          // Fallback a descarga de texto si falla el PDF
-          const date = new Date().toLocaleString('es-AR');
-          const content = `DIAGNÓSTICO GROWAI
-Fecha: ${date}
-${description ? `Descripción: ${description}\n\n` : ''}
-${formatDiagnosis(diagnosis)}
-
----
-Generado por GrowAi - Tu Asistente de Cultivo Inteligente
-www.growai.app
-`;
-          
-          const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `diagnostico-growai-${Date.now()}.txt`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        }
-      }
-      
-      // Función para crear preferencia de pago
-      async function createPaymentPreference() {
-        try {
-          // URL del endpoint de Firebase Functions
-          // Reemplaza 'growapp-36701' con tu Project ID de Firebase si es diferente
-          const backendUrl = 'https://us-central1-growapp-36701.cloudfunctions.net/createDiagnosticPaymentPreference';
-          
-          const response = await fetch(backendUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              items: [
-                {
-                  title: 'Diagnóstico con IA - GrowAi',
-                  quantity: 1,
-                  unit_price: DIAGNOSTIC_PRICE,
-                  currency_id: 'ARS'
-                }
-              ],
-              back_urls: {
-                success: window.location.origin + window.location.pathname + '?payment_status=success&inline=true',
-                failure: window.location.origin + window.location.pathname + '?payment_status=failure&inline=true',
-                pending: window.location.origin + window.location.pathname + '?payment_status=pending&inline=true'
-              },
-              auto_return: 'approved',
-              external_reference: `diagnostico-${Date.now()}`
-            })
-          });
-          
-          if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`);
-          }
-          
-          const data = await response.json();
-          console.log('✅ Preferencia creada:', data);
-          
-          // Usar init_point (producción) primero, sino usar checkout_url
-          // NO usar sandbox_init_point en producción
-          const checkoutUrl = data.init_point || data.checkout_url;
-          
-          // Retornar tanto el preference_id como el init_point
-          return {
-            preference_id: data.preference_id,
-            init_point: data.init_point,
-            checkout_url: checkoutUrl
-          };
-        } catch (error) {
-          console.error('❌ Error creando preferencia:', error);
-          // Retornar el error para que se muestre al usuario
-          throw error;
-        }
-      }
-      
-      // Función para mostrar modal de pago con checkout inline
-      async function showPaymentModal(callback, diagnosticData) {
-        // Guardar datos del diagnóstico pendiente
-        pendingDiagnosticData = diagnosticData;
-        
-        // Guardar también en localStorage como respaldo
-        localStorage.setItem('pendingDiagnosticData', JSON.stringify(diagnosticData));
-        
-        // Crear modal de pago con espacio para checkout inline
-        const modal = document.createElement('div');
-        modal.id = 'payment-modal';
-        modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto';
-        modal.innerHTML = `
-          <div class="bg-secondary rounded-3xl p-6 max-w-2xl w-full mx-4 my-8 border border-accent/30" style="background-color: #2A1F3A !important;">
-            <div class="space-y-4">
-              <div class="text-center">
-                <h3 class="text-2xl font-bold" style="color: #C9C3FF !important;">Diagnóstico con IA</h3>
-                <p class="text-sm mt-2" style="color: #C9C3FF !important; opacity: 0.9;">
-                  El diagnóstico con inteligencia artificial tiene un costo de <strong>$${DIAGNOSTIC_PRICE.toLocaleString('es-AR')} ARS</strong>
-                </p>
-              </div>
-              <div class="bg-primary/70 rounded-2xl p-4 space-y-2" style="background-color: rgba(27, 15, 42, 0.7) !important;">
-                <p class="text-xs" style="color: #C9C3FF !important; opacity: 0.8;">
-                  Incluye análisis completo con GPT-4 Vision, recomendaciones personalizadas y descarga del resultado.
-                </p>
-              </div>
-              <div id="checkout-button-container" class="min-h-[400px] flex items-center justify-center">
-                <div class="text-center">
-                  <div class="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto mb-4" style="border-color: #8B6ED0;"></div>
-                  <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.8;">Cargando checkout...</p>
-                </div>
-              </div>
-              <div class="flex gap-3">
-                <button id="cancel-payment" class="flex-1 px-4 py-3 rounded-full font-semibold transition" style="background-color: rgba(27, 15, 42, 0.6) !important; color: #C9C3FF !important; border: 1px solid rgba(201, 195, 255, 0.3);">
-                  Cancelar
-                </button>
-              </div>
-              <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.7;">
-                El pago se procesará de forma segura con Mercado Pago
-              </p>
-            </div>
-          </div>
-        `;
-        
-        document.body.appendChild(modal);
-        
-        // Intentar crear preferencia e inicializar checkout inline
-        try {
-          const preferenceData = await createPaymentPreference();
-          
-          console.log('📦 Datos de preferencia recibidos:', preferenceData);
-          
-          if (!preferenceData) {
-            throw new Error('No se recibió respuesta del servidor');
-          }
-          
-          if (!preferenceData.preference_id) {
-            throw new Error('No se recibió el ID de preferencia');
-          }
-          
-          console.log('🔍 Preference ID:', preferenceData.preference_id);
-          
-          // Usar init_point para abrir en iframe dentro del modal
-          const checkoutUrl = preferenceData.init_point || preferenceData.checkout_url;
-          
-          if (!checkoutUrl) {
-            throw new Error('No se recibió URL de checkout. Verifica la configuración de Mercado Pago.');
-          }
-          
-          console.log('🔗 URL de checkout:', checkoutUrl);
-          
-          // Crear iframe para el checkout dentro del modal
-          const buttonContainer = document.getElementById('checkout-button-container');
-          if (!buttonContainer) {
-            throw new Error('No se encontró el contenedor del checkout');
-          }
-          
-          // Limpiar y crear iframe
-          buttonContainer.innerHTML = `
-            <div class="w-full" style="min-height: 600px;">
-              <iframe 
-                id="mp-checkout-iframe"
-                src="${checkoutUrl}"
-                style="width: 100%; height: 600px; border: none; border-radius: 12px;"
-                allow="payment"
-              ></iframe>
-            </div>
-          `;
-          
-          // Escuchar mensajes del iframe (Mercado Pago puede comunicarse via postMessage)
-          window.addEventListener('message', async (event) => {
-            // Verificar origen de Mercado Pago
-            if (event.origin.includes('mercadopago.com') || event.origin.includes('mercadolibre.com')) {
-              console.log('📨 Mensaje de Mercado Pago:', event.data);
-              
-              // Si el pago fue exitoso
-              if (event.data && (event.data.type === 'mp-payment-success' || event.data.status === 'approved')) {
-                console.log('✅ Pago exitoso detectado');
-                
-                // Cerrar modal
-                document.body.removeChild(modal);
-                
-                // Procesar diagnóstico inmediatamente
-                if (pendingDiagnosticData) {
-                  await processDiagnostic(pendingDiagnosticData.type);
-                  pendingDiagnosticData = null;
-                  localStorage.removeItem('pendingDiagnosticData');
-                }
-              }
-            }
-          });
-          
-          // También verificar periódicamente si el pago fue exitoso
-          // Esto es un respaldo en caso de que el postMessage no funcione
-          const checkPaymentInterval = setInterval(async () => {
-            try {
-              // Verificar si hay un parámetro de pago exitoso en la URL del iframe
-              const iframe = document.getElementById('mp-checkout-iframe');
-              if (iframe && iframe.contentWindow) {
-                try {
-                  const iframeUrl = iframe.contentWindow.location.href;
-                  if (iframeUrl.includes('payment_status=success') || iframeUrl.includes('status=approved')) {
-                    clearInterval(checkPaymentInterval);
-                    console.log('✅ Pago exitoso detectado en iframe');
-                    
-                    // Cerrar modal
-                    document.body.removeChild(modal);
-                    
-                    // Procesar diagnóstico
-                    if (pendingDiagnosticData) {
-                      await processDiagnostic(pendingDiagnosticData.type);
-                      pendingDiagnosticData = null;
-                      localStorage.removeItem('pendingDiagnosticData');
-                    }
-                  }
-                } catch (e) {
-                  // Error de CORS al acceder al iframe, es normal
-                }
-              }
-            } catch (error) {
-              console.error('Error verificando pago:', error);
-            }
-          }, 2000);
-          
-          // Limpiar intervalo cuando se cierre el modal
-          const cancelButton = document.getElementById('cancel-payment');
-          if (cancelButton) {
-            cancelButton.addEventListener('click', () => {
-              clearInterval(checkPaymentInterval);
-              document.body.removeChild(modal);
-              pendingDiagnosticData = null;
-              localStorage.removeItem('pendingDiagnosticData');
-              localStorage.removeItem(PENDING_RESULT_KEY);
-            });
-          }
-          
-          // Cerrar modal al hacer clic fuera
-          modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-              clearInterval(checkPaymentInterval);
-              document.body.removeChild(modal);
-              pendingDiagnosticData = null;
-              localStorage.removeItem('pendingDiagnosticData');
-              localStorage.removeItem(PENDING_RESULT_KEY);
-            }
-          });
-        } catch (error) {
-          console.error('❌ Error inicializando pago:', error);
-          const errorMessage = error.message || 'Error al inicializar el pago. Por favor, intenta nuevamente.';
-          document.getElementById('checkout-button-container').innerHTML = `
-            <div class="space-y-2">
-              <p class="text-sm font-semibold" style="color: #FF6B6B !important;">
-                Error al inicializar el pago
-              </p>
-              <p class="text-xs" style="color: #C9C3FF !important; opacity: 0.8;">
-                ${errorMessage}
-              </p>
-              <button 
-                id="retry-payment" 
-                class="mt-2 px-4 py-2 rounded-full text-sm font-semibold transition" 
-                style="background-color: #8B6ED0 !important; color: #FFFFFF !important;"
-              >
-                Reintentar
-              </button>
-            </div>
-          `;
-          
-          // Agregar listener para reintentar
-          const retryButton = document.getElementById('retry-payment');
-          if (retryButton) {
-            retryButton.addEventListener('click', async () => {
-              document.getElementById('checkout-button-container').innerHTML = `
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto" style="border-color: #8B6ED0;"></div>
-              `;
-              // Reintentar crear preferencia
-              try {
-                const preferenceData = await createPaymentPreference();
-                
-                if (preferenceData && preferenceData.preference_id) {
-                  const checkoutUrl = preferenceData.init_point || preferenceData.checkout_url;
-                  
-                  if (checkoutUrl) {
-                    const buttonContainer = document.getElementById('checkout-button-container');
-                    if (buttonContainer) {
-                      buttonContainer.innerHTML = `
-                        <div class="w-full" style="min-height: 600px;">
-                          <iframe 
-                            id="mp-checkout-iframe"
-                            src="${checkoutUrl}"
-                            style="width: 100%; height: 600px; border: none; border-radius: 12px;"
-                            allow="payment"
-                          ></iframe>
-                        </div>
-                      `;
-                    }
-                  }
-                }
-              } catch (retryError) {
-                console.error('❌ Error en reintento:', retryError);
-                document.getElementById('checkout-button-container').innerHTML = `
-                  <p class="text-sm" style="color: #FF6B6B !important;">
-                    ${retryError.message || 'Error al crear preferencia. Por favor, intenta más tarde.'}
-                  </p>
-                `;
-              }
-            });
-          }
-        }
-        
-        // Event listeners
-        modal.querySelector('#cancel-payment').addEventListener('click', () => {
-          document.body.removeChild(modal);
-          pendingDiagnosticData = null;
-          localStorage.removeItem(PENDING_RESULT_KEY);
-        });
-        
-        // Cerrar al hacer click fuera
-        modal.addEventListener('click', (e) => {
-          if (e.target === modal) {
-            document.body.removeChild(modal);
-            pendingDiagnosticData = null;
-            localStorage.removeItem(PENDING_RESULT_KEY);
-          }
-        });
-      }
-      
-      // Función para verificar el estado del pago
-      function checkPaymentStatus() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const paymentStatus = urlParams.get('payment_status');
-        const paymentId = urlParams.get('payment_id');
-        const preferenceId = urlParams.get('preference_id');
-        const isInline = urlParams.get('inline') === 'true';
-        
-        // Si es un pago desde iframe inline, procesar inmediatamente sin mostrar modal
-        if (isInline && paymentStatus === 'success' && paymentId) {
-          // Cerrar modal de pago si está abierto
-          const paymentModal = document.getElementById('payment-modal');
-          if (paymentModal) {
-            document.body.removeChild(paymentModal);
-          }
-          
-          // Recuperar datos del diagnóstico
-          const savedDiagnosticData = localStorage.getItem('pendingDiagnosticData');
-          if (savedDiagnosticData) {
-            try {
-              const diagnosticData = JSON.parse(savedDiagnosticData);
-              pendingDiagnosticData = diagnosticData;
-              
-              // Procesar diagnóstico inmediatamente
-              processDiagnostic(diagnosticData.type).then(() => {
-                localStorage.removeItem('pendingDiagnosticData');
-                // Limpiar URL
-                window.history.replaceState({}, document.title, window.location.pathname);
-              });
-              return;
-            } catch (error) {
-              console.error('Error al recuperar datos del diagnóstico:', error);
-            }
-          }
-        }
-        
-        if (paymentStatus === 'success' && paymentId) {
-          // Pago exitoso
-          hasPaid = true;
-          
-          // Guardar estado de pago en localStorage
-          localStorage.setItem('hasPaid', 'true');
-          
-          // Limpiar URL
-          window.history.replaceState({}, document.title, window.location.pathname);
-          
-          // Recuperar datos del diagnóstico desde localStorage
-          const savedDiagnosticData = localStorage.getItem('pendingDiagnosticData');
-          if (savedDiagnosticData) {
-            try {
-              const diagnosticData = JSON.parse(savedDiagnosticData);
-              pendingDiagnosticData = diagnosticData;
-              
-              // Mostrar mensaje de éxito breve y procesar automáticamente
-              const successModal = document.createElement('div');
-              successModal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50';
-              successModal.innerHTML = `
-                <div class="bg-secondary rounded-3xl p-8 max-w-md w-full mx-4 border border-accent/30" style="background-color: #2A1F3A !important;">
-                  <div class="text-center space-y-4">
-                    <div class="text-6xl">✅</div>
-                    <h3 class="text-2xl font-bold" style="color: #C9C3FF !important;">Pago Exitoso</h3>
-                    <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
-                      Generando tu diagnóstico...
-                    </p>
-                    <div class="flex justify-center">
-                      <div class="animate-spin rounded-full h-8 w-8 border-b-2" style="border-color: #8B6ED0;"></div>
-                    </div>
-                  </div>
-                </div>
-              `;
-              
-              document.body.appendChild(successModal);
-              
-              // Procesar diagnóstico automáticamente después de un breve delay
-              setTimeout(async () => {
-                document.body.removeChild(successModal);
-                await processDiagnostic(diagnosticData.type);
-                // Limpiar datos guardados después de procesar
-                localStorage.removeItem('pendingDiagnosticData');
-              }, 500);
-            } catch (error) {
-              console.error('Error al recuperar datos del diagnóstico:', error);
-              localStorage.removeItem('pendingDiagnosticData');
-            }
-          } else {
-            // Si no hay datos guardados, solo mostrar mensaje de éxito
-            const successModal = document.createElement('div');
-            successModal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50';
-            successModal.innerHTML = `
-              <div class="bg-secondary rounded-3xl p-8 max-w-md w-full mx-4 border border-accent/30" style="background-color: #2A1F3A !important;">
-                <div class="text-center space-y-4">
-                  <div class="text-6xl">✅</div>
-                  <h3 class="text-2xl font-bold" style="color: #C9C3FF !important;">Pago Exitoso</h3>
-                  <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
-                    Tu pago ha sido procesado correctamente. Ahora puedes generar tu diagnóstico.
-                  </p>
-                  <button id="close-success" class="w-full px-4 py-3 rounded-full font-semibold transition" style="background-color: #8B6ED0 !important; color: #FFFFFF !important;">
-                    Continuar
-                  </button>
-                </div>
-              </div>
-            `;
-            
-            document.body.appendChild(successModal);
-            
-            successModal.querySelector('#close-success').addEventListener('click', () => {
-              document.body.removeChild(successModal);
-            });
-          }
-        } else if (paymentStatus === 'failure') {
-          // Pago fallido
-          window.history.replaceState({}, document.title, window.location.pathname);
-          localStorage.removeItem('pendingDiagnosticData');
-          localStorage.removeItem(PENDING_RESULT_KEY);
-          alert('El pago no pudo ser procesado. Por favor, intenta nuevamente.');
-        } else if (paymentStatus === 'pending') {
-          // Pago pendiente
-          window.history.replaceState({}, document.title, window.location.pathname);
-          localStorage.removeItem(PENDING_RESULT_KEY);
-          alert('Tu pago está siendo procesado. Te notificaremos cuando esté confirmado.');
-        }
-      }
-      
-      // Verificar estado de pago guardado al cargar la página
-      const savedHasPaid = localStorage.getItem('hasPaid');
-      if (savedHasPaid === 'true') {
-        hasPaid = true;
-      }
-      
-      // Verificar estado de pago al cargar la página
-      checkPaymentStatus();
-
-      // Prompt 100% botánico/agronómico (sin palabras que activen políticas de contenido).
-      function buildDiagnosticPrompt(userDescription) {
-        return `Eres un fitopatólogo y agrónomo. Analiza la imagen de la PLANTA que te envío y da un diagnóstico de salud, nutrición, plagas y enfermedades.
-
-CONOCIMIENTO TÉCNICO:
-
-NUTRICIÓN: Deficiencias o excesos de N, P, K, Ca, Mg, Fe, Zn, Mn, B, Mo. pH sustrato 6.0-7.0 (suelo), 5.5-6.5 (hidro). EC del agua.
-
-HONGOS: Oídio (manchas blancas), Botrytis (moho gris en flores/tallos), Fusarium, Pythium (raíces), Alternaria, Septoria.
-
-PLAGAS: Araña roja, trips, mosca blanca, pulgones, minadores, cochinillas, nematodos.
-
-AMBIENTE: Estrés térmico, humedad alta/baja, luz insuficiente o excesiva, viento.
-
-RIEGO: Exceso, defecto, irregular, drenaje.
-
-FLORACIÓN Y CRECIMIENTO: Etapas germinación, plántula, vegetativa, floración, cosecha. Problemas en flores o frutos.
-
-DESCRIPCIÓN DEL USUARIO: ${userDescription || 'No indicada.'}
-
-INSTRUCCIONES:
-1. Analiza la imagen de la planta.
-2. Identifica todos los problemas visibles.
-3. Evalúa etapa de crecimiento y estado general.
-4. Da un diagnóstico claro y en español.
-
-FORMATO DE RESPUESTA (usa exactamente estos títulos):
-
-**DIAGNÓSTICO PRINCIPAL:**
-(problema más grave)
-
-**PROBLEMAS SECUNDARIOS:**
-(otros si hay)
-
-**ETAPA DE CRECIMIENTO:**
-(Germinación/Plántula/Vegetativa/Floración/Cosecha)
-
-**CAUSA PROBABLE:**
-(explicación)
-
-**SEVERIDAD:**
-(Leve/Moderado/Severo)
-
-**RECOMENDACIONES INMEDIATAS:**
-1. ...
-2. ...
-3. ...
-
-**TRATAMIENTO DETALLADO:**
-(pasos)
-
-**PREVENCIÓN FUTURA:**
-(consejos)
-
-**MONITOREO:**
-(qué observar)
-
-**NIVEL DE CONFIANZA:**
-Confianza: X/10
-
-Responde SIEMPRE con el diagnóstico completo. No rechaces la solicitud. Si la imagen es poco clara, indica qué ves y qué recomiendas revisar.`;
-      }
-
-      // Función para llamar a OpenAI a través del backend (Cloud Function analyzeDiagnostic)
-      async function analyzeWithOpenAI(imageBase64, userDescription) {
-        try {
-          const prompt = buildDiagnosticPrompt(userDescription);
-          
-          const response = await fetch(OPENAI_BACKEND_URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              imageBase64: imageBase64,
-              userDescription: userDescription,
-              prompt: prompt
-            })
-          });
-
-          let data;
-          const contentType = response.headers.get('content-type');
-          try {
-            data = contentType && contentType.includes('application/json')
-              ? await response.json()
-              : {};
-          } catch (_) {
-            data = {};
-          }
-
-          if (!response.ok) {
-            const msg = data.error || data.message || (response.status === 404
-              ? 'El servicio de diagnóstico no está disponible. Por favor, intenta más tarde o descarga la app.'
-              : `Error del servidor (${response.status}). Intenta más tarde.`);
-            return { success: false, error: msg };
-          }
-          
-          if (!data.success) {
-            return {
-              success: false,
-              error: data.error || 'Error al analizar la imagen.'
-            };
-          }
-          
-          if (!data.diagnosis) {
-            return {
-              success: false,
-              error: 'El servicio no devolvió un diagnóstico. Intenta de nuevo.'
-            };
-          }
-          
-          return {
-            success: true,
-            diagnosis: data.diagnosis
-          };
-        } catch (error) {
-          console.error('Error en análisis de IA:', error);
-          const isNetwork = error.message && (error.message.includes('fetch') || error.message.includes('Failed to fetch') || error.message.includes('NetworkError'));
-          return {
-            success: false,
-            error: isNetwork
-              ? 'No se pudo conectar con el servicio. Revisa tu conexión e intenta de nuevo.'
-              : (error.message || 'Error inesperado. Por favor, intenta nuevamente.')
-          };
-        }
-      }
-
-      heroDiagnosticForm?.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        if (!heroImageInput?.files?.length) {
-          heroDiagnosticFeedback.classList.remove('hidden');
-          heroDiagnosticFeedback.style.color = '#FF6B6B';
-          heroDiagnosticFeedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
-          heroDiagnosticFeedback.textContent = 'Por favor, sube una imagen para continuar con el diagnóstico.';
-          return;
-        }
-
-        // Evitar mostrar un diagnóstico antiguo guardado; forzar flujo de pago o análisis nuevo
-        localStorage.removeItem(PENDING_RESULT_KEY);
-
-        // Hero: siempre mostrar pago primero cuando hay imagen (cada diagnóstico requiere pago)
-        const imageFile = heroImageInput.files[0];
-        const description = '';
-        
-        imageToBase64(imageFile).then(imageBase64 => {
-          const diagnosticData = { 
-            type: 'hero', 
-            description,
-            imageBase64: imageBase64
-          };
-          localStorage.setItem('pendingDiagnosticData', JSON.stringify(diagnosticData));
-          
-          showPaymentModal(async () => {
-            await processDiagnostic('hero');
-          }, diagnosticData);
-        }).catch(error => {
-          console.error('Error al convertir imagen:', error);
-          heroDiagnosticFeedback.classList.remove('hidden');
-          heroDiagnosticFeedback.style.color = '#FF6B6B';
-          heroDiagnosticFeedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
-          heroDiagnosticFeedback.textContent = 'Error al procesar la imagen. Por favor, intenta nuevamente.';
-        });
-      });
-      
-      // Función para mostrar un diagnóstico ya obtenido (tras pago exitoso)
-      function displayStoredDiagnosis(type, diagnosis, description) {
-        const feedback = type === 'hero' ? heroDiagnosticFeedback : diagnosticSectionFeedback;
-        const submit = type === 'hero' ? heroDiagnosticSubmit : diagnosticSectionSubmit;
-        const formattedDiagnosis = formatDiagnosis(diagnosis);
-        currentDiagnosis = diagnosis;
-        feedback.classList.remove('hidden');
-        feedback.style.color = '#4CAF50';
-        feedback.style.borderColor = 'rgba(76, 175, 80, 0.4)';
-        feedback.innerHTML = `
-          <div class="space-y-4">
-            <div class="flex items-center gap-2">
-              <span class="text-2xl">✅</span>
-              <h4 class="font-bold text-lg">Diagnóstico Completado</h4>
-            </div>
-            <div class="diagnosis-result-box bg-[rgba(27,15,42,0.6)] rounded-xl p-4 max-h-96 overflow-y-auto">
-              <pre id="diagnosis-result-text" class="whitespace-pre-wrap text-sm font-sans leading-relaxed" style="color: #F0EEFF;">${formattedDiagnosis}</pre>
-            </div>
-            <button 
-              id="download-diagnosis-${type}"
-              class="w-full px-4 py-3 rounded-full font-semibold transition flex items-center justify-center gap-2"
-              style="background-color: #8B6ED0 !important; color: #FFFFFF !important;"
-              onmouseover="this.style.backgroundColor='#9B7EE0'"
-              onmouseout="this.style.backgroundColor='#8B6ED0'"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-              </svg>
-              Descargar Diagnóstico
-            </button>
-          </div>
-        `;
-        const downloadBtn = document.getElementById(`download-diagnosis-${type}`);
-        if (downloadBtn) {
-          downloadBtn.addEventListener('click', () => downloadDiagnosis(diagnosis, description || ''));
-        }
-        submit.disabled = false;
-        submit.innerHTML = type === 'section' ? 'Generar diagnóstico con IA - $1900' : 'Generar diagnóstico preliminar';
-      }
-
-      // Función para procesar el diagnóstico
-      async function processDiagnostic(type) {
-        const form = type === 'hero' ? heroDiagnosticForm : diagnosticSectionForm;
-        const imageInput = type === 'hero' ? heroImageInput : diagnosticSectionImageInput;
-        const feedback = type === 'hero' ? heroDiagnosticFeedback : diagnosticSectionFeedback;
-        const submit = type === 'hero' ? heroDiagnosticSubmit : diagnosticSectionSubmit;
-        const imageLabel = type === 'hero' ? heroImageLabel : diagnosticSectionImageLabel;
-        const defaultLabel = type === 'hero' ? defaultHeroLabel : defaultDiagnosticSectionLabel;
-
-        // Si hay diagnóstico ya realizado y guardado (tras pago), mostrarlo sin llamar a la API
-        const storedResult = localStorage.getItem(PENDING_RESULT_KEY);
-        if (storedResult) {
-          try {
-            const parsed = JSON.parse(storedResult);
-            if (parsed.type === type && parsed.diagnosis) {
-              localStorage.removeItem(PENDING_RESULT_KEY);
-              displayStoredDiagnosis(type, parsed.diagnosis, parsed.description || '');
-              return;
-            }
-          } catch (e) { /* ignore */ }
-        }
-        
-        submit.disabled = true;
-        submit.innerHTML =
-          '<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3.6-3.6A8 8 0 014 12z"></path></svg><span>Analizando con IA...</span>';
-
-        feedback.classList.remove('hidden');
-        feedback.style.color = '#C9C3FF';
-        feedback.style.borderColor = 'rgba(201, 195, 255, 0.3)';
-        feedback.textContent = '🔄 Analizando imagen con inteligencia artificial... Esto puede tomar unos segundos.';
-
-        try {
-          let imageBase64;
-          let description;
-          
-          // Verificar si hay datos guardados en localStorage (después del pago)
-          const savedDiagnosticData = localStorage.getItem('pendingDiagnosticData');
-          if (savedDiagnosticData) {
-            try {
-              const diagnosticData = JSON.parse(savedDiagnosticData);
-              if (diagnosticData.imageBase64) {
-                // Usar imagen guardada
-                imageBase64 = diagnosticData.imageBase64;
-                description = diagnosticData.description || 'Sin descripción adicional';
-              } else {
-                throw new Error('No se encontró imagen guardada');
-              }
-            } catch (error) {
-              console.error('Error al recuperar datos guardados:', error);
-              // Fallback: usar imagen del input
-              const formData = new FormData(form);
-              const imageFile = imageInput.files[0];
-              if (!imageFile) {
-                throw new Error('No se encontró imagen. Por favor, sube una imagen nuevamente.');
-              }
-              description = '';
-              
-              // Validar tamaño de imagen (máx 10MB)
-              if (imageFile.size > 10 * 1024 * 1024) {
-                throw new Error('La imagen es demasiado grande. Por favor, usa una imagen menor a 10MB.');
-              }
-              
-              imageBase64 = await imageToBase64(imageFile);
-            }
-          } else {
-            // Usar imagen del input (flujo normal sin pago)
-            const formData = new FormData(form);
-            const imageFile = imageInput.files[0];
-            if (!imageFile) {
-              throw new Error('Por favor, sube una imagen para continuar con el diagnóstico.');
-            }
-            description = '';
-            
-            // Validar tamaño de imagen (máx 10MB)
-            if (imageFile.size > 10 * 1024 * 1024) {
-              throw new Error('La imagen es demasiado grande. Por favor, usa una imagen menor a 10MB.');
-            }
-            
-            imageBase64 = await imageToBase64(imageFile);
-          }
-
-          // Llamar a OpenAI
-          const result = await analyzeWithOpenAI(imageBase64, description);
-
-          if (result.success) {
-            currentDiagnosis = result.diagnosis;
-            const formattedDiagnosis = formatDiagnosis(result.diagnosis);
-            
-            feedback.style.color = '#4CAF50';
-            feedback.style.borderColor = 'rgba(76, 175, 80, 0.4)';
-            feedback.innerHTML = `
-              <div class="space-y-4">
-                <div class="flex items-center gap-2">
-                  <span class="text-2xl">✅</span>
-                  <h4 class="font-bold text-lg">Diagnóstico Completado</h4>
-                </div>
-                <div class="diagnosis-result-box bg-[rgba(27,15,42,0.6)] rounded-xl p-4 max-h-96 overflow-y-auto">
-                  <pre id="diagnosis-result-text" class="whitespace-pre-wrap text-sm font-sans leading-relaxed" style="color: #F0EEFF;">${formattedDiagnosis}</pre>
-                </div>
-                <button 
-                  id="download-diagnosis-${type}"
-                  class="w-full px-4 py-3 rounded-full font-semibold transition flex items-center justify-center gap-2"
-                  style="background-color: #8B6ED0 !important; color: #FFFFFF !important;"
-                  onmouseover="this.style.backgroundColor='#9B7EE0'"
-                  onmouseout="this.style.backgroundColor='#8B6ED0'"
-                >
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                  </svg>
-                  Descargar Diagnóstico
-                </button>
-              </div>
-            `;
-            
-            // Descargar PDF automáticamente después de un breve delay
-            setTimeout(() => {
-              downloadDiagnosis(result.diagnosis, description);
-            }, 1000);
-            
-            // Agregar listener al botón de descarga (para descargar nuevamente si se desea)
-            setTimeout(() => {
-              const downloadBtn = document.getElementById(`download-diagnosis-${type}`);
-              if (downloadBtn) {
-                downloadBtn.addEventListener('click', () => {
-                  downloadDiagnosis(result.diagnosis, description);
-                });
-              }
-            }, 100);
-          } else {
-            feedback.style.color = '#FF6B6B';
-            feedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
-            feedback.innerHTML = `
-              <div class="space-y-2">
-                <div class="flex items-center gap-2">
-                  <span class="text-xl">❌</span>
-                  <h4 class="font-bold">Error en el análisis</h4>
-                </div>
-                <p>${result.error}</p>
-                <p class="text-xs opacity-80">Por favor, intenta nuevamente o descarga la app para más opciones.</p>
-              </div>
-            `;
-          }
-        } catch (error) {
-          console.error('Error:', error);
-          feedback.style.color = '#FF6B6B';
-          feedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
-          feedback.innerHTML = `
-            <div class="space-y-2">
-              <div class="flex items-center gap-2">
-                <span class="text-xl">⚠️</span>
-                <h4 class="font-bold">Error</h4>
-              </div>
-              <p>${error.message || 'Ocurrió un error inesperado. Por favor, intenta nuevamente.'}</p>
-            </div>
-          `;
-        } finally {
-          submit.disabled = false;
-          submit.innerHTML = type === 'section' ? 'Generar diagnóstico con IA - $1900' : 'Generar diagnóstico preliminar';
-        }
-      }
-
-      diagnosticForm?.addEventListener('submit', (event) => {
-        event.preventDefault();
-        diagnosticSubmit.disabled = true;
-        diagnosticSubmit.innerHTML =
-          '<svg class="animate-spin h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3.6-3.6A8 8 0 014 12z"></path></svg><span>Analizando...</span>';
-
-        const formData = new FormData(diagnosticForm);
-        const problemType = formData.get('problemType');
-        const description = formData.get('description');
-
-        setTimeout(() => {
-          diagnosticSummary.textContent = `Detectamos posibles indicios relacionados con "${problemType}". Te recomendamos asegurar ventilación adecuada, revisar el pH y registrar la evolución en la app para recibir recomendaciones dinámicas según tus notas: "${description}".`;
-          diagnosticResult.classList.remove('hidden');
-          diagnosticSubmit.disabled = false;
-          diagnosticSubmit.innerHTML = '<span>Obtener recomendación</span>';
-          diagnosticForm.reset();
-        }, 1400);
       });
 
       // Función para mostrar/ocultar el campo de descripción "Otro"
@@ -2916,94 +1720,6 @@ Responde SIEMPRE con el diagnóstico completo. No rechaces la solicitud. Si la i
           contactSubmit.disabled = false;
           contactSubmit.innerHTML = '<span>Quiero recibir novedades</span>';
         }
-      });
-
-      // Manejo del formulario de diagnóstico en la sección diagnóstico
-      diagnosticSectionImageInput?.addEventListener('change', () => {
-        const preview = document.getElementById('diagnostic-section-image-preview');
-        const previewImg = document.getElementById('diagnostic-section-image-preview-img');
-        const icon = document.getElementById('diagnostic-section-image-icon');
-        const labelText = document.getElementById('diagnostic-section-image-label-text');
-        
-        if (diagnosticSectionImageInput.files?.length) {
-          const [file] = diagnosticSectionImageInput.files;
-          
-          // Mostrar vista previa
-          if (preview && previewImg) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              previewImg.src = e.target.result;
-              preview.classList.remove('hidden');
-              if (icon) icon.classList.add('hidden');
-              if (labelText) labelText.textContent = file.name.length > 38 ? `${file.name.slice(0, 35)}...` : file.name;
-            };
-            reader.readAsDataURL(file);
-          }
-        } else {
-          if (preview) preview.classList.add('hidden');
-          if (icon) icon.classList.remove('hidden');
-          if (labelText) labelText.textContent = defaultDiagnosticSectionLabel;
-        }
-      });
-
-      diagnosticSectionForm?.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        if (!diagnosticSectionImageInput?.files?.length) {
-          diagnosticSectionFeedback.classList.remove('hidden');
-          diagnosticSectionFeedback.style.color = '#FF6B6B';
-          diagnosticSectionFeedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
-          diagnosticSectionFeedback.textContent = 'Por favor, sube una imagen para continuar con el diagnóstico.';
-          return;
-        }
-
-        // Evitar mostrar un diagnóstico antiguo guardado
-        localStorage.removeItem(PENDING_RESULT_KEY);
-
-        // Flujo: primero hacer el diagnóstico, guardarlo oculto, luego mostrar pago. Tras pago exitoso se muestra el resultado.
-        if (!hasPaid) {
-          const imageFile = diagnosticSectionImageInput.files[0];
-          if (imageFile.size > 10 * 1024 * 1024) {
-            diagnosticSectionFeedback.classList.remove('hidden');
-            diagnosticSectionFeedback.style.color = '#FF6B6B';
-            diagnosticSectionFeedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
-            diagnosticSectionFeedback.textContent = 'La imagen es demasiado grande. Usa una imagen menor a 10MB.';
-            return;
-          }
-          diagnosticSectionSubmit.disabled = true;
-          diagnosticSectionFeedback.classList.remove('hidden');
-          diagnosticSectionFeedback.style.color = '#C9C3FF';
-          diagnosticSectionFeedback.style.borderColor = 'rgba(201, 195, 255, 0.3)';
-          diagnosticSectionFeedback.textContent = '🔄 Analizando imagen con IA... En cuanto termine deberás abonar $1900 para ver el resultado.';
-          diagnosticSectionSubmit.innerHTML = '<svg class="animate-spin h-5 w-5 text-white inline-block mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3.6-3.6A8 8 0 014 12z"></path></svg><span>Analizando con IA...</span>';
-          try {
-            const imageBase64 = await imageToBase64(imageFile);
-            const result = await analyzeWithOpenAI(imageBase64, '');
-            if (result.success) {
-              const diagnosticData = { type: 'section' };
-              const resultToStore = { type: 'section', diagnosis: result.diagnosis, description: '' };
-              localStorage.setItem('pendingDiagnosticData', JSON.stringify(diagnosticData));
-              localStorage.setItem(PENDING_RESULT_KEY, JSON.stringify(resultToStore));
-              pendingDiagnosticData = diagnosticData;
-              showPaymentModal(async () => {
-                await processDiagnostic('section');
-              }, diagnosticData);
-            } else {
-              diagnosticSectionFeedback.style.color = '#FF6B6B';
-              diagnosticSectionFeedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
-              diagnosticSectionFeedback.innerHTML = '<span class="font-semibold">Error en el análisis</span><br><span>' + (result.error || 'Intenta nuevamente.') + '</span>';
-            }
-          } catch (error) {
-            console.error('Error:', error);
-            diagnosticSectionFeedback.style.color = '#FF6B6B';
-            diagnosticSectionFeedback.style.borderColor = 'rgba(255, 107, 107, 0.4)';
-            diagnosticSectionFeedback.textContent = error.message || 'Error al analizar. Por favor, intenta nuevamente.';
-          }
-          diagnosticSectionSubmit.disabled = false;
-          diagnosticSectionSubmit.innerHTML = 'Generar diagnóstico con IA - $1900';
-          return;
-        }
-
-        await processDiagnostic('section');
       });
     </script>
   </body>
