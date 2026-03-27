@@ -320,6 +320,182 @@
         to { transform: rotate(360deg); }
       }
       
+      /* Escena hero: sol + maceta + riego; cabeza = hoja giratoria (sustituye pétalos) */
+      .hero-grow-wrap {
+        width: 100%;
+        max-width: 340px;
+      }
+      .hero-grow-scene {
+        position: relative;
+        width: 100%;
+        height: 220px;
+        margin: 0 auto;
+        --hgs-soil: #6d4c41;
+        --hgs-pot: #8d6e63;
+        --hgs-leaf: #66bb6a;
+      }
+      .hero-grow-scene .sun {
+        position: absolute;
+        top: 4px;
+        right: 8%;
+        width: 64px;
+        height: 64px;
+        z-index: 2;
+      }
+      .hero-grow-scene .sunrays {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: repeating-conic-gradient(
+          from 0deg,
+          rgba(255, 213, 79, 0.95) 0deg 8deg,
+          rgba(255, 213, 79, 0.15) 8deg 16deg
+        );
+        animation: hero-sun-spin 12s linear infinite;
+      }
+      .hero-grow-scene .sun .circle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 30px;
+        height: 30px;
+        margin: -15px 0 0 -15px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 35%, #fff9c4, #ffc107 55%, #ff8f00);
+        box-shadow: 0 0 12px rgba(255, 193, 7, 0.7);
+        z-index: 1;
+      }
+      @keyframes hero-sun-spin {
+        to { transform: rotate(360deg); }
+      }
+      .hero-grow-scene .ground-shadow {
+        position: absolute;
+        bottom: 44px;
+        left: 50%;
+        width: 110px;
+        height: 14px;
+        margin-left: -55px;
+        background: rgba(27, 15, 42, 0.14);
+        border-radius: 50%;
+        filter: blur(2px);
+      }
+      .hero-grow-scene .pot {
+        position: absolute;
+        bottom: 28px;
+        left: 50%;
+        width: 76px;
+        height: 50px;
+        margin-left: -38px;
+        background: linear-gradient(90deg, #a1887f, var(--hgs-pot) 40%, #5d4037);
+        clip-path: polygon(12% 0, 88% 0, 100% 100%, 0 100%);
+        border-radius: 0 0 10px 10px;
+        box-shadow: inset 0 -8px 0 rgba(0, 0, 0, 0.12);
+        z-index: 1;
+      }
+      .hero-grow-scene .pot::after {
+        content: "";
+        position: absolute;
+        top: 6px;
+        left: 8px;
+        right: 8px;
+        height: 8px;
+        border-radius: 2px;
+        background: var(--hgs-soil);
+        opacity: 0.85;
+      }
+      .hero-grow-scene .water-jar {
+        position: absolute;
+        bottom: 36px;
+        left: calc(50% - 86px);
+        width: 30px;
+        height: 44px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(200, 230, 255, 0.5));
+        border: 2px solid rgba(139, 110, 208, 0.45);
+        border-radius: 6px 6px 10px 10px;
+        z-index: 2;
+      }
+      .hero-grow-scene .water-jar::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        width: 14px;
+        height: 8px;
+        margin-left: -7px;
+        background: rgba(139, 110, 208, 0.35);
+        border-radius: 4px 4px 0 0;
+      }
+      .hero-grow-scene .water {
+        position: absolute;
+        bottom: 52px;
+        left: calc(50% - 62px);
+        width: 3px;
+        height: 0;
+        background: linear-gradient(180deg, rgba(100, 181, 246, 0.9), rgba(33, 150, 243, 0.85));
+        border-radius: 2px;
+        transform-origin: top center;
+        transform: rotate(58deg);
+        animation: hero-water-flow 2.2s ease-in-out infinite;
+        z-index: 1;
+      }
+      @keyframes hero-water-flow {
+        0%,
+        100% {
+          height: 0;
+          opacity: 0.4;
+        }
+        40%,
+        60% {
+          height: 36px;
+          opacity: 1;
+        }
+      }
+      .hero-grow-scene .flower {
+        position: absolute;
+        bottom: 76px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 3;
+      }
+      .hero-grow-scene .stem-leaf {
+        position: relative;
+        display: flex;
+        justify-content: center;
+      }
+      .hero-grow-scene .stem {
+        width: 5px;
+        height: 42px;
+        background: linear-gradient(180deg, #81c784, #2e7d32);
+        border-radius: 3px;
+      }
+      .hero-grow-scene .leaf {
+        position: absolute;
+        top: 10px;
+        left: -22px;
+        width: 24px;
+        height: 14px;
+        background: var(--hgs-leaf);
+        border-radius: 0 100% 0 100%;
+        transform: rotate(-16deg);
+        box-shadow: inset -2px -2px 0 rgba(0, 0, 0, 0.08);
+      }
+      .hero-grow-scene .flower-head-loader {
+        margin-bottom: -4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        filter: drop-shadow(0 2px 4px rgba(27, 15, 42, 0.2));
+      }
+      .hero-grow-scene .flower-head-loader img {
+        width: 52px;
+        height: auto;
+        display: block;
+        animation: sensei-loader-rotation 2s linear infinite;
+      }
+      
       /* Sección FUNCIONES - OSCURA */
       section[id="funciones"] {
         background-color: #1B0F2A !important;
@@ -746,6 +922,32 @@
             <p class="text-base md:text-lg text-textPrimary/85 max-w-2xl leading-relaxed">
               Gestioná tus plantas, diagnosticá problemas y mejorá tus resultados desde una sola app.
             </p>
+            <div class="hero-grow-wrap pt-2 pb-1" aria-hidden="true">
+              <div class="hero-grow-scene">
+                <div class="sun">
+                  <div class="sunrays"></div>
+                  <div class="circle"></div>
+                </div>
+                <div class="ground-shadow"></div>
+                <div class="pot"></div>
+                <div class="water-jar"></div>
+                <div class="water"></div>
+                <div class="flower">
+                  <div class="flower-head-loader">
+                    <img
+                      src="https://s3.ca-central-1.amazonaws.com/test-public-420/loader.png"
+                      alt=""
+                      width="52"
+                      height="52"
+                    />
+                  </div>
+                  <div class="stem-leaf">
+                    <div class="stem"></div>
+                    <div class="leaf"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="flex flex-col items-start gap-3 pt-1">
               <a
                 href="#descargar"
