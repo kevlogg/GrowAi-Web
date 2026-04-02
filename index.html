@@ -157,58 +157,187 @@
       }
       
       /* Panel izquierdo - Textos oscuros sobre fondo claro */
-      main[id="inicio"] > section > div > div:first-child h1,
-      main[id="inicio"] > section > div > div:first-child h2,
-      main[id="inicio"] > section > div > div:first-child h3,
-      main[id="inicio"] > section > div > div:first-child p,
-      main[id="inicio"] > section > div > div:first-child span {
+      main[id="inicio"] .hero-inicio-copy h1,
+      main[id="inicio"] .hero-inicio-copy h2,
+      main[id="inicio"] .hero-inicio-copy h3,
+      main[id="inicio"] .hero-inicio-copy p,
+      main[id="inicio"] .hero-inicio-copy span {
         color: #1B0F2A !important;
       }
       
-      main[id="inicio"] > section > div > div:first-child .text-textPrimary,
-      main[id="inicio"] > section > div > div:first-child .text-textPrimary\/70,
-      main[id="inicio"] > section > div > div:first-child .text-textPrimary\/60,
-      main[id="inicio"] > section > div > div:first-child .text-white {
+      main[id="inicio"] .hero-inicio-copy .text-textPrimary,
+      main[id="inicio"] .hero-inicio-copy .text-textPrimary\/70,
+      main[id="inicio"] .hero-inicio-copy .text-textPrimary\/60,
+      main[id="inicio"] .hero-inicio-copy .text-white {
         color: #1B0F2A !important;
       }
       
-      main[id="inicio"] > section > div > div:first-child .text-textPrimary\/70 {
+      main[id="inicio"] .hero-inicio-copy .text-textPrimary\/70 {
         opacity: 0.75;
       }
       
-      main[id="inicio"] > section > div > div:first-child .text-textPrimary\/60 {
+      main[id="inicio"] .hero-inicio-copy .text-textPrimary\/60 {
         opacity: 0.65;
       }
       
       /* Badge del panel izquierdo */
-      main[id="inicio"] > section > div > div:first-child .bg-secondary\/70 {
+      main[id="inicio"] .hero-inicio-copy .bg-secondary\/70 {
         background-color: rgba(27, 15, 42, 0.2) !important;
         color: #1B0F2A !important;
         border-color: rgba(27, 15, 42, 0.3) !important;
       }
       
       /* Botón descargar del panel izquierdo */
-      main[id="inicio"] > section > div > div:first-child .bg-accent {
+      main[id="inicio"] .hero-inicio-copy .bg-accent {
         background-color: #1B0F2A !important;
         color: #C9C3FF !important;
         box-shadow: 0 4px 20px rgba(27, 15, 42, 0.3);
       }
       
       /* Elementos de estadísticas del panel izquierdo */
-      main[id="inicio"] > section > div > div:first-child .text-white {
+      main[id="inicio"] .hero-inicio-copy .text-white {
         color: #1B0F2A !important;
         font-weight: 700;
       }
       
       /* Título principal más oscuro para mejor contraste */
-      main[id="inicio"] > section > div > div:first-child h1 {
+      main[id="inicio"] .hero-inicio-copy h1 {
         color: #0A0515 !important;
         font-weight: 800;
       }
       
       /* Marcas ✔ de beneficios (excepción al color global de span) */
-      main[id="inicio"] > section > div > div:first-child .hero-benefit-mark {
+      main[id="inicio"] .hero-inicio-copy .hero-benefit-mark {
         color: #4CAF50 !important;
+      }
+
+      /* Hero: grilla inicio + foco mirando hacia abajo (alineado al chip) */
+      main[id="inicio"] .hero-inicio-grid {
+        width: 100%;
+        display: grid;
+        gap: 2rem 2.5rem;
+        align-items: start;
+      }
+      @media (min-width: 1024px) {
+        main[id="inicio"] .hero-inicio-grid {
+          grid-template-columns: minmax(0, 1fr) minmax(240px, 400px);
+          gap: 2rem 3rem;
+        }
+      }
+      main[id="inicio"] .hero-inicio-bulb {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.35rem;
+        padding-top: 0;
+        align-self: start;
+      }
+      @media (min-width: 1024px) {
+        main[id="inicio"] .hero-inicio-bulb {
+          display: flex;
+        }
+      }
+      main[id="inicio"] light-bulb.hero-light-bulb {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+      }
+      main[id="inicio"] light-bulb.hero-light-bulb .hero-bulb-svg-wrap {
+        order: 0;
+        transform: rotate(180deg);
+        transform-origin: center center;
+        line-height: 0;
+      }
+      main[id="inicio"] light-bulb.hero-light-bulb svg.bulb {
+        height: clamp(168px, 22vw, 220px);
+        width: auto;
+        display: block;
+      }
+      main[id="inicio"] light-bulb.hero-light-bulb .glow {
+        position: relative;
+        order: 1;
+        width: min(280px, 85vw);
+        height: 160px;
+        margin: -0.35rem auto 0;
+        border-radius: 50%;
+        background: radial-gradient(
+          ellipse 75% 55% at 50% 0%,
+          rgba(255, 224, 100, 0.52) 0%,
+          rgba(255, 210, 80, 0.18) 42%,
+          rgba(255, 210, 80, 0) 72%
+        );
+        opacity: 0;
+        transition: opacity 0.55s ease;
+        pointer-events: none;
+      }
+      main[id="inicio"] light-bulb.hero-light-bulb[status="on"] .glow {
+        opacity: 1;
+      }
+      main[id="inicio"] toggle-switch.hero-bulb-toggle {
+        display: block;
+        height: 35px;
+        width: 80px;
+        position: relative;
+        border-radius: 22px;
+        border: 1px solid rgba(27, 15, 42, 0.35);
+        background: rgba(255, 255, 255, 0.35);
+        cursor: pointer;
+      }
+      main[id="inicio"] toggle-switch.hero-bulb-toggle input[type="checkbox"] {
+        height: 0;
+        width: 0;
+        opacity: 0;
+        position: absolute;
+        margin: 0;
+      }
+      main[id="inicio"] toggle-switch.hero-bulb-toggle label {
+        display: block;
+        height: 100%;
+        width: 100%;
+        cursor: pointer;
+        user-select: none;
+      }
+      main[id="inicio"] toggle-switch.hero-bulb-toggle::before {
+        content: "";
+        height: 25px;
+        width: 25px;
+        position: absolute;
+        left: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: #1b0f2a;
+        border-radius: 12px;
+        pointer-events: none;
+        z-index: 10;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      main[id="inicio"] toggle-switch.hero-bulb-toggle::after {
+        content: "OFF";
+        position: absolute;
+        display: block;
+        left: 40px;
+        top: 0;
+        bottom: 0;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 35px;
+        color: #1b0f2a;
+        pointer-events: none;
+        z-index: 5;
+        transition: left 0.35s ease-out, content 0.2s ease;
+      }
+      main[id="inicio"] toggle-switch.hero-bulb-toggle:has(input[type="checkbox"]:checked)::before {
+        left: 45px;
+      }
+      main[id="inicio"] toggle-switch.hero-bulb-toggle:has(input[type="checkbox"]:checked)::after {
+        content: "ON";
+        left: 12px;
+      }
+      main[id="inicio"] toggle-switch.hero-bulb-toggle:focus-within {
+        outline: 2px dotted #5a3d9a;
+        outline-offset: 3px;
       }
       
       /* Panel derecho - Formulario oscuro con textos claros */
@@ -934,41 +1063,83 @@
     <main id="inicio">
       <section class="relative overflow-x-hidden bg-gradient-to-b from-primary via-primary to-secondary/40">
         <div class="max-w-6xl mx-auto px-4">
-          <div class="space-y-6 md:space-y-7 max-w-2xl">
-            <span
-              class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/70 text-[11px] md:text-xs font-semibold uppercase tracking-[0.12em] text-textPrimary"
-              >Cultivo inteligente con IA</span
-            >
-            <h1
-              class="text-3xl md:text-4xl lg:text-[2.75rem] font-extrabold leading-[1.12] tracking-tight text-textPrimary"
-            >
-              Tu cultivo, ordenado con IA
-            </h1>
-            <p class="text-base md:text-lg text-textPrimary/85 max-w-xl leading-relaxed">
-              Gestioná tus plantas, diagnosticá problemas y mejorá tus resultados desde una sola app.
-            </p>
-            <ul class="space-y-2.5 text-base md:text-lg text-textPrimary/90 max-w-xl" role="list">
-              <li class="flex gap-3 items-start">
-                <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
-                <span>Diagnóstico con IA</span>
-              </li>
-              <li class="flex gap-3 items-start">
-                <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
-                <span>Seguimiento completo</span>
-              </li>
-              <li class="flex gap-3 items-start">
-                <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
-                <span>Recomendaciones en tiempo real</span>
-              </li>
-            </ul>
-            <div class="flex flex-col items-start gap-2 pt-1">
-              <a
-                href="#descargar"
-                class="inline-flex items-center justify-center gap-2 bg-accent text-primary font-bold px-9 py-4 text-lg md:text-xl rounded-full shadow-[0_8px_32px_rgba(139,110,208,0.45)] ring-2 ring-accent/40 hover:ring-accent/70 hover:shadow-[0_12px_40px_rgba(139,110,208,0.55)] hover:-translate-y-0.5 active:translate-y-0 transition duration-200"
-                >Descargar App</a
+          <div class="hero-inicio-grid">
+            <div class="hero-inicio-copy space-y-6 md:space-y-7 max-w-2xl">
+              <span
+                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/70 text-[11px] md:text-xs font-semibold uppercase tracking-[0.12em] text-textPrimary"
+                >Cultivo inteligente con IA</span
               >
-              <p class="text-xs md:text-sm text-textPrimary/60 pl-1">Disponible en Android</p>
+              <h1
+                class="text-3xl md:text-4xl lg:text-[2.75rem] font-extrabold leading-[1.12] tracking-tight text-textPrimary"
+              >
+                Tu cultivo, ordenado con IA
+              </h1>
+              <p class="text-base md:text-lg text-textPrimary/85 max-w-xl leading-relaxed">
+                Gestioná tus plantas, diagnosticá problemas y mejorá tus resultados desde una sola app.
+              </p>
+              <ul class="space-y-2.5 text-base md:text-lg text-textPrimary/90 max-w-xl" role="list">
+                <li class="flex gap-3 items-start">
+                  <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
+                  <span>Diagnóstico con IA</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
+                  <span>Seguimiento completo</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
+                  <span>Recomendaciones en tiempo real</span>
+                </li>
+              </ul>
+              <div class="flex flex-col items-start gap-2 pt-1">
+                <a
+                  href="#descargar"
+                  class="inline-flex items-center justify-center gap-2 bg-accent text-primary font-bold px-9 py-4 text-lg md:text-xl rounded-full shadow-[0_8px_32px_rgba(139,110,208,0.45)] ring-2 ring-accent/40 hover:ring-accent/70 hover:shadow-[0_12px_40px_rgba(139,110,208,0.55)] hover:-translate-y-0.5 active:translate-y-0 transition duration-200"
+                  >Descargar App</a
+                >
+                <p class="text-xs md:text-sm text-textPrimary/60 pl-1">Disponible en Android</p>
+              </div>
             </div>
+            <aside class="hero-inicio-bulb" aria-label="Foco decorativo">
+              <light-bulb class="hero-light-bulb" status="off">
+                <div class="hero-bulb-svg-wrap">
+                  <svg class="bulb" viewBox="0 0 90 120" aria-hidden="true">
+                    <defs>
+                      <radialGradient id="hero-bulb-grad" cx="40%" cy="35%" r="60%">
+                        <stop offset="0%" stop-color="#fff9c4" class="bulb-stop-0" />
+                        <stop offset="100%" stop-color="#f0c030" class="bulb-stop-1" />
+                      </radialGradient>
+                    </defs>
+                    <path
+                      class="bulb-glass"
+                      d="M45 8 C20 8 10 28 10 46 C10 62 20 74 32 82 L32 96 C32 100 36 104 45 104 C54 104 58 100 58 96 L58 82 C70 74 80 62 80 46 C80 28 70 8 45 8Z"
+                      fill="#2a2a3a"
+                      stroke="#444"
+                      stroke-width="1.5"
+                    />
+                    <polyline
+                      class="bulb-filament"
+                      points="38,90 38,70 43,62 47,70 52,62 52,90"
+                      fill="none"
+                      stroke="#555"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <rect class="bulb-base-1" x="32" y="96" width="26" height="5" rx="2" fill="#444" />
+                    <rect class="bulb-base-2" x="34" y="101" width="22" height="5" rx="2" fill="#3a3a3a" />
+                    <rect class="bulb-base-3" x="36" y="106" width="18" height="6" rx="2" fill="#333" />
+                  </svg>
+                </div>
+                <div class="glow"></div>
+              </light-bulb>
+              <toggle-switch class="hero-bulb-toggle">
+                <input type="checkbox" id="hero-bulb-switch" />
+                <label for="hero-bulb-switch"
+                  ><span class="sr-only">Encender o apagar el foco decorativo</span></label
+                >
+              </toggle-switch>
+            </aside>
           </div>
         </div>
       </section>
@@ -2188,6 +2359,74 @@
           contactSubmit.innerHTML = '<span>Quiero recibir novedades</span>';
         }
       });
+    </script>
+    <script>
+      (function () {
+        class LightBulb extends HTMLElement {
+          static get observedAttributes() {
+            return ["status"];
+          }
+          connectedCallback() {
+            this.glass = this.querySelector(".bulb-glass");
+            this.filament = this.querySelector(".bulb-filament");
+            this.base1 = this.querySelector(".bulb-base-1");
+            this.base2 = this.querySelector(".bulb-base-2");
+            this.base3 = this.querySelector(".bulb-base-3");
+            this.g0 = this.querySelector(".bulb-stop-0");
+            this.g1 = this.querySelector(".bulb-stop-1");
+            var st = this.getAttribute("status") || "off";
+            this.attributeChangedCallback("status", null, st);
+          }
+          attributeChangedCallback(name, oldValue, newValue) {
+            if (name !== "status" || !this.glass) return;
+            if (newValue === "on") {
+              this.glass.setAttribute("fill", "url(#hero-bulb-grad)");
+              this.glass.setAttribute("stroke", "#e8b820");
+              this.filament && this.filament.setAttribute("stroke", "#fff8dc");
+              this.base1 && this.base1.setAttribute("fill", "#c8960a");
+              this.base2 && this.base2.setAttribute("fill", "#b07800");
+              this.base3 && this.base3.setAttribute("fill", "#906000");
+              this.g0 && this.g0.setAttribute("stop-color", "#fff9c4");
+              this.g1 && this.g1.setAttribute("stop-color", "#f0c030");
+            } else {
+              this.glass.setAttribute("fill", "#2a2a3a");
+              this.glass.setAttribute("stroke", "#444");
+              this.filament && this.filament.setAttribute("stroke", "#555");
+              this.base1 && this.base1.setAttribute("fill", "#444");
+              this.base2 && this.base2.setAttribute("fill", "#3a3a3a");
+              this.base3 && this.base3.setAttribute("fill", "#333");
+            }
+          }
+        }
+        class ToggleSwitch extends HTMLElement {
+          connectedCallback() {
+            this._input = this.querySelector('input[type="checkbox"]');
+            this._onChange = this._onChange.bind(this);
+            this._input && this._input.addEventListener("change", this._onChange);
+          }
+          disconnectedCallback() {
+            this._input && this._input.removeEventListener("change", this._onChange);
+          }
+          _onChange(evt) {
+            this.dispatchEvent(
+              new CustomEvent("toggle", { detail: { status: evt.target.checked }, bubbles: true })
+            );
+          }
+        }
+        if (!customElements.get("light-bulb")) {
+          customElements.define("light-bulb", LightBulb);
+        }
+        if (!customElements.get("toggle-switch")) {
+          customElements.define("toggle-switch", ToggleSwitch);
+        }
+        var bulbEl = document.querySelector("light-bulb.hero-light-bulb");
+        var switchEl = document.querySelector("toggle-switch.hero-bulb-toggle");
+        switchEl &&
+          switchEl.addEventListener("toggle", function (evt) {
+            if (!bulbEl) return;
+            bulbEl.setAttribute("status", evt.detail.status ? "on" : "off");
+          });
+      })();
     </script>
   </body>
 </html>
