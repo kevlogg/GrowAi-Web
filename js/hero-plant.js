@@ -541,6 +541,13 @@ function display() {
   if (document.readyState !== "loading") {
     kick();
   }
+  var heroCanvasHost = document.getElementById("hero-canvas-container");
+  if (heroCanvasHost && typeof ResizeObserver !== "undefined") {
+    var ro = new ResizeObserver(function () {
+      kick();
+    });
+    ro.observe(heroCanvasHost);
+  }
 })();
 
 
