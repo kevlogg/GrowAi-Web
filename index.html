@@ -320,7 +320,7 @@
         to { transform: rotate(360deg); }
       }
       
-      /* Escena hero: sol + maceta + riego + brote estático (sin hoja giratoria) */
+      /* Escena hero: ilustración estática (sin animaciones) */
       .hero-grow-wrap {
         width: 100%;
         max-width: 360px;
@@ -356,7 +356,6 @@
           rgba(255, 213, 79, 0.95) 0deg 8deg,
           rgba(255, 213, 79, 0.15) 8deg 16deg
         );
-        animation: hero-sun-spin 12s linear infinite;
       }
       .hero-grow-scene .sun .circle {
         position: absolute;
@@ -369,9 +368,6 @@
         background: radial-gradient(circle at 35% 35%, #fff9c4, #ffc107 55%, #ff8f00);
         box-shadow: 0 0 12px rgba(255, 193, 7, 0.7);
         z-index: 1;
-      }
-      @keyframes hero-sun-spin {
-        to { transform: rotate(360deg); }
       }
       .hero-grow-scene .ground-shadow {
         position: absolute;
@@ -435,25 +431,13 @@
         bottom: 52px;
         left: calc(50% - 62px);
         width: 3px;
-        height: 0;
+        height: 28px;
         background: linear-gradient(180deg, rgba(100, 181, 246, 0.9), rgba(33, 150, 243, 0.85));
         border-radius: 2px;
         transform-origin: top center;
         transform: rotate(58deg);
-        animation: hero-water-flow 2.2s ease-in-out infinite;
+        opacity: 0.92;
         z-index: 1;
-      }
-      @keyframes hero-water-flow {
-        0%,
-        100% {
-          height: 0;
-          opacity: 0.4;
-        }
-        40%,
-        60% {
-          height: 36px;
-          opacity: 1;
-        }
       }
       .hero-grow-scene .flower {
         position: absolute;
