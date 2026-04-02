@@ -488,15 +488,19 @@ function display() {
 
 (function growAiHeroPlantBoot() {
   var HERO_PLANT_COUNT = 6;
-  var mq = window.matchMedia("(min-width: 1024px)");
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
   var rafPending = false;
   var simulationReady = false;
 
   function heroPlantVisible() {
+    if (reduced.matches) return false;
     var el = document.getElementById("hero-canvas-container");
     if (!el) return false;
-    return mq.matches && !reduced.matches && el.getBoundingClientRect().width >= 8;
+    var r = el.getBoundingClientRect();
+    if (r.width < 4 || r.height < 4) return false;
+    var st = window.getComputedStyle(el);
+    if (st.display === "none" || st.visibility === "hidden") return false;
+    return true;
   }
 
   function ensureInit() {
@@ -528,7 +532,6 @@ function display() {
     schedule();
   }
 
-  mq.addEventListener("change", kick);
   reduced.addEventListener("change", function () {
     rafPending = false;
     kick();
@@ -537,9 +540,14 @@ function display() {
   document.addEventListener("visibilitychange", function () {
     if (!document.hidden) kick();
   });
-  document.addEventListener("DOMContentLoaded", kick);
+  function kickWhenPainted() {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(kick);
+    });
+  }
+  document.addEventListener("DOMContentLoaded", kickWhenPainted);
   if (document.readyState !== "loading") {
-    kick();
+    kickWhenPainted();
   }
   var heroCanvasHost = document.getElementById("hero-canvas-container");
   if (heroCanvasHost && typeof ResizeObserver !== "undefined") {
@@ -547,6 +555,21 @@ function display() {
       kick();
     });
     ro.observe(heroCanvasHost);
+  }
+  if (heroCanvasHost && typeof IntersectionObserver !== "undefined") {
+    var io = new IntersectionObserver(
+      function (entries) {
+        var e;
+        for (e = 0; e < entries.length; e++) {
+          if (entries[e].isIntersecting) {
+            kick();
+            break;
+          }
+        }
+      },
+      { root: null, rootMargin: "80px", threshold: 0 }
+    );
+    io.observe(heroCanvasHost);
   }
 })();
 

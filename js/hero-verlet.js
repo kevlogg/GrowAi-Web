@@ -56,11 +56,8 @@ function Skin(points_array, color) {
 }
 
 function scaleToWindow() {
-  if (!canvasContainerDiv || !canvas) return;
-  var w = Math.floor(canvasContainerDiv.getBoundingClientRect().width);
-  if (w < 1) return;
-  canvasContainerDiv.style.width = w + "px";
-  canvasContainerDiv.style.height = w + "px";
+  // El tamaño lo fija el CSS (#hero-canvas-container aspect-ratio + width).
+  // Forzar píxeles en cada frame rompía el layout en algunos navegadores/zoom.
 }
 
 function xValFromPct(percent) {
@@ -274,6 +271,8 @@ function renderSkins() {
 function clearCanvas() {
   if (!canvas || !ctx) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "rgba(245, 240, 255, 0.97)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 function renderImages() {

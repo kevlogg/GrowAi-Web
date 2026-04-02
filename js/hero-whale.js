@@ -1,6 +1,6 @@
 /**
- * Estela tipo "whale" (capas SVG) siguiendo el puntero dentro del canvas del hero.
- * Basado en el snippet aportado; coordenadas relativas a #hero-canvas-container.
+ * Estela de capas SVG (hoja) siguiendo el puntero sobre el cuadro del hero.
+ * pointerdown + pointermove en fase capture (mouse y táctil).
  */
 (function () {
   var container = document.getElementById("hero-canvas-container");
@@ -16,7 +16,6 @@
   var mouse = { x: 0, y: 0 };
   var defs = "";
   var loopTimer = null;
-  var mq = window.matchMedia("(min-width: 1024px)");
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   var LEAF_SVG =
@@ -24,8 +23,16 @@
 
   var parts = [];
   var z;
-  for (z = 39; z >= 0; z--) {
+  for (z = 19; z >= 0; z--) {
     parts.push({ x: 0, y: 0, z: z, data: LEAF_SVG });
+  }
+
+  function whaleShouldRun() {
+    if (reduced.matches) return false;
+    var st = window.getComputedStyle(container);
+    if (st.display === "none" || st.visibility === "hidden") return false;
+    var r = container.getBoundingClientRect();
+    return r.width >= 4 && r.height >= 4;
   }
 
   function syncDimensions() {
@@ -43,7 +50,7 @@
     }
   }
 
-  function mousemove(e) {
+  function updatePointerFromEvent(e) {
     var r = container.getBoundingClientRect();
     if (
       e.clientX < r.left ||
@@ -93,7 +100,7 @@
   }
 
   function startLoop() {
-    if (loopTimer || !mq.matches || reduced.matches) return;
+    if (loopTimer || !whaleShouldRun()) return;
     loopTimer = window.setInterval(loop, 1000 / fps);
   }
 
@@ -104,28 +111,43 @@
     }
   }
 
-  function onMqChange() {
-    if (mq.matches && !reduced.matches) {
-      syncDimensions();
-      centerTrail();
-      startLoop();
-    } else {
-      stopLoop();
-    }
+  function syncAndMaybeRestart() {
+    stopLoop();
+    if (!whaleShouldRun()) return;
+    syncDimensions();
+    centerTrail();
+    startLoop();
+    element.innerHTML = svg();
   }
 
   function boot() {
     if (reduced.matches) return;
     syncDimensions();
     centerTrail();
-    document.addEventListener("mousemove", mousemove, { passive: true });
-    var ro = new ResizeObserver(function () {
-      syncDimensions();
-    });
+    document.addEventListener("pointermove", updatePointerFromEvent, true);
+    document.addEventListener("pointerdown", updatePointerFromEvent, true);
+    var ro = new ResizeObserver(syncAndMaybeRestart);
     ro.observe(container);
-    mq.addEventListener("change", onMqChange);
-    reduced.addEventListener("change", onMqChange);
-    onMqChange();
+    if (typeof IntersectionObserver !== "undefined") {
+      var io = new IntersectionObserver(
+        function (entries) {
+          var k;
+          for (k = 0; k < entries.length; k++) {
+            if (entries[k].isIntersecting) {
+              syncAndMaybeRestart();
+              return;
+            }
+          }
+          stopLoop();
+        },
+        { root: null, rootMargin: "80px", threshold: 0 }
+      );
+      io.observe(container);
+    }
+    reduced.addEventListener("change", syncAndMaybeRestart);
+    requestAnimationFrame(function () {
+      requestAnimationFrame(syncAndMaybeRestart);
+    });
     element.innerHTML = svg();
   }
 
