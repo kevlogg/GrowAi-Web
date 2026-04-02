@@ -660,44 +660,69 @@
         color: #1B0F2A !important;
       }
       
-      /* Nav desktop: hover tipo btn-5 (outline expande + brillo interior/exterior), paleta GrowAi */
+      /* Nav desktop: borde que se “dibuja” (mixin btn-border-drawing → bottom/right, 4px, 0.25s), paleta GrowAi */
       header .header-main-nav a.nav-header-link {
         position: relative;
         display: inline-block;
-        padding: 0.4rem 0.7rem;
+        padding: 0.45rem 0.85rem;
         margin: 2px;
-        border: 0 solid transparent;
-        border-radius: 6px;
-        color: #1b0f2a !important;
+        background: transparent;
+        border: none;
         text-decoration: none;
-        outline: 1px solid rgba(27, 15, 42, 0.38);
-        outline-offset: 0;
-        box-shadow: inset 0 0 20px rgba(139, 110, 208, 0);
-        text-shadow: none;
-        transition:
-          border 1250ms cubic-bezier(0.19, 1, 0.22, 1),
-          box-shadow 1250ms cubic-bezier(0.19, 1, 0.22, 1),
-          outline-color 1250ms cubic-bezier(0.19, 1, 0.22, 1),
-          outline-offset 1250ms cubic-bezier(0.19, 1, 0.22, 1),
-          color 1250ms cubic-bezier(0.19, 1, 0.22, 1),
-          text-shadow 1250ms cubic-bezier(0.19, 1, 0.22, 1);
+        color: #1b0f2a !important;
+        box-shadow: inset 0 0 0 4px rgba(139, 110, 208, 0.55);
+        cursor: pointer;
+        transition: color 0.25s 0.08333s, box-shadow 0.25s ease;
+      }
+      
+      header .header-main-nav a.nav-header-link::before,
+      header .header-main-nav a.nav-header-link::after {
+        border: 0 solid transparent;
+        box-sizing: border-box;
+        content: "";
+        pointer-events: none;
+        position: absolute;
+        width: 0;
+        height: 0;
+        bottom: 0;
+        right: 0;
+        transition: border-color 0s, width 0.25s, height 0.25s;
+      }
+      
+      header .header-main-nav a.nav-header-link::before {
+        border-bottom-width: 4px;
+        border-left-width: 4px;
+      }
+      
+      header .header-main-nav a.nav-header-link::after {
+        border-top-width: 4px;
+        border-right-width: 4px;
       }
       
       header .header-main-nav a.nav-header-link:hover {
-        color: #3d2a5c !important;
-        border: 1px solid rgba(139, 110, 208, 0.6);
-        box-shadow:
-          inset 0 0 22px rgba(139, 110, 208, 0.32),
-          0 0 22px rgba(139, 110, 208, 0.22);
-        outline-color: rgba(139, 110, 208, 0);
-        outline-offset: 14px;
-        text-shadow: 1px 1px 2px rgba(27, 15, 42, 0.22);
+        color: #1b0f2a !important;
+        box-shadow: inset 0 0 0 0 transparent;
+      }
+      
+      header .header-main-nav a.nav-header-link:hover::before,
+      header .header-main-nav a.nav-header-link:hover::after {
+        border-color: #1b0f2a;
+        transition: border-color 0s, width 0.25s, height 0.25s;
+        width: 100%;
+        height: 100%;
+      }
+      
+      header .header-main-nav a.nav-header-link:hover::before {
+        transition-delay: 0s, 0s, 0.25s;
+      }
+      
+      header .header-main-nav a.nav-header-link:hover::after {
+        transition-delay: 0s, 0.25s, 0s;
       }
       
       header .header-main-nav a.nav-header-link:focus-visible {
-        outline: 2px solid #8b6ed0;
+        outline: 2px dotted #8b6ed0;
         outline-offset: 3px;
-        border-color: transparent;
       }
       
       header .header-main-nav a.nav-header-link:focus:not(:focus-visible) {
