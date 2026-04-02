@@ -138,6 +138,22 @@
           rgba(201, 195, 255, 0.97) 50%,
           rgba(201, 195, 255, 0.9) 100%
         ) !important;
+        /* Una pantalla completa; padding-top bajo el header fijo para no tapar el badge */
+        min-height: 100svh;
+        min-height: 100dvh;
+        box-sizing: border-box;
+        padding-top: calc(5.75rem + env(safe-area-inset-top, 0px)) !important;
+        padding-bottom: clamp(1.75rem, 5vh, 3rem) !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      main[id="inicio"] > section:first-of-type > .max-w-6xl {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
       }
       
       /* Panel izquierdo - Textos oscuros sobre fondo claro */
@@ -346,150 +362,6 @@
         to { transform: rotate(360deg); }
       }
       
-      /* Escena hero: ilustración estática (sin animaciones) */
-      .hero-grow-wrap {
-        width: 100%;
-        max-width: 360px;
-      }
-      @media (min-width: 1024px) {
-        .hero-grow-wrap {
-          max-width: 100%;
-        }
-      }
-      .hero-grow-scene {
-        position: relative;
-        width: 100%;
-        height: 200px;
-        margin: 0 auto;
-        --hgs-soil: #6d4c41;
-        --hgs-pot: #8d6e63;
-        --hgs-sprout: #66bb6a;
-      }
-      .hero-grow-scene .sun {
-        position: absolute;
-        top: 4px;
-        right: 8%;
-        width: 64px;
-        height: 64px;
-        z-index: 2;
-      }
-      .hero-grow-scene .sunrays {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background: repeating-conic-gradient(
-          from 0deg,
-          rgba(255, 213, 79, 0.95) 0deg 8deg,
-          rgba(255, 213, 79, 0.15) 8deg 16deg
-        );
-      }
-      .hero-grow-scene .sun .circle {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 30px;
-        height: 30px;
-        margin: -15px 0 0 -15px;
-        border-radius: 50%;
-        background: radial-gradient(circle at 35% 35%, #fff9c4, #ffc107 55%, #ff8f00);
-        box-shadow: 0 0 12px rgba(255, 193, 7, 0.7);
-        z-index: 1;
-      }
-      .hero-grow-scene .ground-shadow {
-        position: absolute;
-        bottom: 44px;
-        left: 50%;
-        width: 110px;
-        height: 14px;
-        margin-left: -55px;
-        background: rgba(27, 15, 42, 0.14);
-        border-radius: 50%;
-        filter: blur(2px);
-      }
-      .hero-grow-scene .pot {
-        position: absolute;
-        bottom: 28px;
-        left: 50%;
-        width: 76px;
-        height: 50px;
-        margin-left: -38px;
-        background: linear-gradient(90deg, #a1887f, var(--hgs-pot) 40%, #5d4037);
-        clip-path: polygon(12% 0, 88% 0, 100% 100%, 0 100%);
-        border-radius: 0 0 10px 10px;
-        box-shadow: inset 0 -8px 0 rgba(0, 0, 0, 0.12);
-        z-index: 1;
-      }
-      .hero-grow-scene .pot::after {
-        content: "";
-        position: absolute;
-        top: 6px;
-        left: 8px;
-        right: 8px;
-        height: 8px;
-        border-radius: 2px;
-        background: var(--hgs-soil);
-        opacity: 0.85;
-      }
-      .hero-grow-scene .water-jar {
-        position: absolute;
-        bottom: 36px;
-        left: calc(50% - 86px);
-        width: 30px;
-        height: 44px;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(200, 230, 255, 0.5));
-        border: 2px solid rgba(139, 110, 208, 0.45);
-        border-radius: 6px 6px 10px 10px;
-        z-index: 2;
-      }
-      .hero-grow-scene .water-jar::before {
-        content: "";
-        position: absolute;
-        top: -6px;
-        left: 50%;
-        width: 14px;
-        height: 8px;
-        margin-left: -7px;
-        background: rgba(139, 110, 208, 0.35);
-        border-radius: 4px 4px 0 0;
-      }
-      .hero-grow-scene .water {
-        position: absolute;
-        bottom: 52px;
-        left: calc(50% - 62px);
-        width: 3px;
-        height: 28px;
-        background: linear-gradient(180deg, rgba(100, 181, 246, 0.9), rgba(33, 150, 243, 0.85));
-        border-radius: 2px;
-        transform-origin: top center;
-        transform: rotate(58deg);
-        opacity: 0.92;
-        z-index: 1;
-      }
-      .hero-grow-scene .flower {
-        position: absolute;
-        bottom: 76px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        z-index: 3;
-      }
-      .hero-grow-scene .stem-tip {
-        width: 11px;
-        height: 9px;
-        border-radius: 50% 50% 45% 45%;
-        background: linear-gradient(165deg, #a5d6a7, var(--hgs-sprout) 55%, #2e7d32);
-        margin-bottom: -2px;
-        box-shadow: 0 1px 3px rgba(27, 15, 42, 0.12);
-      }
-      .hero-grow-scene .stem {
-        width: 5px;
-        height: 40px;
-        background: linear-gradient(180deg, #81c784, #2e7d32);
-        border-radius: 3px;
-      }
-      
       /* Bloque FUNCIONES: pin horizontal (GSAP) + cierre */
       #funciones.funciones-experience {
         /* visible: no recortar el carril al animar translateX dentro del pin */
@@ -548,10 +420,24 @@
         box-sizing: border-box;
         align-self: center;
       }
-      #funciones .funciones-pin-lead h2 {
+      #funciones .funciones-pin-lead h2.funciones-pin-lead-title {
         text-wrap: balance;
-        line-height: 1.35;
+        line-height: 1.25;
         letter-spacing: -0.02em;
+        margin: 0;
+      }
+      #funciones .funciones-pin-lead ul.funciones-pin-lead-list {
+        list-style: none;
+        margin: 1.25rem 0 0;
+        padding: 0;
+      }
+      #funciones .funciones-pin-lead ul.funciones-pin-lead-list li {
+        margin: 0;
+        padding: 0.35rem 0;
+        line-height: 1.45;
+      }
+      #funciones .funciones-pin-lead ul.funciones-pin-lead-list li + li {
+        margin-top: 0.15rem;
       }
       #funciones #sectionPinFunciones .funciones-pin-card {
         flex-shrink: 0;
@@ -561,7 +447,7 @@
         box-sizing: border-box;
       }
       #funciones #sectionPinFunciones .funciones-pin-lead h2,
-      #funciones #sectionPinFunciones .funciones-pin-lead h2 strong {
+      #funciones #sectionPinFunciones .funciones-pin-lead ul.funciones-pin-lead-list li {
         color: #c9c3ff !important;
       }
       /* Entrada: solo el lead al inicio; 1.ª card apenas insinuada; el resto al hacer scroll */
@@ -1046,67 +932,42 @@
     </div>
 
     <main id="inicio">
-      <section
-        class="relative overflow-hidden pt-10 md:pt-16 pb-16 md:pb-20 bg-gradient-to-b from-primary via-primary to-secondary/40"
-      >
+      <section class="relative overflow-x-hidden bg-gradient-to-b from-primary via-primary to-secondary/40">
         <div class="max-w-6xl mx-auto px-4">
-          <div
-            class="grid gap-10 lg:gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(260px,400px)] lg:items-center"
-          >
-            <div class="space-y-6 md:space-y-7">
-              <span
-                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/70 text-[11px] md:text-xs font-semibold uppercase tracking-[0.12em] text-textPrimary"
-                >Cultivo inteligente con IA</span
-              >
-              <h1
-                class="text-3xl md:text-4xl lg:text-[2.75rem] font-extrabold leading-[1.12] tracking-tight text-textPrimary"
-              >
-                Tu cultivo, ordenado con IA
-              </h1>
-              <p class="text-base md:text-lg text-textPrimary/85 max-w-xl leading-relaxed">
-                Gestioná tus plantas, diagnosticá problemas y mejorá tus resultados desde una sola app.
-              </p>
-              <ul class="space-y-2.5 text-base md:text-lg text-textPrimary/90 max-w-xl" role="list">
-                <li class="flex gap-3 items-start">
-                  <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
-                  <span>Diagnóstico con IA</span>
-                </li>
-                <li class="flex gap-3 items-start">
-                  <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
-                  <span>Seguimiento completo</span>
-                </li>
-                <li class="flex gap-3 items-start">
-                  <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
-                  <span>Recomendaciones en tiempo real</span>
-                </li>
-              </ul>
-              <div class="flex flex-col items-start gap-2 pt-1">
-                <a
-                  href="#descargar"
-                  class="inline-flex items-center justify-center gap-2 bg-accent text-primary font-bold px-9 py-4 text-lg md:text-xl rounded-full shadow-[0_8px_32px_rgba(139,110,208,0.45)] ring-2 ring-accent/40 hover:ring-accent/70 hover:shadow-[0_12px_40px_rgba(139,110,208,0.55)] hover:-translate-y-0.5 active:translate-y-0 transition duration-200"
-                  >Descargar App</a
-                >
-                <p class="text-xs md:text-sm text-textPrimary/60 pl-1">Disponible en Android</p>
-              </div>
-            </div>
-            <div
-              class="hero-grow-wrap flex justify-center lg:justify-end pt-1 pb-2 lg:py-0"
-              aria-hidden="true"
+          <div class="space-y-6 md:space-y-7 max-w-2xl">
+            <span
+              class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/70 text-[11px] md:text-xs font-semibold uppercase tracking-[0.12em] text-textPrimary"
+              >Cultivo inteligente con IA</span
             >
-              <div class="hero-grow-scene w-full max-w-[320px] lg:max-w-none">
-                <div class="sun">
-                  <div class="sunrays"></div>
-                  <div class="circle"></div>
-                </div>
-                <div class="ground-shadow"></div>
-                <div class="pot"></div>
-                <div class="water-jar"></div>
-                <div class="water"></div>
-                <div class="flower">
-                  <div class="stem-tip"></div>
-                  <div class="stem"></div>
-                </div>
-              </div>
+            <h1
+              class="text-3xl md:text-4xl lg:text-[2.75rem] font-extrabold leading-[1.12] tracking-tight text-textPrimary"
+            >
+              Tu cultivo, ordenado con IA
+            </h1>
+            <p class="text-base md:text-lg text-textPrimary/85 max-w-xl leading-relaxed">
+              Gestioná tus plantas, diagnosticá problemas y mejorá tus resultados desde una sola app.
+            </p>
+            <ul class="space-y-2.5 text-base md:text-lg text-textPrimary/90 max-w-xl" role="list">
+              <li class="flex gap-3 items-start">
+                <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
+                <span>Diagnóstico con IA</span>
+              </li>
+              <li class="flex gap-3 items-start">
+                <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
+                <span>Seguimiento completo</span>
+              </li>
+              <li class="flex gap-3 items-start">
+                <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
+                <span>Recomendaciones en tiempo real</span>
+              </li>
+            </ul>
+            <div class="flex flex-col items-start gap-2 pt-1">
+              <a
+                href="#descargar"
+                class="inline-flex items-center justify-center gap-2 bg-accent text-primary font-bold px-9 py-4 text-lg md:text-xl rounded-full shadow-[0_8px_32px_rgba(139,110,208,0.45)] ring-2 ring-accent/40 hover:ring-accent/70 hover:shadow-[0_12px_40px_rgba(139,110,208,0.55)] hover:-translate-y-0.5 active:translate-y-0 transition duration-200"
+                >Descargar App</a
+              >
+              <p class="text-xs md:text-sm text-textPrimary/60 pl-1">Disponible en Android</p>
             </div>
           </div>
         </div>
@@ -1116,11 +977,14 @@
         <section id="sectionPinFunciones" class="funciones-pin-section" aria-label="Funciones en desplazamiento horizontal">
           <div class="pin-wrap-funciones">
             <div class="funciones-pin-lead">
-              <h2 class="text-2xl md:text-3xl font-bold leading-snug">
-                Tres pilares para tu cultivo: registro y seguimiento con <strong>Mis Cultivos</strong>, orientación con
-                IA en <strong>Sensei</strong>, y apoyo en trámites con <strong>REPROCANN</strong>. Deslizá hacia la
-                derecha para ver el detalle de cada módulo.
+              <h2 class="funciones-pin-lead-title text-2xl md:text-3xl font-bold">
+                Tres pilares para un buen cultivador
               </h2>
+              <ul class="funciones-pin-lead-list text-base md:text-lg font-semibold" role="list">
+                <li>Registro y seguimiento de mis cultivos</li>
+                <li>Sensei te ayuda con todos los problemas que tengas</li>
+                <li>Gestiona tu trámite REPROCANN</li>
+              </ul>
             </div>
             <div class="funciones-pin-spacer" aria-hidden="true"></div>
             <article
