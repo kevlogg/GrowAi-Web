@@ -320,19 +320,24 @@
         to { transform: rotate(360deg); }
       }
       
-      /* Escena hero: sol + maceta + riego; cabeza = hoja giratoria (sustituye pétalos) */
+      /* Escena hero: sol + maceta + riego + brote estático (sin hoja giratoria) */
       .hero-grow-wrap {
         width: 100%;
-        max-width: 340px;
+        max-width: 360px;
+      }
+      @media (min-width: 1024px) {
+        .hero-grow-wrap {
+          max-width: 100%;
+        }
       }
       .hero-grow-scene {
         position: relative;
         width: 100%;
-        height: 220px;
+        height: 200px;
         margin: 0 auto;
         --hgs-soil: #6d4c41;
         --hgs-pot: #8d6e63;
-        --hgs-leaf: #66bb6a;
+        --hgs-sprout: #66bb6a;
       }
       .hero-grow-scene .sun {
         position: absolute;
@@ -460,40 +465,19 @@
         align-items: center;
         z-index: 3;
       }
-      .hero-grow-scene .stem-leaf {
-        position: relative;
-        display: flex;
-        justify-content: center;
+      .hero-grow-scene .stem-tip {
+        width: 11px;
+        height: 9px;
+        border-radius: 50% 50% 45% 45%;
+        background: linear-gradient(165deg, #a5d6a7, var(--hgs-sprout) 55%, #2e7d32);
+        margin-bottom: -2px;
+        box-shadow: 0 1px 3px rgba(27, 15, 42, 0.12);
       }
       .hero-grow-scene .stem {
         width: 5px;
-        height: 42px;
+        height: 40px;
         background: linear-gradient(180deg, #81c784, #2e7d32);
         border-radius: 3px;
-      }
-      .hero-grow-scene .leaf {
-        position: absolute;
-        top: 10px;
-        left: -22px;
-        width: 24px;
-        height: 14px;
-        background: var(--hgs-leaf);
-        border-radius: 0 100% 0 100%;
-        transform: rotate(-16deg);
-        box-shadow: inset -2px -2px 0 rgba(0, 0, 0, 0.08);
-      }
-      .hero-grow-scene .flower-head-loader {
-        margin-bottom: -4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        filter: drop-shadow(0 2px 4px rgba(27, 15, 42, 0.2));
-      }
-      .hero-grow-scene .flower-head-loader img {
-        width: 52px;
-        height: auto;
-        display: block;
-        animation: sensei-loader-rotation 2s linear infinite;
       }
       
       /* Sección FUNCIONES - OSCURA */
@@ -910,20 +894,51 @@
       <section
         class="relative overflow-hidden pt-10 md:pt-16 pb-16 md:pb-20 bg-gradient-to-b from-primary via-primary to-secondary/40"
       >
-        <div class="max-w-3xl mx-auto px-4">
-          <div class="space-y-8">
-            <span
-              class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/70 text-[11px] md:text-xs font-semibold uppercase tracking-[0.12em] text-textPrimary"
-              >Cultivo inteligente con IA</span
+        <div class="max-w-6xl mx-auto px-4">
+          <div
+            class="grid gap-10 lg:gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(260px,400px)] lg:items-center"
+          >
+            <div class="space-y-6 md:space-y-7">
+              <span
+                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/70 text-[11px] md:text-xs font-semibold uppercase tracking-[0.12em] text-textPrimary"
+                >Cultivo inteligente con IA</span
+              >
+              <h1
+                class="text-3xl md:text-4xl lg:text-[2.75rem] font-extrabold leading-[1.12] tracking-tight text-textPrimary"
+              >
+                Tu cultivo, ordenado con IA
+              </h1>
+              <p class="text-base md:text-lg text-textPrimary/85 max-w-xl leading-relaxed">
+                Gestioná tus plantas, diagnosticá problemas y mejorá tus resultados desde una sola app.
+              </p>
+              <ul class="space-y-2.5 text-base md:text-lg text-textPrimary/90 max-w-xl" role="list">
+                <li class="flex gap-3 items-start">
+                  <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
+                  <span>Diagnóstico con IA</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
+                  <span>Seguimiento completo</span>
+                </li>
+                <li class="flex gap-3 items-start">
+                  <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
+                  <span>Recomendaciones en tiempo real</span>
+                </li>
+              </ul>
+              <div class="flex flex-col items-start gap-2 pt-1">
+                <a
+                  href="#descargar"
+                  class="inline-flex items-center justify-center gap-2 bg-accent text-primary font-bold px-9 py-4 text-lg md:text-xl rounded-full shadow-[0_8px_32px_rgba(139,110,208,0.45)] ring-2 ring-accent/40 hover:ring-accent/70 hover:shadow-[0_12px_40px_rgba(139,110,208,0.55)] hover:-translate-y-0.5 active:translate-y-0 transition duration-200"
+                  >Descargar App</a
+                >
+                <p class="text-xs md:text-sm text-textPrimary/60 pl-1">Disponible en Android</p>
+              </div>
+            </div>
+            <div
+              class="hero-grow-wrap flex justify-center lg:justify-end pt-1 pb-2 lg:py-0"
+              aria-hidden="true"
             >
-            <h1 class="text-3xl md:text-4xl lg:text-[2.75rem] font-extrabold leading-[1.15] tracking-tight text-textPrimary">
-              Tu cultivo, ordenado con IA
-            </h1>
-            <p class="text-base md:text-lg text-textPrimary/85 max-w-2xl leading-relaxed">
-              Gestioná tus plantas, diagnosticá problemas y mejorá tus resultados desde una sola app.
-            </p>
-            <div class="hero-grow-wrap pt-2 pb-1" aria-hidden="true">
-              <div class="hero-grow-scene">
+              <div class="hero-grow-scene w-full max-w-[320px] lg:max-w-none">
                 <div class="sun">
                   <div class="sunrays"></div>
                   <div class="circle"></div>
@@ -933,45 +948,11 @@
                 <div class="water-jar"></div>
                 <div class="water"></div>
                 <div class="flower">
-                  <div class="flower-head-loader">
-                    <img
-                      src="https://s3.ca-central-1.amazonaws.com/test-public-420/loader.png"
-                      alt=""
-                      width="52"
-                      height="52"
-                    />
-                  </div>
-                  <div class="stem-leaf">
-                    <div class="stem"></div>
-                    <div class="leaf"></div>
-                  </div>
+                  <div class="stem-tip"></div>
+                  <div class="stem"></div>
                 </div>
               </div>
             </div>
-            <div class="flex flex-col items-start gap-3 pt-1">
-              <a
-                href="#descargar"
-                class="inline-flex items-center justify-center gap-2 bg-accent text-primary font-bold px-9 py-4 text-lg md:text-xl rounded-full shadow-[0_8px_32px_rgba(139,110,208,0.45)] ring-2 ring-accent/40 hover:ring-accent/70 hover:shadow-[0_12px_40px_rgba(139,110,208,0.55)] hover:-translate-y-0.5 active:translate-y-0 transition duration-200"
-                >Descargar App</a
-              >
-              <p class="text-xs md:text-sm text-textPrimary/60 pl-1">
-                Disponible en Android
-              </p>
-            </div>
-            <ul class="space-y-3 pt-2 text-base md:text-lg text-textPrimary/90 max-w-xl" role="list">
-              <li class="flex gap-3 items-start">
-                <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
-                <span>Diagnóstico con IA</span>
-              </li>
-              <li class="flex gap-3 items-start">
-                <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
-                <span>Seguimiento completo</span>
-              </li>
-              <li class="flex gap-3 items-start">
-                <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
-                <span>Recomendaciones en tiempo real</span>
-              </li>
-            </ul>
           </div>
         </div>
       </section>
