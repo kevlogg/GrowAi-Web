@@ -766,9 +766,90 @@
       footer {
         background-color: #1B0F2A !important;
       }
+      
+      /* Ilustración de fondo enlazada al scroll (marketing; solo transform + opacity en la imagen) */
+      #scroll-roll-layer {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+      #scroll-roll-layer img {
+        width: min(92vw, 520px);
+        height: auto;
+        opacity: 0.1;
+        transform: perspective(900px)
+          rotateX(calc(var(--scroll-roll, 0) * 34deg))
+          rotateZ(calc(var(--scroll-roll, 0) * -16deg))
+          scale(calc(0.86 + var(--scroll-roll, 0) * 0.12));
+        transform-origin: 52% 58%;
+        will-change: transform;
+        filter: saturate(0.88);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #scroll-roll-layer img {
+          transform: none;
+          opacity: 0.06;
+        }
+      }
+      body.has-scroll-roll-decor > header,
+      body.has-scroll-roll-decor > main,
+      body.has-scroll-roll-decor > footer {
+        position: relative;
+        z-index: 1;
+      }
+      body.has-scroll-roll-decor > header {
+        z-index: 50;
+      }
+      body.has-scroll-roll-decor main[id="inicio"] > section:first-of-type {
+        background: linear-gradient(
+          to bottom,
+          rgba(201, 195, 255, 0.93),
+          rgba(201, 195, 255, 0.93) 50%,
+          rgba(201, 195, 255, 0.9) 100%
+        ) !important;
+      }
+      body.has-scroll-roll-decor section[id="funciones"] {
+        background-color: rgba(27, 15, 42, 0.93) !important;
+      }
+      body.has-scroll-roll-decor section[id="sensei"] {
+        background-color: rgba(201, 195, 255, 0.93) !important;
+      }
+      body.has-scroll-roll-decor section[id="planes"] {
+        background-color: rgba(27, 15, 42, 0.93) !important;
+      }
+      body.has-scroll-roll-decor section[id="descargar"] {
+        background-color: rgba(201, 195, 255, 0.93) !important;
+      }
+      body.has-scroll-roll-decor section[id="contacto"] {
+        background-color: rgba(27, 15, 42, 0.93) !important;
+      }
+      body.has-scroll-roll-decor section[id="contacto"] form {
+        background-color: rgba(42, 31, 58, 0.78) !important;
+      }
+      body.has-scroll-roll-decor header {
+        background-color: rgba(201, 195, 255, 0.95) !important;
+      }
+      body.has-scroll-roll-decor footer {
+        background-color: rgba(27, 15, 42, 0.93) !important;
+      }
     </style>
   </head>
-  <body class="font-inter bg-primary text-textPrimary">
+  <body class="font-inter bg-primary text-textPrimary has-scroll-roll-decor">
+    <div id="scroll-roll-layer" aria-hidden="true">
+      <img
+        src="imagenes/scroll-roll-hands.png"
+        alt=""
+        width="520"
+        height="520"
+        decoding="async"
+        draggable="false"
+      />
+    </div>
     <header
       class="sticky top-0 z-50 bg-primary/90 backdrop-blur border-b border-secondary"
     >
@@ -1870,6 +1951,28 @@
           contactSubmit.innerHTML = '<span>Quiero recibir novedades</span>';
         }
       });
+    </script>
+    <script>
+      (function () {
+        var root = document.documentElement;
+        function reducedMotion() {
+          return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        }
+        function updateScrollRoll() {
+          if (reducedMotion()) {
+            root.style.setProperty("--scroll-roll", "0");
+            return;
+          }
+          var maxScroll = root.scrollHeight - window.innerHeight;
+          var p = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+          if (p < 0) p = 0;
+          if (p > 1) p = 1;
+          root.style.setProperty("--scroll-roll", p.toFixed(4));
+        }
+        window.addEventListener("scroll", updateScrollRoll, { passive: true });
+        window.addEventListener("resize", updateScrollRoll);
+        updateScrollRoll();
+      })();
     </script>
   </body>
 </html>
