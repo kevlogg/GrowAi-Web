@@ -1,5 +1,346 @@
 
 
+///////// TOOLS.JS /////////
+
+
+
+var Tl = {
+
+
+	//random integer between two numbers (min/max inclusive)
+	rib: function( min, max ) {
+ 		return Math.floor( Math.random() * ( Math.floor(max) - Math.ceil(min) + 1 ) ) + Math.ceil(min);
+	},
+
+	//random float between two numbers
+	rfb: function( min, max ) {
+ 		return Math.random() * ( max - min ) + min;
+	},
+
+	//converts radians to degrees
+	radToDeg: function( radian ) {
+	  return radian * 180 / Math.PI;
+	},
+
+	//converts degrees to radians
+	degToRad: function( degree ) {
+	  return degree / 180 * Math.PI;
+	},
+
+	//pauses program
+	pause: function( milliseconds ) {
+  	var then = Date.now(); 
+  	var now;
+  	do { now = Date.now() } while ( now - then < milliseconds );
+	}
+
+
+};
+
+///////// VERLET.JS (GrowAi hero, canvas embebido) /////////
+
+////---INITIATION---////
+
+var canvasContainerDiv = document.getElementById("hero-canvas-container");
+var canvas = document.getElementById("hero-plant-canvas");
+var ctx = canvas && canvas.getContext("2d");
+var canvRatio = 1;
+
+var points = [],
+  pointCount = 0;
+var spans = [],
+  spanCount = 0;
+var skins = [],
+  skinCount = 0;
+var worldTime = 0;
+
+var gravity = 0.01;
+var rigidity = 10;
+var friction = 0.999;
+var bounceLoss = 0.9;
+var skidLoss = 0.8;
+var viewPoints = false;
+var viewSpans = false;
+var viewScaffolding = false;
+var viewSkins = true;
+var breeze = 0.4;
+
+function Point(current_x, current_y, materiality = "material") {
+  this.cx = current_x;
+  this.cy = current_y;
+  this.px = this.cx;
+  this.py = this.cy;
+  this.mass = 1;
+  this.materiality = materiality;
+  this.fixed = false;
+  this.id = pointCount;
+  pointCount += 1;
+}
+
+function Span(point_1, point_2, visibility = "visible") {
+  this.p1 = point_1;
+  this.p2 = point_2;
+  this.l = distance(this.p1, this.p2);
+  this.strength = 1;
+  this.visibility = visibility;
+  this.id = spanCount;
+  spanCount += 1;
+}
+
+function Skin(points_array, color) {
+  this.points = points_array;
+  this.color = color;
+  this.id = skinCount;
+  skinCount += 1;
+}
+
+function scaleToWindow() {
+  // El tamaño lo fija el CSS (#hero-canvas-container aspect-ratio + width).
+  // Forzar píxeles en cada frame rompía el layout en algunos navegadores/zoom.
+}
+
+function xValFromPct(percent) {
+  return (percent * canvas.width) / 100;
+}
+
+function yValFromPct(percent) {
+  return (percent * canvas.height) / 100;
+}
+
+function pctFromXVal(xValue) {
+  return (xValue * 100) / canvas.width;
+}
+
+function pctFromYVal(yValue) {
+  return (yValue * 100) / canvas.height;
+}
+
+function getPt(id) {
+  for (var i = 0; i < points.length; i++) {
+    if (points[i].id == id) {
+      return points[i];
+    }
+  }
+}
+
+function distance(point_1, point_2) {
+  var x_difference = point_2.cx - point_1.cx;
+  var y_difference = point_2.cy - point_1.cy;
+  return Math.sqrt(x_difference * x_difference + y_difference * y_difference);
+}
+
+function smp(span) {
+  var mx = (span.p1.cx + span.p2.cx) / 2;
+  var my = (span.p1.cy + span.p2.cy) / 2;
+  return { x: mx, y: my };
+}
+
+function removeSpan(id) {
+  for (var i = 0; i < spans.length; i++) {
+    if (spans[i].id === id) {
+      spans.splice(i, 1);
+      break;
+    }
+  }
+}
+
+function addPt(xPercent, yPercent, materiality = "material") {
+  points.push(new Point(xValFromPct(xPercent), yValFromPct(yPercent), materiality));
+  return points[points.length - 1];
+}
+
+function addSp(p1, p2, visibility = "visible") {
+  spans.push(new Span(getPt(p1), getPt(p2), visibility));
+  return spans[spans.length - 1];
+}
+
+function addSk(id_path_array, color) {
+  var points_array = [];
+  for (var i = 0; i < id_path_array.length; i++) {
+    points_array.push(points[id_path_array[i]]);
+  }
+  skins.push(new Skin(points_array, color));
+  return skins[skins.length - 1];
+}
+
+function updatePoints() {
+  if (!canvas) return;
+  for (var i = 0; i < points.length; i++) {
+    var p = points[i];
+    if (!p.fixed) {
+      var xv = (p.cx - p.px) * friction;
+      var yv = (p.cy - p.py) * friction;
+      if (p.py >= canvas.height - 1 && p.py <= canvas.height) {
+        xv *= skidLoss;
+      }
+      p.px = p.cx;
+      p.py = p.cy;
+      p.cx += xv;
+      p.cy += yv;
+      p.cy += gravity * p.mass;
+      if (worldTime % Tl.rib(100, 200) === 0) {
+        p.cx += Tl.rfb(-breeze, breeze);
+      }
+    }
+  }
+}
+
+function applyConstraints(currentIteration) {
+  if (!canvas) return;
+  for (var i = 0; i < points.length; i++) {
+    var p = points[i];
+    if (p.materiality === "material") {
+      if (p.cx > canvas.width) {
+        p.cx = canvas.width;
+        p.px = p.cx + (p.cx - p.px) * bounceLoss;
+      }
+      if (p.cx < 0) {
+        p.cx = 0;
+        p.px = p.cx + (p.cx - p.px) * bounceLoss;
+      }
+      if (p.cy > canvas.height) {
+        p.cy = canvas.height;
+        p.py = p.cy + (p.cy - p.py) * bounceLoss;
+      }
+      if (p.cy < 0) {
+        p.cy = 0;
+        p.py = p.cy + (p.cy - p.py) * bounceLoss;
+      }
+    }
+  }
+}
+
+function updateSpans(currentIteration) {
+  for (var i = 0; i < spans.length; i++) {
+    var strength = spans[i].rigidity != null ? spans[i].rigidity : spans[i].strength;
+    var thisSpanIterations = Math.round(rigidity * strength);
+    if (currentIteration + 1 <= thisSpanIterations) {
+      var s = spans[i];
+      var dx = s.p2.cx - s.p1.cx;
+      var dy = s.p2.cy - s.p1.cy;
+      var d = Math.sqrt(dx * dx + dy * dy);
+      var r = s.l / d;
+      var mx = s.p1.cx + dx / 2;
+      var my = s.p1.cy + dy / 2;
+      var ox = (dx / 2) * r;
+      var oy = (dy / 2) * r;
+      if (!s.p1.fixed) {
+        s.p1.cx = mx - ox;
+        s.p1.cy = my - oy;
+      }
+      if (!s.p2.fixed) {
+        s.p2.cx = mx + ox;
+        s.p2.cy = my + oy;
+      }
+    }
+  }
+}
+
+function refinePositions() {
+  var requiredIterations = rigidity;
+  for (var i = 0; i < spans.length; i++) {
+    var strength = spans[i].rigidity != null ? spans[i].rigidity : spans[i].strength;
+    var thisSpanIterations = Math.round(rigidity * strength);
+    if (thisSpanIterations > requiredIterations) {
+      requiredIterations = thisSpanIterations;
+    }
+  }
+  for (var j = 0; j < requiredIterations; j++) {
+    updateSpans(j);
+    applyConstraints(j);
+  }
+}
+
+function renderPoints() {
+  for (var i = 0; i < points.length; i++) {
+    var p = points[i];
+    ctx.beginPath();
+    ctx.fillStyle = "blue";
+    ctx.arc(p.cx, p.cy, 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function renderSpans() {
+  for (var i = 0; i < spans.length; i++) {
+    var s = spans[i];
+    if (s.visibility == "visible") {
+      ctx.beginPath();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "blue";
+      ctx.moveTo(s.p1.cx, s.p1.cy);
+      ctx.lineTo(s.p2.cx, s.p2.cy);
+      ctx.stroke();
+    }
+  }
+}
+
+function renderScaffolding() {
+  ctx.beginPath();
+  for (var i = 0; i < spans.length; i++) {
+    var s = spans[i];
+    if (s.visibility === "hidden") {
+      ctx.strokeStyle = "pink";
+      ctx.moveTo(s.p1.cx, s.p1.cy);
+      ctx.lineTo(s.p2.cx, s.p2.cy);
+    }
+  }
+  ctx.stroke();
+}
+
+function renderSkins() {
+  for (var i = 0; i < skins.length; i++) {
+    var s = skins[i];
+    ctx.beginPath();
+    ctx.strokeStyle = s.color;
+    ctx.lineWidth = 0;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.fillStyle = s.color;
+    ctx.moveTo(s.points[0].cx, s.points[0].cy);
+    for (var j = 1; j < s.points.length; j++) {
+      ctx.lineTo(s.points[j].cx, s.points[j].cy);
+    }
+    ctx.lineTo(s.points[0].cx, s.points[0].cy);
+    ctx.stroke();
+    ctx.fill();
+  }
+}
+
+function clearCanvas() {
+  if (!canvas || !ctx) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "rgba(245, 240, 255, 0.97)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function renderImages() {
+  if (viewSpans) {
+    renderSpans();
+  }
+  if (viewPoints) {
+    renderPoints();
+  }
+  if (viewScaffolding) {
+    renderScaffolding();
+  }
+}
+
+window.addEventListener("resize", scaleToWindow);
+
+function runVerlet() {
+  if (!canvas || !ctx) return;
+  scaleToWindow();
+  updatePoints();
+  refinePositions();
+  clearCanvas();
+  renderImages();
+  worldTime++;
+}
+
+
+
+
 
 
 ///////////////////////////////////////////////////////////////// 
@@ -591,3 +932,169 @@ function display() {
 
 
 
+
+
+/**
+ * Estela de capas SVG (hoja) siguiendo el puntero sobre el cuadro del hero.
+ * pointerdown + pointermove en fase capture (mouse y táctil).
+ */
+(function () {
+  var container = document.getElementById("hero-canvas-container");
+  var element = document.getElementById("whale");
+  if (!container || !element) return;
+
+  var width = 1;
+  var height = 1;
+  var fps = 30;
+  var easy = 6;
+  var maxspeed = 150;
+  var delay = 15;
+  var mouse = { x: 0, y: 0 };
+  var defs = "";
+  var loopTimer = null;
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  var LEAF_SVG =
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" xml:space="preserve"><g><path d="M512,355.975c0,0-63.51-36.67-141.855-36.67c-4.201,0-8.357,0.111-12.465,0.311c6.563-5.331,13.04-11.11,19.306-17.376 c55.397-55.397,73.175-127.438,73.175-127.438s-72.039,17.778-127.438,73.175c-9.876,9.876-18.55,20.281-26.146,30.712 c4.113-23.396,6.817-48.943,6.817-75.706C303.393,90.879,256,0,256,0s-47.393,90.879-47.393,202.984c0,26.763,2.705,52.311,6.817,75.706c-7.598-10.431 16.272-20.836-26.146 30.712C133.879,192.58,61.84,174.802,61.84,174.802 s17.778,72.041,73.175,127.438c6.265,6.265,12.743,12.044,19.306,17.376c-4.108-0.199-8.264-0.311-12.465-0.311 C63.51,319.304,0,355.975,0,355.975s63.51,36.67,141.855,36.67c17.394,0,34.049-1.813,49.447-4.626 c-0.612,0.589-1.221,1.183-1.825,1.788c-36.786,36.786-44.286,88.929-44.286,88.929s52.143-7.5,88.929-44.286 c1.804-1.804,3.519-3.653,5.185-5.523V512h33.391v-83.072c1.665,1.87,3.38,3.719,5.185,5.523 c36.786,36.786,88.929,44.286,88.929,44.286s-7.5-52.143-44.286-88.929c-0.604-0.604-1.213-1.2-1.825-1.788 c15.398,2.813,32.053,4.626,49.447,4.626C448.49,392.645,512,355.975,512,355.975z"/></g></svg>';
+
+  var parts = [];
+  var z;
+  for (z = 19; z >= 0; z--) {
+    parts.push({ x: 0, y: 0, z: z, data: LEAF_SVG });
+  }
+
+  function whaleShouldRun() {
+    if (reduced.matches) return false;
+    var aside = container.closest(".hero-inicio-bulb");
+    if (aside) {
+      var ast = window.getComputedStyle(aside);
+      if (ast.display === "none" || ast.visibility === "hidden") return false;
+    }
+    var st = window.getComputedStyle(container);
+    if (st.display === "none" || st.visibility === "hidden") return false;
+    var r = container.getBoundingClientRect();
+    return r.width >= 4 && r.height >= 4;
+  }
+
+  function syncDimensions() {
+    width = container.clientWidth || 1;
+    height = container.clientHeight || 1;
+  }
+
+  function centerTrail() {
+    mouse.x = width / 2;
+    mouse.y = height / 2;
+    var i;
+    for (i = 0; i < parts.length; i++) {
+      parts[i].x = mouse.x;
+      parts[i].y = mouse.y;
+    }
+  }
+
+  function updatePointerFromEvent(e) {
+    var r = container.getBoundingClientRect();
+    if (
+      e.clientX < r.left ||
+      e.clientX > r.right ||
+      e.clientY < r.top ||
+      e.clientY > r.bottom
+    ) {
+      return;
+    }
+    mouse.x = e.clientX - r.left;
+    mouse.y = e.clientY - r.top;
+  }
+
+  function loop() {
+    var i;
+    for (i = 0; i < parts.length; i++) {
+      var params = { mouse: mouse, part: parts[i] };
+      setTimeout(transform, parts[i].z * delay, params);
+    }
+    element.innerHTML = svg();
+  }
+
+  function svg() {
+    var out =
+      '<svg color-interpolation-filters="sRGB" style="fill-rule:evenodd;pointer-events:none;-moz-user-select:none;width:100%;height:100%;">';
+    var i;
+    for (i = 0; i < parts.length; i++) {
+      out +=
+        '<g transform="matrix(0.05 0 0 0.05 ' + parts[i].x + " " + parts[i].y + ')">';
+      out += parts[i].data;
+      out += "</g>";
+    }
+    out += defs;
+    out += "</svg>";
+    return out;
+  }
+
+  function transform(params) {
+    params.part.x = definemaxspeed(params.mouse.x - params.part.x) / easy + params.part.x;
+    params.part.y = definemaxspeed(params.mouse.y - params.part.y) / easy + params.part.y;
+  }
+
+  function definemaxspeed(speed) {
+    if (speed > 0 && speed > maxspeed) return maxspeed;
+    if (speed < 0 && speed < -maxspeed) return -maxspeed;
+    return speed;
+  }
+
+  function startLoop() {
+    if (loopTimer || !whaleShouldRun()) return;
+    loopTimer = window.setInterval(loop, 1000 / fps);
+  }
+
+  function stopLoop() {
+    if (loopTimer) {
+      window.clearInterval(loopTimer);
+      loopTimer = null;
+    }
+  }
+
+  function syncAndMaybeRestart() {
+    stopLoop();
+    if (!whaleShouldRun()) return;
+    syncDimensions();
+    centerTrail();
+    startLoop();
+    element.innerHTML = svg();
+  }
+
+  function boot() {
+    if (reduced.matches) return;
+    syncDimensions();
+    centerTrail();
+    document.addEventListener("pointermove", updatePointerFromEvent, true);
+    document.addEventListener("pointerdown", updatePointerFromEvent, true);
+    var ro = new ResizeObserver(syncAndMaybeRestart);
+    ro.observe(container);
+    if (typeof IntersectionObserver !== "undefined") {
+      var io = new IntersectionObserver(
+        function (entries) {
+          var k;
+          for (k = 0; k < entries.length; k++) {
+            if (entries[k].isIntersecting) {
+              syncAndMaybeRestart();
+              return;
+            }
+          }
+          stopLoop();
+        },
+        { root: null, rootMargin: "80px", threshold: 0 }
+      );
+      io.observe(container);
+    }
+    reduced.addEventListener("change", syncAndMaybeRestart);
+    requestAnimationFrame(function () {
+      requestAnimationFrame(syncAndMaybeRestart);
+    });
+    element.innerHTML = svg();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();

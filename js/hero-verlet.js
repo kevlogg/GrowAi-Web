@@ -1,4 +1,4 @@
-///////// VERLET.JS (GrowAi hero — canvas embebido) /////////
+///////// VERLET.JS (GrowAi hero, canvas embebido) /////////
 
 ////---INITIATION---////
 

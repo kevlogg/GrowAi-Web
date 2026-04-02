@@ -218,7 +218,7 @@
         gap: 2rem 2.5rem;
         align-items: start;
       }
-      @media (min-width: 1024px) {
+      @media (min-width: 768px) {
         main[id="inicio"] .hero-inicio-grid {
           grid-template-columns: minmax(0, 1fr) minmax(240px, 400px);
           gap: 2rem 3rem;
@@ -233,7 +233,7 @@
         align-self: start;
         width: 100%;
       }
-      @media (min-width: 1024px) {
+      @media (min-width: 768px) {
         main[id="inicio"] .hero-inicio-bulb {
           display: flex;
         }
@@ -255,30 +255,33 @@
         width: 100%;
         max-width: 320px;
         margin: 0.75rem auto 0;
-        aspect-ratio: 1;
+        aspect-ratio: 1 / 1;
+        min-height: 220px;
         border-radius: 0.5rem;
         overflow: hidden;
-        background: rgba(27, 15, 42, 0.04);
+        background: rgba(27, 15, 42, 0.06);
+        isolation: isolate;
       }
       main[id="inicio"] #hero-canvas-container #whale {
         position: absolute;
         inset: 0;
-        z-index: 3;
+        z-index: 1;
         width: 100%;
-        height: 99.5%;
-        margin: 0 auto;
+        height: 100%;
+        margin: 0;
         pointer-events: none;
       }
       main[id="inicio"] #hero-canvas-container #whale svg path {
-        fill: rgba(57, 255, 20, 0.32);
+        fill: rgba(57, 255, 20, 0.38);
       }
       main[id="inicio"] #hero-plant-canvas {
-        position: relative;
-        z-index: 2;
-        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
         width: 100%;
         height: 100%;
-        vertical-align: top;
+        z-index: 2;
+        display: block;
         touch-action: none;
       }
       main[id="inicio"] light-bulb.hero-light-bulb {
@@ -1186,8 +1189,8 @@
                 </toggle-switch>
               </div>
               <div id="hero-canvas-container" aria-hidden="true">
-                <canvas id="hero-plant-canvas" width="1000" height="1000"></canvas>
                 <div id="whale"></div>
+                <canvas id="hero-plant-canvas" width="1000" height="1000"></canvas>
               </div>
             </aside>
           </div>
@@ -2478,10 +2481,7 @@
           });
       })();
     </script>
-    <script src="js/hero-tools.js"></script>
-    <script src="js/hero-verlet.js"></script>
-    <script src="js/hero-plant.js"></script>
-    <script src="js/hero-whale.js"></script>
+    <script src="js/hero-sim-bundle.js"></script>
   </body>
 </html>
 

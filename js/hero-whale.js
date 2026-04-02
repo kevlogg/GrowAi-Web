@@ -29,6 +29,11 @@
 
   function whaleShouldRun() {
     if (reduced.matches) return false;
+    var aside = container.closest(".hero-inicio-bulb");
+    if (aside) {
+      var ast = window.getComputedStyle(aside);
+      if (ast.display === "none" || ast.visibility === "hidden") return false;
+    }
     var st = window.getComputedStyle(container);
     if (st.display === "none" || st.visibility === "hidden") return false;
     var r = container.getBoundingClientRect();
