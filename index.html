@@ -79,6 +79,10 @@
         max-width: 100%;
         overflow-x: hidden;
       }
+      /* Pin horizontal funciones: el strip ancho no debe recortarse dentro de main */
+      main#inicio {
+        overflow-x: visible;
+      }
       
       .max-w-6xl, .max-w-4xl, .max-w-2xl {
         max-width: 100%;
@@ -464,20 +468,88 @@
         border-radius: 3px;
       }
       
-      /* Sección FUNCIONES - OSCURA */
-      section[id="funciones"] {
-        background-color: #1B0F2A !important;
+      /* Bloque FUNCIONES: intro + pin horizontal (GSAP) + cierre */
+      #funciones.funciones-experience {
+        overflow-x: hidden;
+        max-width: 100%;
       }
-      section[id="funciones"] .text-textPrimary,
-      section[id="funciones"] .text-textPrimary\/70,
-      section[id="funciones"] .text-textPrimary\/60,
-      section[id="funciones"] .text-white,
-      section[id="funciones"] h1,
-      section[id="funciones"] h2,
-      section[id="funciones"] h3,
-      section[id="funciones"] p,
-      section[id="funciones"] span {
-        color: #C9C3FF !important;
+      #funciones .funciones-scroll-intro {
+        background-color: #c9c3ff !important;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #funciones #sectionPinFunciones {
+        background-color: #1b0f2a !important;
+        height: 100vh;
+        overflow: hidden;
+        width: 100%;
+        max-width: 100%;
+        position: relative;
+        left: 0;
+      }
+      #funciones #sectionPinFunciones .pin-wrap-funciones {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: flex-start;
+        height: 100vh;
+        width: max-content;
+        max-width: none;
+        padding: 2rem min(5vw, 3rem);
+        padding-top: max(2rem, 5.25rem);
+        box-sizing: border-box;
+        will-change: transform;
+      }
+      #funciones .funciones-pin-lead {
+        flex-shrink: 0;
+        min-width: min(92vw, 540px);
+        max-width: 560px;
+        padding: 0 clamp(1rem, 4vw, 2.5rem) 0 0;
+        box-sizing: border-box;
+      }
+      #funciones #sectionPinFunciones .funciones-pin-card {
+        flex-shrink: 0;
+        width: min(440px, 88vw);
+        min-width: min(440px, 88vw);
+        margin-right: min(4vw, 2rem);
+        box-sizing: border-box;
+      }
+      #funciones #sectionPinFunciones .funciones-pin-lead h2,
+      #funciones #sectionPinFunciones .funciones-pin-lead h2 strong {
+        color: #c9c3ff !important;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #funciones #sectionPinFunciones {
+          height: auto !important;
+          overflow: visible !important;
+        }
+        #funciones .pin-wrap-funciones {
+          flex-direction: column !important;
+          height: auto !important;
+          width: 100% !important;
+          max-width: 48rem !important;
+          margin-left: auto;
+          margin-right: auto;
+          will-change: auto;
+        }
+        #funciones .pin-wrap-funciones > * {
+          min-width: 100% !important;
+          width: 100% !important;
+          max-width: 28rem;
+          margin-left: auto !important;
+          margin-right: auto !important;
+          margin-bottom: 2rem;
+          padding-right: 0 !important;
+        }
+      }
+      #funciones .funciones-scroll-outro {
+        background: linear-gradient(180deg, #c9c3ff 0%, #b8b0f0 100%) !important;
+        min-height: 72vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       
       /* Sección SENSEI - CLARA */
@@ -1003,30 +1075,50 @@
         </div>
       </section>
 
-      <section id="funciones" class="py-20 bg-secondary/40 border-y border-secondary/60">
-        <div class="max-w-6xl mx-auto px-4">
-          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
-            <div>
-              <span class="text-sm font-semibold text-accent uppercase tracking-wider"
-                >Todas las funciones · Demo</span
-              >
-              <h2 class="text-2xl md:text-3xl font-bold mt-2">
-                Explora GrowAi · Descarga la app para utilizar estas funciones
-              </h2>
-              <p class="text-textPrimary/70 mt-3 max-w-3xl">
-                Conoce cada aspecto de la plataforma que transforma el cultivo de cannabis. Estas secciones muestran el potencial de GrowAi; accede a la experiencia completa descargando la app móvil.
-              </p>
-            </div>
+      <div id="funciones" class="funciones-experience border-y border-secondary/60">
+        <section class="funciones-scroll-intro" aria-label="Introducción a las funciones">
+          <div
+            class="w-full max-w-4xl mx-auto px-6 py-20 md:py-24 flex flex-col justify-center min-h-[100svh]"
+          >
+            <span class="text-sm font-semibold uppercase tracking-wider text-[#8B6ED0]"
+              >Todas las funciones · Demo</span
+            >
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.08] mt-4 text-[#1B0F2A]">
+              <span class="block">Explorá</span>
+              <span class="block">GrowAi</span>
+              <span class="block text-[#4a3568]">en profundidad</span>
+            </h1>
+            <p class="mt-8 text-lg md:text-xl text-[#1B0F2A]/85 max-w-2xl leading-relaxed">
+              Al hacer scroll, la siguiente pantalla queda fija y podés recorrer en horizontal las tres funciones
+              principales de la app:
+              <strong class="text-[#1B0F2A]">Mis Cultivos</strong>,
+              <strong class="text-[#1B0F2A]">Sensei</strong> y
+              <strong class="text-[#1B0F2A]">REPROCANN</strong>. Cada tarjeta resume qué incluye y cómo acceder desde
+              la aplicación.
+            </p>
             <a
               href="#descargar"
-              class="self-start inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-white transition"
+              class="mt-10 inline-flex items-center gap-2 self-start text-sm font-semibold text-[#8B6ED0] hover:text-[#1B0F2A] transition"
               >Descargar ahora →</a
             >
           </div>
-          <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-            <article class="rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition" style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;">
+        </section>
+
+        <section id="sectionPinFunciones" class="funciones-pin-section" aria-label="Funciones en desplazamiento horizontal">
+          <div class="pin-wrap-funciones">
+            <div class="funciones-pin-lead">
+              <h2 class="text-2xl md:text-3xl font-bold leading-snug">
+                Tres pilares para tu cultivo: registro y seguimiento con <strong>Mis Cultivos</strong>, orientación con
+                IA en <strong>Sensei</strong>, y apoyo en trámites con <strong>REPROCANN</strong>. Deslizá hacia la
+                derecha para ver el detalle de cada módulo.
+              </h2>
+            </div>
+            <article
+              class="funciones-pin-card rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition"
+              style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;"
+            >
               <div class="flex items-center gap-4">
-                <span class="text-3xl">🌱</span>
+                <span class="text-3xl" aria-hidden="true">🌱</span>
                 <div>
                   <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">Mis Cultivos</h3>
                   <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
@@ -1034,9 +1126,17 @@
                   </p>
                 </div>
               </div>
-              <div class="rounded-2xl p-4 text-sm" style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;">
-                <p style="color: #C9C3FF !important; opacity: 0.9;"><strong style="color: #C9C3FF !important;">Incluye:</strong> Registro por planta, historial, notas, recordatorios de riego y nutrición.</p>
-                <p class="mt-2 font-medium" style="color: #FF9800 !important;">Descarga la app para gestionar tus cultivos en tiempo real.</p>
+              <div
+                class="rounded-2xl p-4 text-sm"
+                style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;"
+              >
+                <p style="color: #C9C3FF !important; opacity: 0.9;">
+                  <strong style="color: #C9C3FF !important;">Incluye:</strong> Registro por planta, historial, notas,
+                  recordatorios de riego y nutrición.
+                </p>
+                <p class="mt-2 font-medium" style="color: #FF9800 !important;">
+                  Descarga la app para gestionar tus cultivos en tiempo real.
+                </p>
               </div>
               <a
                 href="#descargar"
@@ -1044,26 +1144,37 @@
                 style="background-color: #8B6ED0 !important; color: #FFFFFF !important; box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);"
                 onmouseover="this.style.backgroundColor='#9B7EE0'; this.style.boxShadow='0 6px 25px rgba(139, 110, 208, 0.5)';"
                 onmouseout="this.style.backgroundColor='#8B6ED0'; this.style.boxShadow='0 4px 20px rgba(139, 110, 208, 0.4)';"
+                >Descarga la app para usar</a
               >
-                Descarga la app para usar
-              </a>
               <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
                 Esta función está disponible en la app móvil.
               </p>
             </article>
-            <article class="rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition" style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;">
+            <article
+              class="funciones-pin-card rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition"
+              style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;"
+            >
               <div class="flex items-center gap-4">
-                <span class="text-3xl">🧘</span>
+                <span class="text-3xl" aria-hidden="true">🧘</span>
                 <div>
                   <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">Sensei</h3>
                   <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
-                    Chateá con tu asistente de IA: describí síntomas o compartí fotos y recibí orientación clara sobre tu cultivo.
+                    Chateá con tu asistente de IA: describí síntomas o compartí fotos y recibí orientación clara sobre
+                    tu cultivo.
                   </p>
                 </div>
               </div>
-              <div class="rounded-2xl p-4 text-sm" style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;">
-                <p style="color: #C9C3FF !important; opacity: 0.9;"><strong style="color: #C9C3FF !important;">Incluye:</strong> Conversaciones con contexto, seguimiento por chat y respuestas pensadas para cultivadores.</p>
-                <p class="mt-2 font-medium" style="color: #FF9800 !important;">Disponible en la app; la web solo muestra información.</p>
+              <div
+                class="rounded-2xl p-4 text-sm"
+                style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;"
+              >
+                <p style="color: #C9C3FF !important; opacity: 0.9;">
+                  <strong style="color: #C9C3FF !important;">Incluye:</strong> Conversaciones con contexto, seguimiento
+                  por chat y respuestas pensadas para cultivadores.
+                </p>
+                <p class="mt-2 font-medium" style="color: #FF9800 !important;">
+                  Disponible en la app; la web solo muestra información.
+                </p>
               </div>
               <a
                 href="#descargar"
@@ -1071,43 +1182,18 @@
                 style="background-color: #8B6ED0 !important; color: #FFFFFF !important; box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);"
                 onmouseover="this.style.backgroundColor='#9B7EE0'; this.style.boxShadow='0 6px 25px rgba(139, 110, 208, 0.5)';"
                 onmouseout="this.style.backgroundColor='#8B6ED0'; this.style.boxShadow='0 4px 20px rgba(139, 110, 208, 0.4)';"
+                >Descarga la app para usar</a
               >
-                Descarga la app para usar
-              </a>
               <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
                 Esta función está disponible en la app móvil.
               </p>
             </article>
-            <article class="rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition" style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;">
+            <article
+              class="funciones-pin-card rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition"
+              style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;"
+            >
               <div class="flex items-center gap-4">
-                <span class="text-3xl">📚</span>
-                <div>
-                  <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">Recursos Profesionales</h3>
-                  <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
-                    Guías, capacitaciones, estudios y biblioteca de enfermedades para decisiones confiables.
-                  </p>
-                </div>
-              </div>
-              <div class="rounded-2xl p-4 text-sm" style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;">
-                <p style="color: #C9C3FF !important; opacity: 0.9;"><strong style="color: #C9C3FF !important;">Incluye:</strong> Videos, documentos descargables y actualizaciones continuas.</p>
-                <p class="mt-2 font-medium" style="color: #FF9800 !important;">Interactúa con contenido premium en la app.</p>
-              </div>
-              <a
-                href="#descargar"
-                class="inline-flex justify-center items-center rounded-full py-2 font-semibold transition"
-                style="background-color: #8B6ED0 !important; color: #FFFFFF !important; box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);"
-                onmouseover="this.style.backgroundColor='#9B7EE0'; this.style.boxShadow='0 6px 25px rgba(139, 110, 208, 0.5)';"
-                onmouseout="this.style.backgroundColor='#8B6ED0'; this.style.boxShadow='0 4px 20px rgba(139, 110, 208, 0.4)';"
-              >
-                Descarga la app para usar
-              </a>
-              <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
-                Esta función está disponible en la app móvil.
-              </p>
-            </article>
-            <article class="rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition" style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;">
-              <div class="flex items-center gap-4">
-                <span class="text-3xl">🏥</span>
+                <span class="text-3xl" aria-hidden="true">🏥</span>
                 <div>
                   <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">REPROCANN</h3>
                   <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
@@ -1115,8 +1201,14 @@
                   </p>
                 </div>
               </div>
-              <div class="rounded-2xl p-4 text-sm" style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;">
-                <p style="color: #C9C3FF !important; opacity: 0.9;"><strong style="color: #C9C3FF !important;">Incluye:</strong> Checklist, alertas de renovación, vinculación profesional.</p>
+              <div
+                class="rounded-2xl p-4 text-sm"
+                style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;"
+              >
+                <p style="color: #C9C3FF !important; opacity: 0.9;">
+                  <strong style="color: #C9C3FF !important;">Incluye:</strong> Checklist, alertas de renovación,
+                  vinculación profesional.
+                </p>
                 <p class="mt-2 font-medium" style="color: #FF9800 !important;">Gestiona tus trámites desde la app.</p>
               </div>
               <a
@@ -1125,68 +1217,29 @@
                 style="background-color: #8B6ED0 !important; color: #FFFFFF !important; box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);"
                 onmouseover="this.style.backgroundColor='#9B7EE0'; this.style.boxShadow='0 6px 25px rgba(139, 110, 208, 0.5)';"
                 onmouseout="this.style.backgroundColor='#8B6ED0'; this.style.boxShadow='0 4px 20px rgba(139, 110, 208, 0.4)';"
+                >Descarga la app para usar</a
               >
-                Descarga la app para usar
-              </a>
-              <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
-                Esta función está disponible en la app móvil.
-              </p>
-            </article>
-            <article class="rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition" style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;">
-              <div class="flex items-center gap-4">
-                <span class="text-3xl">💳</span>
-                <div>
-                  <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">Planes de Suscripción</h3>
-                  <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
-                    Accede a funcionalidades avanzadas con los planes Básico, Pro y Admin.
-                  </p>
-                </div>
-              </div>
-              <div class="rounded-2xl p-4 text-sm" style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;">
-                <p style="color: #C9C3FF !important; opacity: 0.9;"><strong style="color: #C9C3FF !important;">Incluye:</strong> Sensei y funciones avanzadas según plan, equipo colaborativo, reportes.</p>
-                <p class="mt-2 font-medium" style="color: #FF9800 !important;">Contrata desde la app y gestiona tu equipo.</p>
-              </div>
-              <a
-                href="#descargar"
-                class="inline-flex justify-center items-center rounded-full py-2 font-semibold transition"
-                style="background-color: #8B6ED0 !important; color: #FFFFFF !important; box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);"
-                onmouseover="this.style.backgroundColor='#9B7EE0'; this.style.boxShadow='0 6px 25px rgba(139, 110, 208, 0.5)';"
-                onmouseout="this.style.backgroundColor='#8B6ED0'; this.style.boxShadow='0 4px 20px rgba(139, 110, 208, 0.4)';"
-              >
-                Descarga la app para usar
-              </a>
-              <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
-                Esta función está disponible en la app móvil.
-              </p>
-            </article>
-            <article class="rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition" style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;">
-              <div class="flex items-center gap-4">
-                <span class="text-3xl">🛒</span>
-                <div>
-                  <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">Tienda (Próximamente)</h3>
-                  <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
-                    Productos, servicios y packs exclusivos para optimizar tu cultivo.
-                  </p>
-                </div>
-              </div>
-              <div class="rounded-2xl p-4 text-sm" style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;">
-                <p style="color: #C9C3FF !important; opacity: 0.9;"><strong style="color: #C9C3FF !important;">Incluye:</strong> Equipamiento, consultorías, beneficios para suscriptores.</p>
-                <p class="mt-2 font-medium" style="color: #FF9800 !important;">Será accesible desde la app en su lanzamiento.</p>
-              </div>
-              <button
-                class="cursor-not-allowed rounded-full py-2 font-semibold"
-                style="background-color: rgba(42, 31, 58, 0.5) !important; color: rgba(201, 195, 255, 0.5) !important; border: 1px solid rgba(201, 195, 255, 0.2) !important;"
-                disabled
-              >
-                Descarga la app para usar
-              </button>
               <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
                 Esta función está disponible en la app móvil.
               </p>
             </article>
           </div>
-        </div>
-      </section>
+        </section>
+
+        <section class="funciones-scroll-outro" aria-label="Cierre de funciones">
+          <div class="max-w-3xl mx-auto px-6 py-20 md:py-28 text-center flex flex-col items-center justify-center min-h-[min(72vh,640px)]">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#1B0F2A]">¿Listo para probarlo?</h2>
+            <p class="mt-4 text-lg text-[#1B0F2A]/80 max-w-xl leading-relaxed">
+              Descargá GrowAi en Android y usá Mis Cultivos, Sensei y REPROCANN cuando quieras.
+            </p>
+            <a
+              href="#descargar"
+              class="mt-10 inline-flex items-center gap-2 rounded-full px-8 py-4 font-semibold text-[#C9C3FF] bg-[#1B0F2A] shadow-lg hover:bg-[#2A1F3A] transition"
+              >Ir a descargar →</a
+            >
+          </div>
+        </section>
+      </div>
 
       <section
         id="sensei"
@@ -1643,6 +1696,47 @@
       </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script>
+      (function () {
+        function initFuncionesHorizontalPin() {
+          if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+          if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+          var pinSection = document.querySelector("#sectionPinFunciones");
+          var pinWrap = pinSection ? pinSection.querySelector(".pin-wrap-funciones") : null;
+          if (!pinSection || !pinWrap) return;
+          gsap.registerPlugin(ScrollTrigger);
+          var getScrollLength = function () {
+            return Math.max(0, pinWrap.scrollWidth - window.innerWidth);
+          };
+          gsap.to(pinWrap, {
+            x: function () {
+              return -getScrollLength();
+            },
+            ease: "none",
+            scrollTrigger: {
+              trigger: pinSection,
+              pin: true,
+              scrub: true,
+              start: "top top",
+              end: function () {
+                return "+=" + getScrollLength();
+              },
+              invalidateOnRefresh: true,
+              anticipatePin: 1,
+            },
+          });
+        }
+        window.addEventListener("load", function () {
+          initFuncionesHorizontalPin();
+          if (typeof ScrollTrigger !== "undefined") ScrollTrigger.refresh();
+        });
+        window.addEventListener("resize", function () {
+          if (typeof ScrollTrigger !== "undefined") ScrollTrigger.refresh();
+        });
+      })();
+    </script>
     <script>
       const menuButton = document.getElementById('menu-button');
       const mobileMenu = document.getElementById('mobile-menu');
