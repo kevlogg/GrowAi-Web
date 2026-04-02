@@ -512,6 +512,13 @@
         max-width: 100%;
         position: relative;
         left: 0;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      #funciones #sectionPinFunciones::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
       }
       #funciones #sectionPinFunciones .pin-wrap-funciones {
         display: inline-flex;
@@ -547,28 +554,12 @@
       #funciones #sectionPinFunciones .funciones-pin-lead h2 strong {
         color: #c9c3ff !important;
       }
-      /* Con “reducir movimiento”: misma fila horizontal + scroll táctil; no apilar en columna */
-      @media (prefers-reduced-motion: reduce) {
-        #funciones #sectionPinFunciones {
-          height: min(100vh, 720px) !important;
-          overflow-x: auto !important;
-          overflow-y: hidden !important;
-          -webkit-overflow-scrolling: touch;
-          scroll-snap-type: x mandatory;
-        }
-        #funciones .pin-wrap-funciones {
-          flex-direction: row !important;
-          flex-wrap: nowrap !important;
-          height: 100% !important;
-          width: max-content !important;
-          max-width: none !important;
-          will-change: auto;
-          transform: none !important;
-        }
-        #funciones #sectionPinFunciones .funciones-pin-lead,
-        #funciones #sectionPinFunciones .funciones-pin-card {
-          scroll-snap-align: start;
-        }
+      /* Entrada: texto y cards (GSAP devuelve opacidad; sin JS siguen visibles) */
+      #funciones #sectionPinFunciones.funciones-pin-gsap .funciones-pin-lead,
+      #funciones #sectionPinFunciones.funciones-pin-gsap .funciones-pin-card {
+        opacity: 0;
+        transform: translate3d(0, 1.25rem, 0);
+        will-change: transform, opacity;
       }
       #funciones .funciones-scroll-outro {
         background: linear-gradient(180deg, #c9c3ff 0%, #b8b0f0 100%) !important;
@@ -745,6 +736,16 @@
         border-color: rgba(255, 107, 107, 0.4) !important;
       }
       
+      /* Header siempre visible: sticky falla con overflow-x en html/body; el pin de GSAP usa fixed y tapaba el nav */
+      body > header.site-header-bar {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9990;
+        width: 100%;
+        max-width: 100%;
+      }
       /* Header fijo - mismo color que la primera sección */
       header {
         background-color: #C9C3FF !important;
@@ -913,7 +914,7 @@
   <body class="font-inter bg-primary text-textPrimary">
     <div id="scroll-chrome-bg" aria-hidden="true"></div>
     <header
-      class="sticky top-0 z-50 bg-primary/90 backdrop-blur border-b border-secondary"
+      class="site-header-bar bg-primary/90 backdrop-blur border-b border-secondary"
     >
       <div class="max-w-6xl mx-auto px-4">
         <div class="flex items-center justify-between py-4">
@@ -1714,33 +1715,87 @@
     <script>
       (function () {
         function initFuncionesHorizontalPin() {
-          if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
           if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
           var pinSection = document.querySelector("#sectionPinFunciones");
           var pinWrap = pinSection ? pinSection.querySelector(".pin-wrap-funciones") : null;
           if (!pinSection || !pinWrap) return;
+          if (pinSection.dataset.gsapFuncionesPin === "1") return;
+          pinSection.dataset.gsapFuncionesPin = "1";
           gsap.registerPlugin(ScrollTrigger);
+          var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
           var getScrollLength = function () {
             var viewW = pinSection.clientWidth || window.innerWidth;
             return Math.max(0, pinWrap.scrollWidth - viewW);
           };
-          gsap.to(pinWrap, {
-            x: function () {
-              return -getScrollLength();
+          var introPx = function () {
+            return reduce
+              ? 0
+              : Math.min(520, Math.max(260, window.innerHeight * 0.38));
+          };
+          var stConfig = {
+            trigger: pinSection,
+            pin: true,
+            scrub: 0.65,
+            start: "top top",
+            end: function () {
+              return "+=" + (introPx() + getScrollLength());
             },
-            ease: "none",
-            scrollTrigger: {
-              trigger: pinSection,
-              pin: true,
-              scrub: true,
-              start: "top top",
-              end: function () {
-                return "+=" + getScrollLength();
+            invalidateOnRefresh: true,
+            anticipatePin: 1,
+          };
+          if (reduce) {
+            gsap.timeline({ scrollTrigger: stConfig }).fromTo(
+              pinWrap,
+              { x: 0 },
+              {
+                x: function () {
+                  return -getScrollLength();
+                },
+                ease: "none",
+                duration: 1,
               },
-              invalidateOnRefresh: true,
-              anticipatePin: 1,
+              0
+            );
+            return;
+          }
+          pinSection.classList.add("funciones-pin-gsap");
+          var lead = pinSection.querySelector(".funciones-pin-lead");
+          var cardEls = pinSection.querySelectorAll(".funciones-pin-card");
+          var tl = gsap.timeline({ scrollTrigger: stConfig });
+          if (lead) {
+            tl.fromTo(
+              lead,
+              { opacity: 0, y: 22 },
+              { opacity: 1, y: 0, duration: 0.18, ease: "power2.out" },
+              0
+            );
+          }
+          if (cardEls.length) {
+            tl.fromTo(
+              cardEls,
+              { opacity: 0, y: 26 },
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.14,
+                stagger: 0.07,
+                ease: "power2.out",
+              },
+              0.14
+            );
+          }
+          tl.fromTo(
+            pinWrap,
+            { x: 0 },
+            {
+              x: function () {
+                return -getScrollLength();
+              },
+              duration: 0.58,
+              ease: "none",
             },
-          });
+            0.42
+          );
         }
         function runAfterLayout() {
           requestAnimationFrame(function () {
