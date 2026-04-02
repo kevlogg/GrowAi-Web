@@ -228,14 +228,43 @@
         display: none;
         flex-direction: column;
         align-items: center;
-        gap: 1.35rem;
+        gap: 0;
         padding-top: 0;
         align-self: start;
+        width: 100%;
       }
       @media (min-width: 1024px) {
         main[id="inicio"] .hero-inicio-bulb {
           display: flex;
         }
+      }
+      main[id="inicio"] .hero-bulb-controls-row {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 0.75rem 1rem;
+        width: 100%;
+      }
+      main[id="inicio"] .hero-bulb-controls-row toggle-switch.hero-bulb-toggle {
+        flex-shrink: 0;
+        margin-top: 0.35rem;
+      }
+      main[id="inicio"] #hero-canvas-container {
+        position: relative;
+        width: 100%;
+        max-width: 320px;
+        margin: 0.75rem auto 0;
+        aspect-ratio: 1;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        background: rgba(27, 15, 42, 0.04);
+      }
+      main[id="inicio"] #hero-plant-canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        vertical-align: top;
       }
       main[id="inicio"] light-bulb.hero-light-bulb {
         position: relative;
@@ -1100,45 +1129,50 @@
                 <p class="text-xs md:text-sm text-textPrimary/60 pl-1">Disponible en Android</p>
               </div>
             </div>
-            <aside class="hero-inicio-bulb" aria-label="Foco decorativo">
-              <light-bulb class="hero-light-bulb" status="off">
-                <div class="hero-bulb-svg-wrap">
-                  <svg class="bulb" viewBox="0 0 90 120" aria-hidden="true">
-                    <defs>
-                      <radialGradient id="hero-bulb-grad" cx="40%" cy="35%" r="60%">
-                        <stop offset="0%" stop-color="#fff9c4" class="bulb-stop-0" />
-                        <stop offset="100%" stop-color="#f0c030" class="bulb-stop-1" />
-                      </radialGradient>
-                    </defs>
-                    <path
-                      class="bulb-glass"
-                      d="M45 8 C20 8 10 28 10 46 C10 62 20 74 32 82 L32 96 C32 100 36 104 45 104 C54 104 58 100 58 96 L58 82 C70 74 80 62 80 46 C80 28 70 8 45 8Z"
-                      fill="#2a2a3a"
-                      stroke="#444"
-                      stroke-width="1.5"
-                    />
-                    <polyline
-                      class="bulb-filament"
-                      points="38,90 38,70 43,62 47,70 52,62 52,90"
-                      fill="none"
-                      stroke="#555"
-                      stroke-width="1.8"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <rect class="bulb-base-1" x="32" y="96" width="26" height="5" rx="2" fill="#444" />
-                    <rect class="bulb-base-2" x="34" y="101" width="22" height="5" rx="2" fill="#3a3a3a" />
-                    <rect class="bulb-base-3" x="36" y="106" width="18" height="6" rx="2" fill="#333" />
-                  </svg>
-                </div>
-                <div class="glow"></div>
-              </light-bulb>
-              <toggle-switch class="hero-bulb-toggle">
-                <input type="checkbox" id="hero-bulb-switch" />
-                <label for="hero-bulb-switch"
-                  ><span class="sr-only">Encender o apagar el foco decorativo</span></label
-                >
-              </toggle-switch>
+            <aside class="hero-inicio-bulb" aria-label="Foco y cultivo simulado">
+              <div class="hero-bulb-controls-row">
+                <light-bulb class="hero-light-bulb" status="off">
+                  <div class="hero-bulb-svg-wrap">
+                    <svg class="bulb" viewBox="0 0 90 120" aria-hidden="true">
+                      <defs>
+                        <radialGradient id="hero-bulb-grad" cx="40%" cy="35%" r="60%">
+                          <stop offset="0%" stop-color="#fff9c4" class="bulb-stop-0" />
+                          <stop offset="100%" stop-color="#f0c030" class="bulb-stop-1" />
+                        </radialGradient>
+                      </defs>
+                      <path
+                        class="bulb-glass"
+                        d="M45 8 C20 8 10 28 10 46 C10 62 20 74 32 82 L32 96 C32 100 36 104 45 104 C54 104 58 100 58 96 L58 82 C70 74 80 62 80 46 C80 28 70 8 45 8Z"
+                        fill="#2a2a3a"
+                        stroke="#444"
+                        stroke-width="1.5"
+                      />
+                      <polyline
+                        class="bulb-filament"
+                        points="38,90 38,70 43,62 47,70 52,62 52,90"
+                        fill="none"
+                        stroke="#555"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <rect class="bulb-base-1" x="32" y="96" width="26" height="5" rx="2" fill="#444" />
+                      <rect class="bulb-base-2" x="34" y="101" width="22" height="5" rx="2" fill="#3a3a3a" />
+                      <rect class="bulb-base-3" x="36" y="106" width="18" height="6" rx="2" fill="#333" />
+                    </svg>
+                  </div>
+                  <div class="glow"></div>
+                </light-bulb>
+                <toggle-switch class="hero-bulb-toggle">
+                  <input type="checkbox" id="hero-bulb-switch" />
+                  <label for="hero-bulb-switch"
+                    ><span class="sr-only">Encender o apagar el foco decorativo</span></label
+                  >
+                </toggle-switch>
+              </div>
+              <div id="hero-canvas-container" aria-hidden="true">
+                <canvas id="hero-plant-canvas" width="1000" height="1000"></canvas>
+              </div>
             </aside>
           </div>
         </div>
@@ -2428,6 +2462,9 @@
           });
       })();
     </script>
+    <script src="js/hero-tools.js"></script>
+    <script src="js/hero-verlet.js"></script>
+    <script src="js/hero-plant.js"></script>
   </body>
 </html>
 
