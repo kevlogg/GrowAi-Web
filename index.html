@@ -490,18 +490,11 @@
         border-radius: 3px;
       }
       
-      /* Bloque FUNCIONES: intro + pin horizontal (GSAP) + cierre */
+      /* Bloque FUNCIONES: pin horizontal (GSAP) + cierre */
       #funciones.funciones-experience {
         /* visible: no recortar el carril al animar translateX dentro del pin */
         overflow-x: visible;
         max-width: 100%;
-      }
-      #funciones .funciones-scroll-intro {
-        background-color: rgba(201, 195, 255, 0.92) !important;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
       }
       #funciones #sectionPinFunciones {
         background-color: rgba(27, 15, 42, 0.88) !important;
@@ -536,12 +529,29 @@
         will-change: transform;
         vertical-align: top;
       }
+      /* Empuja la 1.ª card: solo un “peek” (~4.5rem) a la derecha del texto */
+      #funciones .funciones-pin-spacer {
+        flex-shrink: 0;
+        width: max(
+          0px,
+          calc(100svw - 2 * min(5vw, 3rem) - min(88vw, 560px) - 4.5rem)
+        );
+        min-width: 0;
+        pointer-events: none;
+      }
       #funciones .funciones-pin-lead {
         flex-shrink: 0;
-        min-width: min(92vw, 540px);
+        width: min(560px, 88vw);
         max-width: 560px;
-        padding: 0 clamp(1rem, 4vw, 2.5rem) 0 0;
+        min-width: 0;
+        padding: 0 clamp(0.75rem, 3vw, 1.75rem) 0 0;
         box-sizing: border-box;
+        align-self: center;
+      }
+      #funciones .funciones-pin-lead h2 {
+        text-wrap: balance;
+        line-height: 1.35;
+        letter-spacing: -0.02em;
       }
       #funciones #sectionPinFunciones .funciones-pin-card {
         flex-shrink: 0;
@@ -554,11 +564,20 @@
       #funciones #sectionPinFunciones .funciones-pin-lead h2 strong {
         color: #c9c3ff !important;
       }
-      /* Entrada: texto y cards (GSAP devuelve opacidad; sin JS siguen visibles) */
-      #funciones #sectionPinFunciones.funciones-pin-gsap .funciones-pin-lead,
-      #funciones #sectionPinFunciones.funciones-pin-gsap .funciones-pin-card {
+      /* Entrada: solo el lead al inicio; 1.ª card apenas insinuada; el resto al hacer scroll */
+      #funciones #sectionPinFunciones.funciones-pin-gsap .funciones-pin-lead {
         opacity: 0;
         transform: translate3d(0, 1.25rem, 0);
+        will-change: transform, opacity;
+      }
+      #funciones #sectionPinFunciones.funciones-pin-gsap .funciones-pin-card:first-of-type {
+        opacity: 0.22;
+        transform: translate3d(12px, 0, 0);
+        will-change: transform, opacity;
+      }
+      #funciones #sectionPinFunciones.funciones-pin-gsap .funciones-pin-card:not(:first-of-type) {
+        opacity: 0;
+        transform: translate3d(0, 1.5rem, 0);
         will-change: transform, opacity;
       }
       #funciones .funciones-scroll-outro {
@@ -812,13 +831,15 @@
         z-index: 1;
         pointer-events: none;
       }
+      /* Haz centrado bajo la barra (mismo eje que translateX(-50%) del .tubelight) */
       header .header-tubelight-nav .tubelight .light-ray {
         position: absolute;
-        left: -25%;
+        left: 50%;
         top: 4px;
-        width: 150%;
+        transform: translateX(-50%);
+        width: 200%;
         height: 52px;
-        clip-path: polygon(5% 100%, 25% 0, 75% 0, 95% 100%);
+        clip-path: polygon(43% 0, 57% 0, 91% 100%, 9% 100%);
         background: linear-gradient(
           to bottom,
           rgba(139, 110, 208, 0.35) 0%,
@@ -1092,34 +1113,6 @@
       </section>
 
       <div id="funciones" class="funciones-experience border-y border-secondary/60">
-        <section class="funciones-scroll-intro" aria-label="Introducción a las funciones">
-          <div
-            class="w-full max-w-4xl mx-auto px-6 py-20 md:py-24 flex flex-col justify-center min-h-[100svh]"
-          >
-            <span class="text-sm font-semibold uppercase tracking-wider text-[#8B6ED0]"
-              >Todas las funciones · Demo</span
-            >
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.08] mt-4 text-[#1B0F2A]">
-              <span class="block">Explorá</span>
-              <span class="block">GrowAi</span>
-              <span class="block text-[#4a3568]">en profundidad</span>
-            </h1>
-            <p class="mt-8 text-lg md:text-xl text-[#1B0F2A]/85 max-w-2xl leading-relaxed">
-              Al hacer scroll, la siguiente pantalla queda fija y podés recorrer en horizontal las tres funciones
-              principales de la app:
-              <strong class="text-[#1B0F2A]">Mis Cultivos</strong>,
-              <strong class="text-[#1B0F2A]">Sensei</strong> y
-              <strong class="text-[#1B0F2A]">REPROCANN</strong>. Cada tarjeta resume qué incluye y cómo acceder desde
-              la aplicación.
-            </p>
-            <a
-              href="#descargar"
-              class="mt-10 inline-flex items-center gap-2 self-start text-sm font-semibold text-[#8B6ED0] hover:text-[#1B0F2A] transition"
-              >Descargar ahora →</a
-            >
-          </div>
-        </section>
-
         <section id="sectionPinFunciones" class="funciones-pin-section" aria-label="Funciones en desplazamiento horizontal">
           <div class="pin-wrap-funciones">
             <div class="funciones-pin-lead">
@@ -1129,6 +1122,7 @@
                 derecha para ver el detalle de cada módulo.
               </h2>
             </div>
+            <div class="funciones-pin-spacer" aria-hidden="true"></div>
             <article
               class="funciones-pin-card rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition"
               style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;"
@@ -1732,19 +1726,31 @@
               ? 0
               : Math.min(520, Math.max(260, window.innerHeight * 0.38));
           };
+          var outroPx = function () {
+            return Math.min(560, Math.max(320, window.innerHeight * 0.52));
+          };
           var stConfig = {
             trigger: pinSection,
             pin: true,
             scrub: 0.65,
             start: "top top",
             end: function () {
-              return "+=" + (introPx() + getScrollLength());
+              var sl = getScrollLength();
+              var o = outroPx();
+              if (reduce) return "+=" + (sl + o);
+              return "+=" + (introPx() + sl + o);
             },
             invalidateOnRefresh: true,
             anticipatePin: 1,
           };
           if (reduce) {
-            gsap.timeline({ scrollTrigger: stConfig }).fromTo(
+            var slR = getScrollLength();
+            var oR = outroPx();
+            var tR = slR + oR;
+            var dMoveR = tR ? slR / tR : 1;
+            var dHoldR = tR ? oR / tR : 0;
+            var tlR = gsap.timeline({ scrollTrigger: stConfig });
+            tlR.fromTo(
               pinWrap,
               { x: 0 },
               {
@@ -1752,36 +1758,64 @@
                   return -getScrollLength();
                 },
                 ease: "none",
-                duration: 1,
+                duration: dMoveR,
               },
               0
             );
+            if (dHoldR > 0) tlR.to({}, { duration: dHoldR }, dMoveR);
             return;
           }
           pinSection.classList.add("funciones-pin-gsap");
           var lead = pinSection.querySelector(".funciones-pin-lead");
           var cardEls = pinSection.querySelectorAll(".funciones-pin-card");
+          var intro = introPx();
+          var sl = getScrollLength();
+          var outro = outroPx();
+          var total = intro + sl + outro;
+          var dIntro = total ? intro / total : 0;
+          var dMove = total ? sl / total : 0;
+          var dHold = total ? outro / total : 0;
           var tl = gsap.timeline({ scrollTrigger: stConfig });
           if (lead) {
             tl.fromTo(
               lead,
               { opacity: 0, y: 22 },
-              { opacity: 1, y: 0, duration: 0.18, ease: "power2.out" },
-              0
-            );
-          }
-          if (cardEls.length) {
-            tl.fromTo(
-              cardEls,
-              { opacity: 0, y: 26 },
               {
                 opacity: 1,
                 y: 0,
-                duration: 0.14,
-                stagger: 0.07,
+                duration: Math.max(0.08, dIntro * 0.62),
                 ease: "power2.out",
               },
-              0.14
+              0
+            );
+          }
+          var firstCard = cardEls.length ? cardEls[0] : null;
+          var restCards = cardEls.length > 1 ? Array.prototype.slice.call(cardEls, 1) : [];
+          if (firstCard) {
+            tl.fromTo(
+              firstCard,
+              { opacity: 0.22, x: 12 },
+              {
+                opacity: 1,
+                x: 0,
+                duration: Math.max(0.12, dMove * 0.42),
+                ease: "power2.out",
+              },
+              dIntro
+            );
+          }
+          if (restCards.length) {
+            tl.fromTo(
+              restCards,
+              { opacity: 0, y: 28 },
+              {
+                opacity: 1,
+                y: 0,
+                duration: Math.max(0.1, dMove * 0.34),
+                stagger: 0.065,
+                ease: "power2.out",
+              },
+              dIntro + dMove * 0.14
             );
           }
           tl.fromTo(
@@ -1791,11 +1825,12 @@
               x: function () {
                 return -getScrollLength();
               },
-              duration: 0.58,
+              duration: Math.max(0.05, dMove),
               ease: "none",
             },
-            0.42
+            dIntro
           );
+          if (dHold > 0.001) tl.to({}, { duration: dHold }, dIntro + dMove);
         }
         function runAfterLayout() {
           requestAnimationFrame(function () {
