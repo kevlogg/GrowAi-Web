@@ -245,11 +245,12 @@
         flex-shrink: 0;
         margin-top: 0.35rem;
       }
-      main[id="inicio"] .hero-plant-stage {
+      /* Dentro del light-bulb: sube el cultivo hacia la punta del foco (SVG rotado) */
+      main[id="inicio"] light-bulb.hero-light-bulb .hero-plant-stage {
         position: relative;
         width: 100%;
-        max-width: 320px;
-        margin: -0.35rem auto 0;
+        max-width: min(300px, 92vw);
+        margin: clamp(-5.75rem, -14vw, -3.25rem) auto 0;
         border-radius: 0;
         overflow: visible;
         background: transparent;
@@ -1171,6 +1172,11 @@
                     </svg>
                   </div>
                   <div class="glow"></div>
+                  <div class="hero-plant-stage" aria-hidden="true">
+                    <div id="canvas_container_div">
+                      <canvas id="canvas" width="800" height="1000"></canvas>
+                    </div>
+                  </div>
                 </light-bulb>
                 <toggle-switch class="hero-bulb-toggle">
                   <input type="checkbox" id="hero-bulb-switch" />
@@ -1178,11 +1184,6 @@
                     ><span class="sr-only">Encender o apagar el foco decorativo</span></label
                   >
                 </toggle-switch>
-              </div>
-              <div class="hero-plant-stage" aria-hidden="true">
-                <div id="canvas_container_div">
-                  <canvas id="canvas" width="800" height="1000"></canvas>
-                </div>
               </div>
             </aside>
           </div>

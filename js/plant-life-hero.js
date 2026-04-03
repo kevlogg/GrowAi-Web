@@ -391,7 +391,6 @@ function runVerlet() {
   refinePositions();
   clearCanvas();
   renderImages();
-  worldTime++;
 }
 
 
@@ -883,24 +882,142 @@ function renderShadows() {
 
 ////---DISPLAY---////
 
+var growAiHeroSeedSnapshot = null;
+var growAiHeroReversing = false;
+var growAiHeroReverseFrames = 0;
+var GROW_AI_HERO_REVERSE_LERP = 0.12;
+var GROW_AI_HERO_REVERSE_EPS = 4;
+var GROW_AI_HERO_REVERSE_MAX_FRAMES = 480;
+
+function growAiHeroTeardown() {
+  plants = [];
+  plantCount = 0;
+  sunRays = [];
+  sunRayCount = 0;
+  shadows = [];
+  shadowCount = 0;
+  points = [];
+  pointCount = 0;
+  spans = [];
+  spanCount = 0;
+  skins = [];
+  skinCount = 0;
+  worldTime = 0;
+  growAiHeroSeedSnapshot = null;
+}
+
+function growAiHeroInitPlants() {
+  growAiHeroTeardown();
+  var i;
+  for (i = 0; i < 25; i++) {
+    createPlant();
+  }
+  createSunRays();
+  for (i = 0; i < 10; i++) {
+    updatePoints();
+    refinePositions();
+  }
+  growAiHeroSeedSnapshot = Object.create(null);
+  for (i = 0; i < points.length; i++) {
+    var p = points[i];
+    growAiHeroSeedSnapshot[p.id] = { cx: p.cx, cy: p.cy, px: p.px, py: p.py };
+  }
+}
+
+function growAiHeroReverseLerpStep() {
+  var snap = growAiHeroSeedSnapshot;
+  if (!snap || points.length === 0) return true;
+  var gy = yValFromPct(96);
+  var allClose = true;
+  var i;
+  var p;
+  var s;
+  var tx;
+  var ty;
+  var dx;
+  var dy;
+  for (i = 0; i < points.length; i++) {
+    p = points[i];
+    s = snap[p.id];
+    if (s) {
+      tx = s.cx;
+      ty = s.cy;
+    } else {
+      tx = p.cx;
+      ty = gy;
+    }
+    dx = tx - p.cx;
+    dy = ty - p.cy;
+    if (Math.abs(dx) > GROW_AI_HERO_REVERSE_EPS || Math.abs(dy) > GROW_AI_HERO_REVERSE_EPS) {
+      allClose = false;
+    }
+    p.cx += dx * GROW_AI_HERO_REVERSE_LERP;
+    p.cy += dy * GROW_AI_HERO_REVERSE_LERP;
+    if (s) {
+      p.px += (s.px - p.px) * GROW_AI_HERO_REVERSE_LERP;
+      p.py += (s.py - p.py) * GROW_AI_HERO_REVERSE_LERP;
+    } else {
+      p.px += (tx - p.px) * GROW_AI_HERO_REVERSE_LERP;
+      p.py += (ty - p.py) * GROW_AI_HERO_REVERSE_LERP;
+    }
+  }
+  return allClose;
+}
 
 function display() {
-  runVerlet();
-  if ( worldTime % worldSpeed === 0 ) { growPlants(); }
-  renderPlants();
-  shedSunlight();
-  renderShadows();
+  var sw = document.getElementById("hero-bulb-switch");
+  var lightOn = !!(sw && sw.checked);
+
+  if (lightOn) {
+    growAiHeroReversing = false;
+    growAiHeroReverseFrames = 0;
+  }
+
+  if (plants.length === 0) {
+    if (lightOn) {
+      growAiHeroInitPlants();
+    } else {
+      if (ctx && canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      worldTime++;
+      window.requestAnimationFrame(display);
+      return;
+    }
+  } else if (!lightOn && !growAiHeroReversing) {
+    growAiHeroReversing = true;
+    growAiHeroReverseFrames = 0;
+  }
+
+  if (growAiHeroReversing) {
+    clearCanvas();
+    growAiHeroReverseFrames++;
+    var done =
+      growAiHeroReverseLerpStep() || growAiHeroReverseFrames >= GROW_AI_HERO_REVERSE_MAX_FRAMES;
+    refinePositions();
+    renderPlants();
+    renderShadows();
+    worldTime++;
+    if (done) {
+      growAiHeroTeardown();
+      growAiHeroReversing = false;
+      growAiHeroReverseFrames = 0;
+      if (ctx && canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+  } else {
+    runVerlet();
+    worldTime++;
+    if (lightOn && worldTime % worldSpeed === 0) {
+      growPlants();
+    }
+    renderPlants();
+    shedSunlight();
+    renderShadows();
+  }
+
   window.requestAnimationFrame(display);
-
-          // if ( worldTime % 300 == 0 ) {
-          //   console.log("");
-          //   console.log("plant 1: "+plants[0].energy);
-          //   console.log("plant 2: "+plants[1].energy);
-          //   console.log("plant 3: "+plants[2].energy);
-          //   console.log("plant 4: "+plants[3].energy);
-          //   console.log("plant 5: "+plants[4].energy);
-          // }
-
 }
 
 var growAiPlantLifeStarted = false;
@@ -919,10 +1036,6 @@ function growAiPlantLifeBoot() {
     var w = parent ? parent.clientWidth : canvasContainerDiv.clientWidth;
     if (!w || w < 8) return;
     growAiPlantLifeStarted = true;
-    for (var i = 0; i < 25; i++) {
-      createPlant();
-    }
-    createSunRays();
     display();
   }
 
