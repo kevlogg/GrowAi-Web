@@ -1,0 +1,7 @@
+Video para la sección Funciones (entre el título "Tres pilares..." y las cards):
+
+  cogollo-girando.mp4
+
+Fondo negro en el MP4 + mix-blend-mode: screen en la página → el negro se funde con #1B0F2A.
+
+Si el archivo tiene otro nombre, cambiá la ruta en index.html (buscá cogollo-girando.mp4).

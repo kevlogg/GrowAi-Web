@@ -607,6 +607,32 @@
       #funciones .funciones-pin-lead ul.funciones-pin-lead-list li + li {
         margin-top: 0.15rem;
       }
+      /* MP4 entre el lead y las cards: fondo negro “desaparece” con screen sobre #1B0F2A */
+      #funciones .funciones-pin-video-wrap {
+        flex-shrink: 0;
+        align-self: center;
+        width: min(300px, 42vw);
+        max-width: 300px;
+        margin-right: min(3vw, 1.25rem);
+        border-radius: 1rem;
+        overflow: hidden;
+        background-color: #1b0f2a;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
+        pointer-events: none;
+      }
+      #funciones .funciones-pin-video-wrap video {
+        display: block;
+        width: 100%;
+        height: auto;
+        max-width: none;
+        vertical-align: top;
+        mix-blend-mode: screen;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #funciones .funciones-pin-video-wrap {
+          display: none;
+        }
+      }
       #funciones #sectionPinFunciones .funciones-pin-card {
         flex-shrink: 0;
         width: min(440px, 88vw);
@@ -622,6 +648,11 @@
       #funciones #sectionPinFunciones.funciones-pin-gsap .funciones-pin-lead {
         opacity: 0;
         transform: translate3d(0, 1.25rem, 0);
+        will-change: transform, opacity;
+      }
+      #funciones #sectionPinFunciones.funciones-pin-gsap .funciones-pin-video-wrap {
+        opacity: 0;
+        transform: translate3d(14px, 0, 0);
         will-change: transform, opacity;
       }
       #funciones #sectionPinFunciones.funciones-pin-gsap .funciones-pin-card:first-of-type {
@@ -1202,6 +1233,18 @@
                 <li>Sensei te ayuda con todos los problemas que tengas</li>
                 <li>Gestiona tu trámite REPROCANN</li>
               </ul>
+            </div>
+            <div class="funciones-pin-video-wrap" aria-hidden="true">
+              <video
+                id="funciones-pin-video-el"
+                muted
+                loop
+                playsinline
+                autoplay
+                preload="metadata"
+              >
+                <source src="videos/cogollo-girando.mp4" type="video/mp4" />
+              </video>
             </div>
             <div class="funciones-pin-spacer" aria-hidden="true"></div>
             <article
@@ -1870,6 +1913,20 @@
               0
             );
           }
+          var videoWrap = pinSection.querySelector(".funciones-pin-video-wrap");
+          if (videoWrap) {
+            tl.fromTo(
+              videoWrap,
+              { opacity: 0, x: 14 },
+              {
+                opacity: 1,
+                x: 0,
+                duration: Math.max(0.1, dIntro * 0.48),
+                ease: "power2.out",
+              },
+              Math.max(0.02, dIntro * 0.1)
+            );
+          }
           var firstCard = cardEls.length ? cardEls[0] : null;
           var restCards = cardEls.length > 1 ? Array.prototype.slice.call(cardEls, 1) : [];
           if (firstCard) {
@@ -1913,10 +1970,17 @@
           );
           if (dHold > 0.001) tl.to({}, { duration: dHold }, dIntro + dMove);
         }
+        function playFuncionesPinVideo() {
+          var v = document.getElementById("funciones-pin-video-el");
+          if (!v || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
+          var p = v.play();
+          if (p && typeof p.catch === "function") p.catch(function () {});
+        }
         function runAfterLayout() {
           requestAnimationFrame(function () {
             requestAnimationFrame(function () {
               initFuncionesHorizontalPin();
+              playFuncionesPinVideo();
               if (typeof ScrollTrigger !== "undefined") ScrollTrigger.refresh();
             });
           });
