@@ -353,9 +353,17 @@ function renderSkins() {
   }
 }
 
-///clears canvas frame
+///clears canvas frame (fondo suave acorde al hero claro; las plantas se leen bien)
 function clearCanvas() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  var w = canvas.width;
+  var h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+  var g = ctx.createLinearGradient(0, 0, 0, h);
+  g.addColorStop(0, "rgba(201, 195, 255, 0.22)");
+  g.addColorStop(0.55, "rgba(230, 226, 255, 0.35)");
+  g.addColorStop(1, "rgba(180, 200, 170, 0.45)");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
 }
 
 ///renders all visible components
@@ -510,7 +518,7 @@ function Segment( plant, parentSegment, basePoint1, basePoint2 ) {
   this.spLf2 = null;  // leaf 2 Span
   //skins
   this.skins = [];
-  this.skins.push( addSk( [ this.ptE1.id, this.ptE2.id, this.ptB2.id, this.ptB1.id ], "darkgreen" ) );
+  this.skins.push( addSk( [ this.ptE1.id, this.ptE2.id, this.ptB2.id, this.ptB1.id ], "#2E7D32" ) );
 }
 
 ///sun ray constructor
@@ -773,8 +781,8 @@ function renderLeaf( plant, leafSpan ) {
   ctx.lineWidth = 2;
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
-  ctx.strokeStyle = "#003000";
-  ctx.fillStyle = "green";
+  ctx.strokeStyle = "#1B5E20";
+  ctx.fillStyle = "#66BB6A";
   var ah = 0.35;  // arc height
   //leaf top
   var ccpx = mpx + ( p2y - p1y ) * ah;  // curve control point x
@@ -795,7 +803,7 @@ function renderLeaf( plant, leafSpan ) {
   //leaf center
   ctx.beginPath();
   ctx.lineWidth = 1;
-  ctx.strokeStyle = "#007000";
+  ctx.strokeStyle = "#2E7D32";
   ctx.moveTo(p1x,p1y);
   ctx.lineTo(p2x,p2y);
   ctx.stroke();
@@ -818,7 +826,7 @@ function renderStalks( plant, segment ) {
     ctx.beginPath();
     ctx.fillStyle = s.color;
     ctx.lineWidth = 1;
-    ctx.strokeStyle = "darkgreen";
+    ctx.strokeStyle = "#1B5E20";
     ctx.moveTo(s.points[0].cx, s.points[0].cy);
     for(var j=1; j<s.points.length; j++) { ctx.lineTo(s.points[j].cx, s.points[j].cy); }
     ctx.lineTo(s.points[0].cx, s.points[0].cy);
@@ -897,21 +905,41 @@ function display() {
 
 }
 
+var growAiPlantLifeStarted = false;
+
 function growAiPlantLifeBoot() {
-  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    return;
-  }
   canvasContainerDiv = document.getElementById("canvas_container_div");
   canvas = document.getElementById("canvas");
   if (!canvasContainerDiv || !canvas) return;
-  ctx = canvas.getContext("2d");
+  ctx = canvas.getContext("2d", { alpha: true });
   if (!ctx) return;
-  scaleToWindow();
-  for (var i = 0; i < 25; i++) {
-    createPlant();
+
+  function startIfReady() {
+    scaleToWindow();
+    if (growAiPlantLifeStarted) return;
+    var parent = canvasContainerDiv.parentElement;
+    var w = parent ? parent.clientWidth : canvasContainerDiv.clientWidth;
+    if (!w || w < 8) return;
+    growAiPlantLifeStarted = true;
+    for (var i = 0; i < 25; i++) {
+      createPlant();
+    }
+    createSunRays();
+    display();
   }
-  createSunRays();
-  display();
+
+  requestAnimationFrame(function () {
+    requestAnimationFrame(startIfReady);
+  });
+
+  var stage = canvasContainerDiv.closest(".hero-plant-stage");
+  if (stage && typeof ResizeObserver !== "undefined") {
+    var ro = new ResizeObserver(function () {
+      scaleToWindow();
+      startIfReady();
+    });
+    ro.observe(stage);
+  }
 }
 
 if (document.readyState === "loading") {
