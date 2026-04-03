@@ -225,18 +225,13 @@
         }
       }
       main[id="inicio"] .hero-inicio-bulb {
-        display: none;
+        display: flex;
         flex-direction: column;
         align-items: center;
         gap: 0;
         padding-top: 0;
         align-self: start;
         width: 100%;
-      }
-      @media (min-width: 768px) {
-        main[id="inicio"] .hero-inicio-bulb {
-          display: flex;
-        }
       }
       main[id="inicio"] .hero-bulb-controls-row {
         display: flex;
@@ -250,38 +245,29 @@
         flex-shrink: 0;
         margin-top: 0.35rem;
       }
-      main[id="inicio"] #hero-canvas-container {
+      main[id="inicio"] .hero-plant-stage {
         position: relative;
         width: 100%;
         max-width: 320px;
         margin: 0.75rem auto 0;
-        aspect-ratio: 1 / 1;
-        min-height: 220px;
         border-radius: 0.5rem;
         overflow: hidden;
-        background: rgba(27, 15, 42, 0.06);
         isolation: isolate;
+        background: rgba(27, 15, 42, 0.06);
       }
-      main[id="inicio"] #hero-canvas-container #whale {
-        position: absolute;
-        inset: 0;
-        z-index: 1;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        pointer-events: none;
+      main[id="inicio"] #canvas_container_div {
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+        width: min(320px, 100%);
+        aspect-ratio: 1 / 1;
+        min-height: 160px;
       }
-      main[id="inicio"] #hero-canvas-container #whale svg path {
-        fill: rgba(57, 255, 20, 0.38);
-      }
-      main[id="inicio"] #hero-plant-canvas {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 2;
+      main[id="inicio"] #canvas {
         display: block;
+        width: 100%;
+        height: 100%;
+        background: #111111;
         touch-action: none;
       }
       main[id="inicio"] light-bulb.hero-light-bulb {
@@ -1188,9 +1174,10 @@
                   >
                 </toggle-switch>
               </div>
-              <div id="hero-canvas-container" aria-hidden="true">
-                <div id="whale"></div>
-                <canvas id="hero-plant-canvas" width="1000" height="1000"></canvas>
+              <div class="hero-plant-stage" aria-hidden="true">
+                <div id="canvas_container_div">
+                  <canvas id="canvas" width="1000" height="1000"></canvas>
+                </div>
               </div>
             </aside>
           </div>
@@ -2482,8 +2469,8 @@
       })();
     </script>
     <script
-      src="js/hero-sim-bundle.js"
-      onerror="console.error('GrowAi: no se pudo cargar js/hero-sim-bundle.js (revisá despliegue y ruta /js/).');"
+      src="js/plant-life-hero.js"
+      onerror="console.error('GrowAi: no se pudo cargar js/plant-life-hero.js (revisá despliegue y ruta /js/).');"
     ></script>
   </body>
 </html>
