@@ -650,11 +650,6 @@
         transform: translate3d(0, 1.25rem, 0);
         will-change: transform, opacity;
       }
-      #funciones #sectionPinFunciones.funciones-pin-gsap .funciones-pin-video-wrap {
-        opacity: 0;
-        transform: translate3d(14px, 0, 0);
-        will-change: transform, opacity;
-      }
       #funciones #sectionPinFunciones.funciones-pin-gsap .funciones-pin-card:first-of-type {
         opacity: 0.22;
         transform: translate3d(12px, 0, 0);
@@ -1241,7 +1236,7 @@
                 loop
                 playsinline
                 autoplay
-                preload="metadata"
+                preload="auto"
               >
                 <source src="videos/cogollo-girando.mp4" type="video/mp4" />
               </video>
@@ -1915,16 +1910,17 @@
           }
           var videoWrap = pinSection.querySelector(".funciones-pin-video-wrap");
           if (videoWrap) {
+            /* Visible desde el inicio del pin: antes quedaba opacity 0 hasta mucho scroll */
             tl.fromTo(
               videoWrap,
-              { opacity: 0, x: 14 },
+              { opacity: 1, x: 10 },
               {
                 opacity: 1,
                 x: 0,
-                duration: Math.max(0.1, dIntro * 0.48),
+                duration: Math.max(0.08, dIntro * 0.35),
                 ease: "power2.out",
               },
-              Math.max(0.02, dIntro * 0.1)
+              0
             );
           }
           var firstCard = cardEls.length ? cardEls[0] : null;
@@ -1970,11 +1966,46 @@
           );
           if (dHold > 0.001) tl.to({}, { duration: dHold }, dIntro + dMove);
         }
+        function tryPlayFuncionesVideo(v) {
+          if (!v) return;
+          var p = v.play();
+          if (p && typeof p.catch === "function") p.catch(function () {});
+        }
         function playFuncionesPinVideo() {
           var v = document.getElementById("funciones-pin-video-el");
           if (!v || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
-          var p = v.play();
-          if (p && typeof p.catch === "function") p.catch(function () {});
+          var srcEl = v.querySelector("source");
+          v.addEventListener("error", function () {
+            if (srcEl && !srcEl.dataset.growaiTriedAbs) {
+              srcEl.dataset.growaiTriedAbs = "1";
+              srcEl.src = "/videos/cogollo-girando.mp4";
+              v.load();
+              tryPlayFuncionesVideo(v);
+              return;
+            }
+            console.warn(
+              "GrowAi: no se pudo cargar cogollo-girando.mp4 (subí la carpeta videos/ al servidor y permití video/mp4).",
+              v.error || ""
+            );
+          });
+          var sec = document.getElementById("funciones");
+          if (sec && typeof IntersectionObserver !== "undefined") {
+            var io = new IntersectionObserver(
+              function (entries) {
+                for (var i = 0; i < entries.length; i++) {
+                  if (entries[i].isIntersecting) {
+                    tryPlayFuncionesVideo(v);
+                    io.disconnect();
+                    return;
+                  }
+                }
+              },
+              { rootMargin: "120px", threshold: 0.02 }
+            );
+            io.observe(sec);
+          } else {
+            tryPlayFuncionesVideo(v);
+          }
         }
         function runAfterLayout() {
           requestAnimationFrame(function () {
