@@ -607,12 +607,14 @@
       #funciones .funciones-pin-lead ul.funciones-pin-lead-list li + li {
         margin-top: 0.15rem;
       }
-      /* MP4 entre el lead y las cards: fondo negro “desaparece” con screen sobre #1B0F2A */
+      /* MP4 entre el lead y las cards (altura mínima: sin metadata el video quedaba en 0px) */
       #funciones .funciones-pin-video-wrap {
         flex-shrink: 0;
         align-self: center;
-        width: min(300px, 42vw);
-        max-width: 300px;
+        width: min(280px, 40vw);
+        max-width: 280px;
+        min-height: 220px;
+        aspect-ratio: 9 / 16;
         margin-right: min(3vw, 1.25rem);
         border-radius: 1rem;
         overflow: hidden;
@@ -623,10 +625,12 @@
       #funciones .funciones-pin-video-wrap video {
         display: block;
         width: 100%;
-        height: auto;
+        height: 100%;
         max-width: none;
-        vertical-align: top;
-        mix-blend-mode: screen;
+        object-fit: cover;
+        object-position: center;
+        /* screen hacía invisible casi todo si el clip es oscuro/negro sobre #1B0F2A */
+        mix-blend-mode: normal;
       }
       @media (prefers-reduced-motion: reduce) {
         #funciones .funciones-pin-video-wrap {
@@ -1239,6 +1243,11 @@
                 preload="auto"
               >
                 <source src="videos/cogollo-girando.mp4" type="video/mp4" />
+                <!-- Fallback: mismo archivo servido desde el repo vía jsDelivr si el hosting no sube /videos/ -->
+                <source
+                  src="https://cdn.jsdelivr.net/gh/kevlogg/GrowAi-Web@main/videos/cogollo-girando.mp4"
+                  type="video/mp4"
+                />
               </video>
             </div>
             <div class="funciones-pin-spacer" aria-hidden="true"></div>
