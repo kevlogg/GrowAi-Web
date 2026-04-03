@@ -249,19 +249,19 @@
         position: relative;
         width: 100%;
         max-width: 320px;
-        margin: 0.75rem auto 0;
-        border-radius: 0.5rem;
-        overflow: hidden;
-        isolation: isolate;
-        background: rgba(27, 15, 42, 0.06);
+        margin: -0.35rem auto 0;
+        border-radius: 0;
+        overflow: visible;
+        background: transparent;
       }
+      /* Más alto que ancho: el crecimiento usa mejor el eje vertical hacia el foco */
       main[id="inicio"] #canvas_container_div {
         position: relative;
         margin-left: auto;
         margin-right: auto;
-        width: min(320px, 100%);
-        aspect-ratio: 1 / 1;
-        min-height: 160px;
+        width: min(300px, 100%);
+        aspect-ratio: 4 / 5;
+        min-height: 180px;
       }
       main[id="inicio"] #canvas {
         display: block;
@@ -289,12 +289,16 @@
         width: auto;
         display: block;
       }
+      /* Fuera del flujo: antes reservaba 160px vacíos y empujaba las plantas abajo */
       main[id="inicio"] light-bulb.hero-light-bulb .glow {
-        position: relative;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: clamp(-6.5rem, -18vw, -4.5rem);
         order: 1;
         width: min(280px, 85vw);
         height: 160px;
-        margin: -0.35rem auto 0;
+        margin: 0;
         border-radius: 50%;
         background: radial-gradient(
           ellipse 75% 55% at 50% 0%,
@@ -1177,7 +1181,7 @@
               </div>
               <div class="hero-plant-stage" aria-hidden="true">
                 <div id="canvas_container_div">
-                  <canvas id="canvas" width="1000" height="1000"></canvas>
+                  <canvas id="canvas" width="800" height="1000"></canvas>
                 </div>
               </div>
             </aside>

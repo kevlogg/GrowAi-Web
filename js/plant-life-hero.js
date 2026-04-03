@@ -120,14 +120,17 @@ function Skin(points_array,color) {
 ///scales canvas to window
 function scaleToWindow() {
   if (!canvasContainerDiv || !canvas) return;
-  var maxSide = 320;
+  var maxW = 300;
+  var arW = 4;
+  var arH = 5;
   var parent = canvasContainerDiv.parentElement;
   var pw = parent ? parent.clientWidth : window.innerWidth;
-  var side = Math.min(maxSide, Math.max(160, pw * 0.92));
+  var w = Math.min(maxW, Math.max(160, pw * 0.92));
   var cap = Math.min(window.innerWidth, window.innerHeight) * canvRatio;
-  if (cap > 0) side = Math.min(side, cap);
-  canvasContainerDiv.style.width = side + "px";
-  canvasContainerDiv.style.height = side + "px";
+  if (cap > 0) w = Math.min(w, cap);
+  var h = Math.round((w * arH) / arW);
+  canvasContainerDiv.style.width = w + "px";
+  canvasContainerDiv.style.height = h + "px";
 }
 
 ///converts percentage to canvas x value
@@ -353,17 +356,11 @@ function renderSkins() {
   }
 }
 
-///clears canvas frame (fondo suave acorde al hero claro; las plantas se leen bien)
+///clears canvas frame (transparente: solo se ven las plantas sobre el hero)
 function clearCanvas() {
   var w = canvas.width;
   var h = canvas.height;
   ctx.clearRect(0, 0, w, h);
-  var g = ctx.createLinearGradient(0, 0, 0, h);
-  g.addColorStop(0, "rgba(201, 195, 255, 0.22)");
-  g.addColorStop(0.55, "rgba(230, 226, 255, 0.35)");
-  g.addColorStop(1, "rgba(180, 200, 170, 0.45)");
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, w, h);
 }
 
 ///renders all visible components
@@ -461,8 +458,9 @@ function Plant( xLocation ) {
   this.maxLeaflength = this.maxSegmentWidth * Tl.rfb(4,7);  // maximum leaf length at maturity
   this.leafGrowthRate = this.forwardGrowthRate * Tl.rfb(1.4,1.6);  // leaf growth rate
   //base segment
-  this.ptB1 = addPt( this.xLocation - 0.1, 100 );  // base point 1
-  this.ptB2 = addPt( this.xLocation + 0.1, 100 );  // base point 2
+  /* Suelo un poco más arriba: más recorrido vertical hacia el foco */
+  this.ptB1 = addPt( this.xLocation - 0.1, 96 );
+  this.ptB2 = addPt( this.xLocation + 0.1, 96 );
   this.ptB1.fixed = this.ptB2.fixed = true;  // fixes base points to ground
   this.spB = addSp( this.ptB1.id, this.ptB2.id );  // adds base span
   createSegment( this, null, this.ptB1, this.ptB2 );  // creates the base segment (with "null" parent)
