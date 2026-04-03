@@ -29,15 +29,14 @@
 
   function whaleShouldRun() {
     if (reduced.matches) return false;
+    var vw = window.innerWidth || document.documentElement.clientWidth || 0;
+    if (vw < 768) return false;
     var aside = container.closest(".hero-inicio-bulb");
     if (aside) {
       var ast = window.getComputedStyle(aside);
-      if (ast.display === "none" || ast.visibility === "hidden") return false;
+      if (ast.display === "none") return false;
     }
-    var st = window.getComputedStyle(container);
-    if (st.display === "none" || st.visibility === "hidden") return false;
-    var r = container.getBoundingClientRect();
-    return r.width >= 4 && r.height >= 4;
+    return true;
   }
 
   function syncDimensions() {

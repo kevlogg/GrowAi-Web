@@ -41,9 +41,22 @@ var Tl = {
 
 ////---INITIATION---////
 
-var canvasContainerDiv = document.getElementById("hero-canvas-container");
-var canvas = document.getElementById("hero-plant-canvas");
-var ctx = canvas && canvas.getContext("2d");
+var canvasContainerDiv = null;
+var canvas = null;
+var ctx = null;
+
+function ensureHeroCanvas2D() {
+  if (!canvasContainerDiv) {
+    canvasContainerDiv = document.getElementById("hero-canvas-container");
+  }
+  if (!canvas) {
+    canvas = document.getElementById("hero-plant-canvas");
+  }
+  if (canvas && !ctx) {
+    ctx = canvas.getContext("2d");
+  }
+  return ctx;
+}
 var canvRatio = 1;
 
 var points = [],
@@ -219,6 +232,9 @@ function updateSpans(currentIteration) {
       var dx = s.p2.cx - s.p1.cx;
       var dy = s.p2.cy - s.p1.cy;
       var d = Math.sqrt(dx * dx + dy * dy);
+      if (d < 1e-8) {
+        continue;
+      }
       var r = s.l / d;
       var mx = s.p1.cx + dx / 2;
       var my = s.p1.cy + dy / 2;
@@ -329,7 +345,7 @@ function renderImages() {
 window.addEventListener("resize", scaleToWindow);
 
 function runVerlet() {
-  if (!canvas || !ctx) return;
+  if (!ensureHeroCanvas2D()) return;
   scaleToWindow();
   updatePoints();
   refinePositions();
@@ -841,28 +857,36 @@ function display() {
 
   function heroPlantVisible() {
     if (reduced.matches) return false;
+    var vw = window.innerWidth || document.documentElement.clientWidth || 0;
+    if (vw < 768) return false;
     var el = document.getElementById("hero-canvas-container");
     if (!el) return false;
     var aside = el.closest(".hero-inicio-bulb");
     if (aside) {
       var ast = window.getComputedStyle(aside);
-      if (ast.display === "none" || ast.visibility === "hidden") return false;
+      if (ast.display === "none") return false;
     }
-    var r = el.getBoundingClientRect();
-    if (r.width < 4 || r.height < 4) return false;
-    var st = window.getComputedStyle(el);
-    if (st.display === "none" || st.visibility === "hidden") return false;
     return true;
   }
 
   function ensureInit() {
     if (simulationReady) return;
-    simulationReady = true;
-    var i;
-    for (i = 0; i < HERO_PLANT_COUNT; i++) {
-      createPlant();
+    if (typeof ensureHeroCanvas2D === "function" && !ensureHeroCanvas2D()) {
+      return;
     }
-    createSunRays();
+    simulationReady = true;
+    try {
+      var i;
+      for (i = 0; i < HERO_PLANT_COUNT; i++) {
+        createPlant();
+      }
+      createSunRays();
+    } catch (err) {
+      simulationReady = false;
+      if (typeof console !== "undefined" && console.warn) {
+        console.warn("[GrowAi hero] ensureInit falló:", err);
+      }
+    }
   }
 
   function heroPlantFrame() {
@@ -923,6 +947,9 @@ function display() {
     );
     io.observe(heroCanvasHost);
   }
+  setTimeout(kick, 0);
+  setTimeout(kick, 120);
+  setTimeout(kick, 400);
 })();
 
 
@@ -965,15 +992,14 @@ function display() {
 
   function whaleShouldRun() {
     if (reduced.matches) return false;
+    var vw = window.innerWidth || document.documentElement.clientWidth || 0;
+    if (vw < 768) return false;
     var aside = container.closest(".hero-inicio-bulb");
     if (aside) {
       var ast = window.getComputedStyle(aside);
-      if (ast.display === "none" || ast.visibility === "hidden") return false;
+      if (ast.display === "none") return false;
     }
-    var st = window.getComputedStyle(container);
-    if (st.display === "none" || st.visibility === "hidden") return false;
-    var r = container.getBoundingClientRect();
-    return r.width >= 4 && r.height >= 4;
+    return true;
   }
 
   function syncDimensions() {

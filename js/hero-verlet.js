@@ -2,9 +2,22 @@
 
 ////---INITIATION---////
 
-var canvasContainerDiv = document.getElementById("hero-canvas-container");
-var canvas = document.getElementById("hero-plant-canvas");
-var ctx = canvas && canvas.getContext("2d");
+var canvasContainerDiv = null;
+var canvas = null;
+var ctx = null;
+
+function ensureHeroCanvas2D() {
+  if (!canvasContainerDiv) {
+    canvasContainerDiv = document.getElementById("hero-canvas-container");
+  }
+  if (!canvas) {
+    canvas = document.getElementById("hero-plant-canvas");
+  }
+  if (canvas && !ctx) {
+    ctx = canvas.getContext("2d");
+  }
+  return ctx;
+}
 var canvRatio = 1;
 
 var points = [],
@@ -180,6 +193,9 @@ function updateSpans(currentIteration) {
       var dx = s.p2.cx - s.p1.cx;
       var dy = s.p2.cy - s.p1.cy;
       var d = Math.sqrt(dx * dx + dy * dy);
+      if (d < 1e-8) {
+        continue;
+      }
       var r = s.l / d;
       var mx = s.p1.cx + dx / 2;
       var my = s.p1.cy + dy / 2;
@@ -290,7 +306,7 @@ function renderImages() {
 window.addEventListener("resize", scaleToWindow);
 
 function runVerlet() {
-  if (!canvas || !ctx) return;
+  if (!ensureHeroCanvas2D()) return;
   scaleToWindow();
   updatePoints();
   refinePositions();
