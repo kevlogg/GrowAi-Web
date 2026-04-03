@@ -537,6 +537,14 @@
         max-width: 100%;
       }
       #funciones #sectionPinFunciones {
+        /* Lead + video + padding deben caber en 100svw; si no, el clip horizontal ocultaba casi todo el MP4 */
+        --fp-pad-x: min(5vw, 3rem);
+        --fp-video-w: min(280px, 40vw);
+        --fp-video-mr: min(3vw, 1.25rem);
+        --fp-lead-w: min(
+          560px,
+          calc(100svw - 2 * var(--fp-pad-x) - var(--fp-video-w) - var(--fp-video-mr) - 1rem)
+        );
         background-color: rgba(27, 15, 42, 0.88) !important;
         height: 100vh;
         overflow-x: hidden;
@@ -574,14 +582,17 @@
         flex-shrink: 0;
         width: max(
           0px,
-          calc(100svw - 2 * min(5vw, 3rem) - min(88vw, 560px) - 4.5rem)
+          calc(
+            100svw - 2 * var(--fp-pad-x) - var(--fp-lead-w) - var(--fp-video-w) - var(--fp-video-mr) -
+              4.5rem
+          )
         );
         min-width: 0;
         pointer-events: none;
       }
       #funciones .funciones-pin-lead {
         flex-shrink: 0;
-        width: min(560px, 88vw);
+        width: var(--fp-lead-w);
         max-width: 560px;
         min-width: 0;
         padding: 0 clamp(0.75rem, 3vw, 1.75rem) 0 0;
@@ -1236,18 +1247,15 @@
             <div class="funciones-pin-video-wrap" aria-hidden="true">
               <video
                 id="funciones-pin-video-el"
+                src="https://cdn.jsdelivr.net/gh/kevlogg/GrowAi-Web@main/videos/cogollo-girando.mp4"
                 muted
                 loop
                 playsinline
                 autoplay
                 preload="auto"
               >
+                <!-- Fallback mismo origen por si el CDN falla -->
                 <source src="videos/cogollo-girando.mp4" type="video/mp4" />
-                <!-- Fallback: mismo archivo servido desde el repo vía jsDelivr si el hosting no sube /videos/ -->
-                <source
-                  src="https://cdn.jsdelivr.net/gh/kevlogg/GrowAi-Web@main/videos/cogollo-girando.mp4"
-                  type="video/mp4"
-                />
               </video>
             </div>
             <div class="funciones-pin-spacer" aria-hidden="true"></div>
@@ -1983,17 +1991,18 @@
         function playFuncionesPinVideo() {
           var v = document.getElementById("funciones-pin-video-el");
           if (!v || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
-          var srcEl = v.querySelector("source");
           v.addEventListener("error", function () {
-            if (srcEl && !srcEl.dataset.growaiTriedAbs) {
-              srcEl.dataset.growaiTriedAbs = "1";
-              srcEl.src = "/videos/cogollo-girando.mp4";
+            if (!v.dataset.growaiFallbackSrc) {
+              v.dataset.growaiFallbackSrc = "1";
+              v.removeAttribute("src");
+              var s = v.querySelector("source");
+              if (s) s.src = "videos/cogollo-girando.mp4";
               v.load();
               tryPlayFuncionesVideo(v);
               return;
             }
             console.warn(
-              "GrowAi: no se pudo cargar cogollo-girando.mp4 (subí la carpeta videos/ al servidor y permití video/mp4).",
+              "GrowAi: no se pudo cargar cogollo-girando.mp4 (revisá /videos/ en el hosting y video/mp4).",
               v.error || ""
             );
           });
