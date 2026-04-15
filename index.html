@@ -632,6 +632,8 @@
         background-color: #1b0f2a;
         box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
         pointer-events: none;
+        isolation: isolate;
+        transform: translateZ(0);
       }
       #funciones .funciones-pin-video-wrap video {
         display: block;
@@ -641,6 +643,7 @@
         object-fit: cover;
         object-position: center;
         mix-blend-mode: screen;
+        transform: translateZ(0);
       }
       @media (prefers-reduced-motion: reduce) {
         #funciones .funciones-pin-video-wrap {
