@@ -1,2618 +1,885 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GrowAi | Tu Asistente de Cultivo Inteligente</title>
-    <meta
-      name="description"
-      content="GrowAi es la plataforma inteligente para el cultivo de cannabis. Sensei, tu asistente por chat con IA, te orienta desde la app. Comunidad y más."
-    />
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="icono/favicon.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="icono/favicon.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="icono/favicon.png" />
-    <link rel="shortcut icon" href="icono/favicon.png" />
-    <link rel="icon" href="icono/favicon.png" type="image/png" />
-    <!-- Open Graph / Social Media -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="GrowAi | Tu Asistente de Cultivo Inteligente" />
-    <meta property="og:description" content="GrowAi es la plataforma inteligente para el cultivo de cannabis. Sensei, tu asistente por chat con IA, te orienta desde la app. Comunidad y más." />
-    <meta property="og:url" content="https://growai.com.ar" />
-    <meta property="og:image" content="https://growai.com.ar/icono/favicon.png" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:image" content="https://growai.com.ar/icono/favicon.png" />
-    <meta name="theme-color" content="#1B0F2A" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              inter: ['Inter', 'sans-serif'],
-            },
-            colors: {
-              primary: '#1B0F2A',
-              secondary: '#2A1F3A',
-              accent: '#8B6ED0',
-              textPrimary: '#C9C3FF',
-              success: '#4CAF50',
-              warning: '#FF9800',
-              error: '#FF6B6B',
-            },
-            boxShadow: {
-              glow: '0 0 28px rgba(139, 110, 208, 0.28)',
-            },
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GrowAI | Tu Asistente de Cultivo Inteligente</title>
+  <meta name="description" content="GrowAI es la plataforma inteligente para el cultivo de cannabis. Sensei, tu asistente IA, te guía en cada etapa. Mis Cultivos, REPROCANN y más." />
+  <link rel="icon" type="image/png" href="icono/favicon.png" />
+  <link rel="apple-touch-icon" href="icono/favicon.png" />
+  <meta name="theme-color" content="#060e07" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="GrowAI | Tu Asistente de Cultivo Inteligente" />
+  <meta property="og:description" content="Registrá tus plantas, diagnosticá con Sensei IA y gestioná tu REPROCANN. App web para cualquier dispositivo." />
+  <meta property="og:url" content="https://growai.com.ar" />
+  <meta property="og:image" content="https://growai.com.ar/icono/favicon.png" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { inter: ['Inter', 'sans-serif'] },
+          colors: {
+            'bg-deep':    '#060e07',
+            'bg-forest':  '#0d1f0f',
+            'bg-purple':  '#1B0F2A',
+            'green':      '#4CAF50',
+            'green-soft': '#81c784',
+            'purple':     '#8B6ED0',
+            'text-main':  '#f0fdf4',
           },
         },
-      };
-    </script>
-    <style>
-      html, body {
-        overflow-x: hidden;
-        width: 100%;
-        max-width: 100%;
-      }
-      body {
-        /* smooth scroll rompe cálculos de GSAP ScrollTrigger (pin + scrub horizontal) */
-        scroll-behavior: auto;
-        background-color: #1b0f2a;
-        position: relative;
-        padding-bottom: env(safe-area-inset-bottom, 0px);
-      }
-      /* Capa fija: violetas #1B0F2A ↔ #2A1F3A según scroll (script actualiza color) */
-      #scroll-chrome-bg {
-        position: fixed;
-        inset: 0;
-        z-index: 0;
-        pointer-events: none;
-        background-color: #1b0f2a;
-      }
-      body > main,
-      body > footer {
-        position: relative;
-        z-index: 1;
-      }
-      * {
-        box-sizing: border-box;
-      }
-      
-      /* Prevenir overflow horizontal */
-      img, video, iframe {
-        max-width: 100%;
-        height: auto;
-      }
-      
-      section, main, header, footer {
-        max-width: 100%;
-        overflow-x: hidden;
-      }
-      /* Pin horizontal funciones: el strip ancho no debe recortarse dentro de main */
-      main#inicio {
-        overflow-x: visible;
-      }
-      
-      .max-w-6xl, .max-w-4xl, .max-w-2xl {
-        max-width: 100%;
-        padding-left: 1rem;
-        padding-right: 1rem;
-      }
-      
-      @media (min-width: 768px) {
-        .max-w-6xl {
-          max-width: 72rem;
-        }
-        .max-w-4xl {
-          max-width: 56rem;
-        }
-        .max-w-2xl {
-          max-width: 42rem;
-        }
-      }
-      ::selection {
-        background-color: #8b6ed0;
-        color: #1b0f2a;
-      }
-      
-      /* Fondos fijos para cada sección - Intercalado claro/oscuro */
-      section {
-        position: relative;
-        z-index: 1;
-      }
-      
-      /* Hero: solo la primera sección; el main es transparente para ver el scroll-chrome */
-      main[id="inicio"] {
-        background: transparent !important;
-      }
-      main[id="inicio"] > section:first-of-type {
-        background: linear-gradient(
-          to bottom,
-          rgba(201, 195, 255, 0.97) 0%,
-          rgba(201, 195, 255, 0.97) 50%,
-          rgba(201, 195, 255, 0.9) 100%
-        ) !important;
-        /* Una pantalla completa; padding-top bajo el header fijo para no tapar el badge */
-        min-height: 100svh;
-        min-height: 100dvh;
-        box-sizing: border-box;
-        padding-top: calc(5.75rem + env(safe-area-inset-top, 0px)) !important;
-        padding-bottom: clamp(1.75rem, 5vh, 3rem) !important;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-      main[id="inicio"] > section:first-of-type > .max-w-6xl {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 100%;
-      }
-      
-      /* Panel izquierdo - Textos oscuros sobre fondo claro */
-      main[id="inicio"] .hero-inicio-copy h1,
-      main[id="inicio"] .hero-inicio-copy h2,
-      main[id="inicio"] .hero-inicio-copy h3,
-      main[id="inicio"] .hero-inicio-copy p,
-      main[id="inicio"] .hero-inicio-copy span {
-        color: #1B0F2A !important;
-      }
-      
-      main[id="inicio"] .hero-inicio-copy .text-textPrimary,
-      main[id="inicio"] .hero-inicio-copy .text-textPrimary\/70,
-      main[id="inicio"] .hero-inicio-copy .text-textPrimary\/60,
-      main[id="inicio"] .hero-inicio-copy .text-white {
-        color: #1B0F2A !important;
-      }
-      
-      main[id="inicio"] .hero-inicio-copy .text-textPrimary\/70 {
-        opacity: 0.75;
-      }
-      
-      main[id="inicio"] .hero-inicio-copy .text-textPrimary\/60 {
-        opacity: 0.65;
-      }
-      
-      /* Badge del panel izquierdo */
-      main[id="inicio"] .hero-inicio-copy .bg-secondary\/70 {
-        background-color: rgba(27, 15, 42, 0.2) !important;
-        color: #1B0F2A !important;
-        border-color: rgba(27, 15, 42, 0.3) !important;
-      }
-      
-      /* Botón descargar del panel izquierdo */
-      main[id="inicio"] .hero-inicio-copy .bg-accent {
-        background-color: #1B0F2A !important;
-        color: #C9C3FF !important;
-        box-shadow: 0 4px 20px rgba(27, 15, 42, 0.3);
-      }
-      
-      /* Elementos de estadísticas del panel izquierdo */
-      main[id="inicio"] .hero-inicio-copy .text-white {
-        color: #1B0F2A !important;
-        font-weight: 700;
-      }
-      
-      /* Título principal más oscuro para mejor contraste */
-      main[id="inicio"] .hero-inicio-copy h1 {
-        color: #0A0515 !important;
-        font-weight: 800;
-      }
-      
-      /* Marcas ✔ de beneficios (excepción al color global de span) */
-      main[id="inicio"] .hero-inicio-copy .hero-benefit-mark {
-        color: #4CAF50 !important;
-      }
+      },
+    };
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #060e07;
+      color: #f0fdf4;
+      overflow-x: hidden;
+    }
+    ::selection { background: #4CAF50; color: #060e07; }
 
-      /* Hero: grilla inicio + foco mirando hacia abajo (alineado al chip) */
-      main[id="inicio"] .hero-inicio-grid {
-        width: 100%;
-        display: grid;
-        gap: 2rem 2.5rem;
-        align-items: start;
-      }
-      @media (min-width: 768px) {
-        main[id="inicio"] .hero-inicio-grid {
-          grid-template-columns: minmax(0, 1fr) minmax(240px, 400px);
-          gap: 2rem 3rem;
-        }
-      }
-      main[id="inicio"] .hero-inicio-bulb {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0;
-        padding-top: 0;
-        align-self: start;
-        width: 100%;
-      }
-      main[id="inicio"] .hero-bulb-controls-row {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        justify-content: center;
-        gap: 0.75rem 1rem;
-        width: 100%;
-      }
-      main[id="inicio"] .hero-bulb-controls-row toggle-switch.hero-bulb-toggle {
-        flex-shrink: 0;
-        margin-top: 0.35rem;
-      }
-      /* Dentro del light-bulb: sube el cultivo hacia la punta del foco (SVG rotado) */
-      main[id="inicio"] light-bulb.hero-light-bulb .hero-plant-stage {
-        position: relative;
-        width: 100%;
-        max-width: min(300px, 92vw);
-        margin: clamp(-5.75rem, -14vw, -3.25rem) auto 0;
-        border-radius: 0;
-        overflow: visible;
-        background: transparent;
-      }
-      /* Más alto que ancho: el crecimiento usa mejor el eje vertical hacia el foco */
-      main[id="inicio"] #canvas_container_div {
-        position: relative;
-        margin-left: auto;
-        margin-right: auto;
-        width: min(300px, 100%);
-        aspect-ratio: 4 / 5;
-        min-height: 180px;
-      }
-      main[id="inicio"] #canvas {
-        display: block;
-        width: 100%;
-        height: 100%;
-        /* Transparente: el verde oscuro sobre #111 era casi invisible */
-        background: transparent;
-        touch-action: none;
-      }
-      main[id="inicio"] light-bulb.hero-light-bulb {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0;
-      }
-      main[id="inicio"] light-bulb.hero-light-bulb .hero-bulb-svg-wrap {
-        order: 0;
-        transform: rotate(180deg);
-        transform-origin: center center;
-        line-height: 0;
-      }
-      main[id="inicio"] light-bulb.hero-light-bulb svg.bulb {
-        height: clamp(168px, 22vw, 220px);
-        width: auto;
-        display: block;
-      }
-      /* Fuera del flujo: antes reservaba 160px vacíos y empujaba las plantas abajo */
-      main[id="inicio"] light-bulb.hero-light-bulb .glow {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: clamp(-6.5rem, -18vw, -4.5rem);
-        order: 1;
-        width: min(280px, 85vw);
-        height: 160px;
-        margin: 0;
-        border-radius: 50%;
-        background: radial-gradient(
-          ellipse 75% 55% at 50% 0%,
-          rgba(255, 224, 100, 0.52) 0%,
-          rgba(255, 210, 80, 0.18) 42%,
-          rgba(255, 210, 80, 0) 72%
-        );
-        opacity: 0;
-        transition: opacity 0.55s ease;
-        pointer-events: none;
-      }
-      main[id="inicio"] light-bulb.hero-light-bulb[status="on"] .glow {
-        opacity: 1;
-      }
-      main[id="inicio"] toggle-switch.hero-bulb-toggle {
-        display: block;
-        height: 35px;
-        width: 80px;
-        position: relative;
-        border-radius: 22px;
-        border: 1px solid rgba(27, 15, 42, 0.35);
-        background: rgba(255, 255, 255, 0.35);
-        cursor: pointer;
-      }
-      main[id="inicio"] toggle-switch.hero-bulb-toggle input[type="checkbox"] {
-        height: 0;
-        width: 0;
-        opacity: 0;
-        position: absolute;
-        margin: 0;
-      }
-      main[id="inicio"] toggle-switch.hero-bulb-toggle label {
-        display: block;
-        height: 100%;
-        width: 100%;
-        cursor: pointer;
-        user-select: none;
-      }
-      main[id="inicio"] toggle-switch.hero-bulb-toggle::before {
-        content: "";
-        height: 25px;
-        width: 25px;
-        position: absolute;
-        left: 5px;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: #1b0f2a;
-        border-radius: 12px;
-        pointer-events: none;
-        z-index: 10;
-        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-      main[id="inicio"] toggle-switch.hero-bulb-toggle::after {
-        content: "OFF";
-        position: absolute;
-        display: block;
-        left: 40px;
-        top: 0;
-        bottom: 0;
-        font-size: 12px;
-        font-weight: 700;
-        line-height: 35px;
-        color: #1b0f2a;
-        pointer-events: none;
-        z-index: 5;
-        transition: left 0.35s ease-out, content 0.2s ease;
-      }
-      main[id="inicio"] toggle-switch.hero-bulb-toggle:has(input[type="checkbox"]:checked)::before {
-        left: 45px;
-      }
-      main[id="inicio"] toggle-switch.hero-bulb-toggle:has(input[type="checkbox"]:checked)::after {
-        content: "ON";
-        left: 12px;
-      }
-      main[id="inicio"] toggle-switch.hero-bulb-toggle:focus-within {
-        outline: 2px dotted #5a3d9a;
-        outline-offset: 3px;
-      }
-      
-      /* Panel derecho - Formulario oscuro con textos claros */
-      main[id="inicio"] .bg-secondary {
-        background-color: #1B0F2A !important;
-        border-color: rgba(201, 195, 255, 0.4) !important;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-      }
-      
-      main[id="inicio"] .bg-secondary * {
-        color: #C9C3FF !important;
-      }
-      
-      main[id="inicio"] .bg-secondary h3 {
-        color: #C9C3FF !important;
-        font-weight: 800;
-        font-size: 1.75rem;
-      }
-      
-      main[id="inicio"] .bg-secondary p {
-        color: #C9C3FF !important;
-      }
-      
-      main[id="inicio"] .bg-secondary span {
-        color: #C9C3FF !important;
-      }
-      
-      main[id="inicio"] .bg-secondary label {
-        color: #C9C3FF !important;
-        font-weight: 600;
-      }
-      
-      main[id="inicio"] .bg-secondary .text-textPrimary,
-      main[id="inicio"] .bg-secondary .text-textPrimary\/70,
-      main[id="inicio"] .bg-secondary .text-textPrimary\/60,
-      main[id="inicio"] .bg-secondary .text-white {
-        color: #C9C3FF !important;
-      }
-      
-      main[id="inicio"] .bg-secondary .text-textPrimary\/70 {
-        opacity: 0.85;
-      }
-      
-      main[id="inicio"] .bg-secondary .text-textPrimary\/60 {
-        opacity: 0.7;
-      }
-      
-      /* Inputs del formulario oscuro */
-      main[id="inicio"] .bg-secondary input,
-      main[id="inicio"] .bg-secondary textarea,
-      main[id="inicio"] .bg-secondary select {
-        color: #C9C3FF !important;
-        background-color: rgba(42, 31, 58, 0.7) !important;
-        border-color: rgba(201, 195, 255, 0.4) !important;
-      }
-      
-      main[id="inicio"] .bg-secondary input:focus,
-      main[id="inicio"] .bg-secondary textarea:focus,
-      main[id="inicio"] .bg-secondary select:focus {
-        border-color: rgba(201, 195, 255, 0.7) !important;
-        background-color: rgba(42, 31, 58, 0.8) !important;
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(201, 195, 255, 0.2);
-      }
-      
-      main[id="inicio"] .bg-secondary input::placeholder,
-      main[id="inicio"] .bg-secondary textarea::placeholder {
-        color: #C9C3FF !important;
-        opacity: 0.75 !important;
-      }
-      
-      main[id="inicio"] .bg-secondary textarea::placeholder {
-        color: rgba(201, 195, 255, 0.8) !important;
-      }
-      
-      /* Botón del formulario oscuro */
-      main[id="inicio"] .bg-secondary .bg-accent {
-        background-color: #8B6ED0 !important;
-        color: #1B0F2A !important;
-      }
-      
-      /* Área de carga de imagen */
-      main[id="inicio"] .bg-secondary .bg-primary\/70 {
-        background-color: rgba(42, 31, 58, 0.7) !important;
-        border-color: rgba(201, 195, 255, 0.5) !important;
-      }
-      
-      main[id="inicio"] .bg-secondary .bg-primary\/70:hover {
-        background-color: rgba(42, 31, 58, 0.8) !important;
-        border-color: rgba(201, 195, 255, 0.7) !important;
-      }
-      
-      main[id="inicio"] .bg-secondary .bg-accent\/20 {
-        background-color: rgba(139, 110, 208, 0.25) !important;
-      }
-      
-      /* Textos dentro del área de carga */
-      main[id="inicio"] .bg-secondary .bg-primary\/70 .text-sm,
-      main[id="inicio"] .bg-secondary .bg-primary\/70 .text-xs,
-      main[id="inicio"] .bg-secondary .bg-primary\/70 p {
-        color: #C9C3FF !important;
-      }
-      
-      main[id="inicio"] .bg-secondary .bg-primary\/70 .text-textPrimary\/60 {
-        color: #C9C3FF !important;
-        opacity: 0.85;
-      }
-      
-      /* Botón del formulario con mejor contraste */
-      main[id="inicio"] .bg-secondary .bg-accent {
-        background-color: #8B6ED0 !important;
-        color: #FFFFFF !important;
-        font-weight: 700;
-        box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);
-      }
-      
-      main[id="inicio"] .bg-secondary .bg-accent:hover {
-        background-color: #9B7EE0 !important;
-        box-shadow: 0 6px 25px rgba(139, 110, 208, 0.5);
-      }
-      
-      /* Texto de descargo de responsabilidad */
-      main[id="inicio"] .bg-secondary p.text-xs {
-        color: #C9C3FF !important;
-        opacity: 0.9;
-      }
-      
-      /* Preloader decorativo (hero): imagen con rotación */
-      .preloader-inline {
-        position: relative;
-        background-color: #c3c3c3;
-        width: 100%;
-        min-height: 180px;
-        border-radius: 1rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-      }
-      .preloader-inline img {
-        animation: sensei-loader-rotation 2s infinite linear;
-        max-width: 120px;
-        height: auto;
-      }
-      @keyframes sensei-loader-rotation {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-      }
-      @-webkit-keyframes sensei-loader-rotation {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-      }
-      
-      /* Bloque FUNCIONES: pin horizontal (GSAP) + cierre */
-      #funciones.funciones-experience {
-        /* visible: no recortar el carril al animar translateX dentro del pin */
-        overflow-x: visible;
-        max-width: 100%;
-      }
-      #funciones #sectionPinFunciones {
-        /* Lead + video + padding deben caber en 100svw; si no, el clip horizontal ocultaba casi todo el MP4 */
-        --fp-pad-x: min(5vw, 3rem);
-        --fp-video-w: min(560px, 62vw);
-        --fp-video-mr: min(3vw, 1.25rem);
-        --fp-lead-w: min(
-          560px,
-          calc(100svw - 2 * var(--fp-pad-x) - var(--fp-video-w) - var(--fp-video-mr) - 1rem)
-        );
-        background-color: rgba(27, 15, 42, 0.88) !important;
-        height: 100vh;
-        overflow-x: hidden;
-        overflow-y: hidden;
-        width: 100%;
-        max-width: 100%;
-        position: relative;
-        left: 0;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-      }
-      #funciones #sectionPinFunciones::-webkit-scrollbar {
-        display: none;
-        width: 0;
-        height: 0;
-      }
-      #funciones #sectionPinFunciones .pin-wrap-funciones {
-        display: inline-flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-items: center;
-        justify-content: flex-start;
-        height: 100vh;
-        width: max-content;
-        max-width: none;
-        min-width: min-content;
-        padding: 2rem min(5vw, 3rem);
-        padding-top: max(2rem, 5.25rem);
-        box-sizing: border-box;
-        will-change: transform;
-        vertical-align: top;
-      }
-      /* Empuja la 1.ª card: solo un “peek” (~4.5rem) a la derecha del texto */
-      #funciones .funciones-pin-spacer {
-        flex-shrink: 0;
-        width: max(
-          0px,
-          calc(
-            100svw - 2 * var(--fp-pad-x) - var(--fp-lead-w) - var(--fp-video-w) - var(--fp-video-mr) -
-              4.5rem
-          )
-        );
-        min-width: 0;
-        pointer-events: none;
-      }
-      #funciones .funciones-pin-lead {
-        flex-shrink: 0;
-        width: var(--fp-lead-w);
-        max-width: 560px;
-        min-width: 0;
-        padding: 0 clamp(0.75rem, 3vw, 1.75rem) 0 0;
-        box-sizing: border-box;
-        align-self: center;
-      }
-      #funciones .funciones-pin-lead h2.funciones-pin-lead-title {
-        text-wrap: balance;
-        line-height: 1.25;
-        letter-spacing: -0.02em;
-        margin: 0;
-      }
-      #funciones .funciones-pin-lead ul.funciones-pin-lead-list {
-        list-style: none;
-        margin: 1.25rem 0 0;
-        padding: 0;
-      }
-      #funciones .funciones-pin-lead ul.funciones-pin-lead-list li {
-        margin: 0;
-        padding: 0.35rem 0;
-        line-height: 1.45;
-      }
-      #funciones .funciones-pin-lead ul.funciones-pin-lead-list li + li {
-        margin-top: 0.15rem;
-      }
-      /* MP4 entre el lead y las cards (altura mínima: sin metadata el video quedaba en 0px) */
-      #funciones .funciones-pin-video-wrap {
-        flex-shrink: 0;
-        align-self: center;
-        width: min(560px, 62vw);
-        max-width: 560px;
-        aspect-ratio: 16 / 9;
-        margin-right: min(3vw, 1.25rem);
-        border-radius: 1.25rem;
-        overflow: hidden;
-        background-color: #1b0f2a;
-        box-shadow: none;
-        pointer-events: none;
-      }
-      #funciones .funciones-pin-video-wrap video {
-        display: block;
-        width: 100%;
-        height: 100%;
-        max-width: none;
-        object-fit: contain;
-        object-position: center;
-        mix-blend-mode: screen;
-      }
-      @media (prefers-reduced-motion: reduce) {
-        #funciones .funciones-pin-video-wrap {
-          display: none;
-        }
-      }
-      #funciones #sectionPinFunciones .funciones-pin-card {
-        flex-shrink: 0;
-        width: min(440px, 88vw);
-        min-width: min(440px, 88vw);
-        margin-right: min(4vw, 2rem);
-        box-sizing: border-box;
-      }
-      #funciones #sectionPinFunciones .funciones-pin-lead h2,
-      #funciones #sectionPinFunciones .funciones-pin-lead ul.funciones-pin-lead-list li {
-        color: #c9c3ff !important;
-      }
-      /* Entrada: solo el lead al inicio; 1.ª card apenas insinuada; el resto al hacer scroll */
-      #funciones #sectionPinFunciones.funciones-pin-gsap .funciones-pin-lead {
-        opacity: 0;
-        transform: translate3d(0, 1.25rem, 0);
-        will-change: transform, opacity;
-      }
-      #funciones #sectionPinFunciones.funciones-pin-gsap .funciones-pin-card:first-of-type {
-        opacity: 0.22;
-        transform: translate3d(12px, 0, 0);
-        will-change: transform, opacity;
-      }
-      #funciones #sectionPinFunciones.funciones-pin-gsap .funciones-pin-card:not(:first-of-type) {
-        opacity: 0;
-        transform: translate3d(0, 1.5rem, 0);
-        will-change: transform, opacity;
-      }
-      #funciones .funciones-scroll-outro {
-        background: linear-gradient(180deg, #c9c3ff 0%, #b8b0f0 100%) !important;
-        min-height: 72vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      
-      /* Sección SENSEI - CLARA (ligera transparencia para ver el scroll-chrome) */
-      section[id="sensei"] {
-        background-color: rgba(201, 195, 255, 0.9) !important;
-      }
-      section[id="sensei"] * {
-        color: #1B0F2A !important;
-      }
-      section[id="sensei"] .text-textPrimary,
-      section[id="sensei"] .text-textPrimary\/70,
-      section[id="sensei"] .text-textPrimary\/60,
-      section[id="sensei"] .text-white,
-      section[id="sensei"] h1,
-      section[id="sensei"] h2,
-      section[id="sensei"] h3,
-      section[id="sensei"] p,
-      section[id="sensei"] span,
-      section[id="sensei"] label {
-        color: #1B0F2A !important;
-      }
-      section[id="sensei"] .text-textPrimary\/70 {
-        opacity: 0.85;
-      }
-      section[id="sensei"] .text-textPrimary\/60 {
-        opacity: 0.7;
-      }
-      section[id="sensei"] .bg-secondary\/70,
-      section[id="sensei"] .bg-primary\/70,
-      section[id="sensei"] .bg-primary\/80 {
-        background-color: rgba(27, 15, 42, 0.15) !important;
-        border-color: rgba(27, 15, 42, 0.3) !important;
-      }
-      section[id="sensei"] .bg-accent {
-        background-color: #1B0F2A !important;
-        color: #C9C3FF !important;
-      }
-      
-      /* Sección PLANES - OSCURA */
-      section[id="planes"] {
-        background-color: rgba(42, 31, 58, 0.9) !important;
-      }
-      section[id="planes"] .text-textPrimary,
-      section[id="planes"] .text-textPrimary\/70,
-      section[id="planes"] .text-textPrimary\/60,
-      section[id="planes"] .text-white,
-      section[id="planes"] h1,
-      section[id="planes"] h2,
-      section[id="planes"] h3,
-      section[id="planes"] p,
-      section[id="planes"] span {
-        color: #C9C3FF !important;
-      }
-      
-      /* Cards blancas en sección planes - textos violeta oscuro */
-      section[id="planes"] .bg-white,
-      section[id="planes"] .bg-white *,
-      section[id="planes"] .bg-white h3,
-      section[id="planes"] .bg-white h4,
-      section[id="planes"] .bg-white p,
-      section[id="planes"] .bg-white span,
-      section[id="planes"] .bg-white li {
-        color: #1B0F2A !important;
-      }
-      
-      section[id="planes"] .bg-white .text-textPrimary,
-      section[id="planes"] .bg-white .text-textPrimary\/70,
-      section[id="planes"] .bg-white .text-textPrimary\/60 {
-        color: #1B0F2A !important;
-      }
-      
-      /* Sección DESCARGAR - CLARA */
-      section[id="descargar"] {
-        background-color: rgba(201, 195, 255, 0.9) !important;
-      }
-      section[id="descargar"] * {
-        color: #1B0F2A !important;
-      }
-      section[id="descargar"] .text-textPrimary,
-      section[id="descargar"] .text-textPrimary\/70,
-      section[id="descargar"] .text-textPrimary\/60,
-      section[id="descargar"] .text-white,
-      section[id="descargar"] h1,
-      section[id="descargar"] h2,
-      section[id="descargar"] h3,
-      section[id="descargar"] p,
-      section[id="descargar"] span {
-        color: #1B0F2A !important;
-      }
-      section[id="descargar"] .text-textPrimary\/70 {
-        opacity: 0.85;
-      }
-      section[id="descargar"] .text-textPrimary\/60 {
-        opacity: 0.7;
-      }
-      section[id="descargar"] .bg-secondary {
-        background-color: rgba(27, 15, 42, 0.15) !important;
-        border-color: rgba(27, 15, 42, 0.3) !important;
-      }
-      
-      /* Sección CONTACTO - OSCURA */
-      section[id="contacto"] {
-        background-color: rgba(27, 15, 42, 0.88) !important;
-      }
-      section[id="contacto"] .text-textPrimary,
-      section[id="contacto"] .text-textPrimary\/70,
-      section[id="contacto"] .text-textPrimary\/60,
-      section[id="contacto"] .text-white,
-      section[id="contacto"] h1,
-      section[id="contacto"] h2,
-      section[id="contacto"] h3,
-      section[id="contacto"] p,
-      section[id="contacto"] span,
-      section[id="contacto"] label {
-        color: #C9C3FF !important;
-      }
-      section[id="contacto"] input,
-      section[id="contacto"] textarea,
-      section[id="contacto"] select {
-        color: #C9C3FF !important;
-      }
-      
-      section[id="contacto"] input::placeholder,
-      section[id="contacto"] textarea::placeholder {
-        color: rgba(201, 195, 255, 0.6) !important;
-      }
-      
-      /* Card del formulario de contacto - mejor contraste */
-      section[id="contacto"] form {
-        background-color: rgba(42, 31, 58, 0.8) !important;
-        border-color: rgba(201, 195, 255, 0.3) !important;
-      }
-      
-      section[id="contacto"] form label {
-        color: #C9C3FF !important;
-      }
-      
-      section[id="contacto"] form input,
-      section[id="contacto"] form select,
-      section[id="contacto"] form textarea {
-        background-color: rgba(27, 15, 42, 0.6) !important;
-        border-color: rgba(201, 195, 255, 0.3) !important;
-        color: #C9C3FF !important;
-      }
-      
-      section[id="contacto"] form input:focus,
-      section[id="contacto"] form select:focus,
-      section[id="contacto"] form textarea:focus {
-        border-color: rgba(201, 195, 255, 0.6) !important;
-        box-shadow: 0 0 0 3px rgba(201, 195, 255, 0.2) !important;
-      }
-      
-      section[id="contacto"] form textarea::placeholder {
-        color: rgba(201, 195, 255, 0.6) !important;
-      }
-      
-      /* Mensaje del formulario de contacto */
-      #contact-form-message {
-        transition: all 0.3s ease;
-      }
-      
-      #contact-form-message.border-success\/40 {
-        border-color: rgba(76, 175, 80, 0.4) !important;
-      }
-      
-      #contact-form-message.border-error\/40 {
-        border-color: rgba(255, 107, 107, 0.4) !important;
-      }
-      
-      /* Header siempre visible: sticky falla con overflow-x en html/body; el pin de GSAP usa fixed y tapaba el nav */
-      body > header.site-header-bar {
-        position: fixed !important;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 9990;
-        width: 100%;
-        max-width: 100%;
-      }
-      /* Header fijo - mismo color que la primera sección */
-      header {
-        background-color: #C9C3FF !important;
-        backdrop-filter: blur(12px);
-        border-bottom-color: rgba(27, 15, 42, 0.2) !important;
-      }
-      
-      header a,
-      header span,
-      header button {
-        color: #1B0F2A !important;
-      }
-      
-      /* Nav desktop: tubelight (barra + haz) — ancho se ajusta al texto vía JS */
-      header .header-tubelight-track {
-        position: relative;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-items: flex-end;
-        gap: 0.15rem;
-        padding-top: 11px;
-      }
-      header .header-tubelight-nav a.nav-header-link {
-        position: relative;
-        z-index: 2;
-        display: inline-block;
-        padding: 0.4rem 0.55rem;
-        margin: 0;
-        background: transparent;
-        border: none;
-        text-decoration: none;
-        color: #1b0f2a !important;
-        cursor: pointer;
-        white-space: nowrap;
-        opacity: 0.45;
-        font-weight: 500;
-        transition: opacity 0.2s ease, color 0.2s ease;
-      }
-      header .header-tubelight-nav a.nav-header-link:hover {
-        opacity: 0.85;
-        color: #1b0f2a !important;
-      }
-      header .header-tubelight-nav a.nav-header-link.active,
-      header .header-tubelight-nav a.nav-header-link[aria-current="page"] {
-        opacity: 1;
-        font-weight: 700;
-        color: #12081f !important;
-      }
-      header .header-tubelight-nav .tubelight {
-        position: absolute;
-        top: 0;
-        left: 0;
-        transform: translateX(-50%);
-        width: 40px;
-        min-width: 28px;
-        height: 4px;
-        border-radius: 4px;
-        background: linear-gradient(90deg, #8b6ed0, #c9c3ff);
-        box-shadow: 0 0 14px rgba(139, 110, 208, 0.55);
-        transition:
-          left 0.38s cubic-bezier(0.22, 1, 0.36, 1),
-          width 0.38s cubic-bezier(0.22, 1, 0.36, 1);
-        z-index: 1;
-        pointer-events: none;
-      }
-      /* Haz centrado bajo la barra (mismo eje que translateX(-50%) del .tubelight) */
-      header .header-tubelight-nav .tubelight .light-ray {
-        position: absolute;
-        left: 50%;
-        top: 4px;
-        transform: translateX(-50%);
-        width: 200%;
-        height: 52px;
-        clip-path: polygon(43% 0, 57% 0, 91% 100%, 9% 100%);
-        background: linear-gradient(
-          to bottom,
-          rgba(139, 110, 208, 0.35) 0%,
-          rgba(201, 195, 255, 0.15) 45%,
-          rgba(201, 195, 255, 0) 90%
-        );
-        pointer-events: none;
-      }
-      header .header-tubelight-nav a.nav-header-link:focus-visible {
-        outline: 2px dotted #8b6ed0;
-        outline-offset: 3px;
-      }
-      header .header-tubelight-nav a.nav-header-link:focus:not(:focus-visible) {
-        outline: none;
-      }
-      
-      header .bg-accent {
-        background-color: #1B0F2A !important;
-        color: #C9C3FF !important;
-      }
-      
-      header .border-accent {
-        border-color: #1B0F2A !important;
-      }
-      
-      header .text-accent {
-        color: #1B0F2A !important;
-      }
-      
-      /* Drawer móvil - Menú lateral */
-      #mobile-menu-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(27, 15, 42, 0.8);
-        backdrop-filter: blur(4px);
-        z-index: 9998;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
-      }
-      
-      #mobile-menu-overlay.active {
-        opacity: 1;
-        visibility: visible;
-      }
-      
-      #mobile-menu {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 80%;
-        max-width: 320px;
-        height: 100vh;
-        height: 100dvh; /* Soporte para viewport dinámico en móviles */
-        background-color: #1B0F2A;
-        border-left: 1px solid rgba(201, 195, 255, 0.2);
-        z-index: 9999;
-        padding: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        overflow-y: auto;
-        transition: right 0.3s ease;
-        box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
-      }
-      
-      #mobile-menu:not(.hidden) {
-        right: 0;
-      }
-      
-      #mobile-menu a {
-        color: #C9C3FF !important;
-        padding: 0.75rem 1rem;
-        border-radius: 0.5rem;
-        transition: background-color 0.2s ease;
-        font-weight: 500;
-      }
-      
-      #mobile-menu a:hover {
-        background-color: rgba(201, 195, 255, 0.1);
-        color: #E8E4FF !important;
-      }
-      
-      /* Footer fijo oscuro */
-      footer {
-        background-color: rgba(27, 15, 42, 0.92) !important;
-      }
-    </style>
-  </head>
-  <body class="font-inter bg-primary text-textPrimary">
-    <div id="scroll-chrome-bg" aria-hidden="true"></div>
-    <header
-      class="site-header-bar bg-primary/90 backdrop-blur border-b border-secondary"
-    >
-      <div class="max-w-6xl mx-auto px-4">
-        <div class="flex items-center justify-between py-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 flex items-center justify-center">
-              <img
-                src="icono/favicon.png"
-                alt="GrowAi Logo"
-                class="w-10 h-10 object-contain"
-                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-              />
-              <!-- Fallback SVG si la imagen no se carga -->
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 100 100"
-                class="w-10 h-10"
-                style="display: none;"
-              >
-                <ellipse cx="50" cy="70" rx="18" ry="12" fill="#1B0F2A" />
-                <ellipse cx="50" cy="50" rx="14" ry="10" fill="#1B0F2A" />
-                <ellipse cx="50" cy="30" rx="10" ry="8" fill="#1B0F2A" />
-                <path d="M50 22 L48 18 L50 15 L52 18 Z" fill="#1B0F2A" />
-                <circle cx="40" cy="85" r="5" fill="#1B0F2A" />
-                <circle cx="50" cy="88" r="5" fill="#1B0F2A" />
-                <circle cx="60" cy="85" r="5" fill="#1B0F2A" />
-              </svg>
-            </div>
-            <span class="text-xl md:text-2xl font-semibold tracking-tight text-[#1B0F2A]"
-              >GrowAi</span
-            >
-          </div>
-          <nav
-            id="header-section-nav"
-            class="header-main-nav header-tubelight-nav hidden md:flex items-end text-sm font-medium"
-            aria-label="Principal"
-          >
-            <div class="header-tubelight-track">
-              <a class="nav-header-link active" href="#inicio" aria-current="page">Inicio</a>
-              <a class="nav-header-link" href="#funciones">Funciones</a>
-              <a class="nav-header-link" href="#sensei">Sensei</a>
-              <a class="nav-header-link" href="#contacto">Contacto</a>
-              <div class="tubelight" aria-hidden="true">
-                <div class="light-ray"></div>
-              </div>
-            </div>
-          </nav>
-          <button
-            id="menu-button"
-            class="md:hidden inline-flex items-center justify-center p-2 rounded-full border border-accent text-accent"
-            aria-label="Abrir menú"
-          >
-            <svg
-              id="menu-icon"
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          </button>
-        </div>
+    /* ── Reveal on scroll ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.7s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.12s; }
+    .reveal-delay-2 { transition-delay: 0.24s; }
+    .reveal-delay-3 { transition-delay: 0.36s; }
+
+    /* ── Eyebrow label ── */
+    .eyebrow {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #4CAF50;
+    }
+
+    /* ── Partículas hero ── */
+    @keyframes float-a {
+      0%,100% { transform: translateY(0) translateX(0); opacity: .5; }
+      50%      { transform: translateY(-18px) translateX(8px); opacity: .8; }
+    }
+    @keyframes float-b {
+      0%,100% { transform: translateY(0) translateX(0); opacity: .3; }
+      50%      { transform: translateY(14px) translateX(-10px); opacity: .6; }
+    }
+    @keyframes float-c {
+      0%,100% { transform: translateY(0); opacity: .4; }
+      50%      { transform: translateY(-10px); opacity: .7; }
+    }
+    .particle { position: absolute; border-radius: 50%; pointer-events: none; }
+    .particle-a { animation: float-a 7s ease-in-out infinite; }
+    .particle-b { animation: float-b 9s ease-in-out infinite; }
+    .particle-c { animation: float-c 5s ease-in-out infinite; }
+
+    /* ── Scroll indicator ── */
+    @keyframes scroll-bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(6px); }
+    }
+    .scroll-indicator { animation: scroll-bounce 2s ease-in-out infinite; }
+
+    /* ── Navbar backdrop ── */
+    #navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      transition: background 0.3s, border-color 0.3s, backdrop-filter 0.3s;
+      border-bottom: 1px solid transparent;
+    }
+    #navbar.scrolled {
+      background: rgba(6,14,7,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-color: rgba(76,175,80,0.12);
+    }
+
+    /* ── Mobile menu drawer ── */
+    #mobile-drawer {
+      position: fixed; inset: 0; z-index: 100;
+      display: flex; pointer-events: none;
+    }
+    #mobile-drawer.open { pointer-events: auto; }
+    #drawer-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.6);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    #mobile-drawer.open #drawer-overlay { opacity: 1; }
+    #drawer-panel {
+      position: absolute; top: 0; right: 0; bottom: 0;
+      width: 260px; background: #0d1f0f;
+      border-left: 1px solid rgba(76,175,80,0.15);
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+      display: flex; flex-direction: column; padding: 1.5rem;
+    }
+    #mobile-drawer.open #drawer-panel { transform: translateX(0); }
+
+    /* ── Chat typing indicator ── */
+    @keyframes typing-dot {
+      0%,80%,100% { opacity: .3; transform: scale(.8); }
+      40%          { opacity: 1; transform: scale(1); }
+    }
+    .typing-dot:nth-child(1) { animation: typing-dot 1.2s 0s infinite; }
+    .typing-dot:nth-child(2) { animation: typing-dot 1.2s .2s infinite; }
+    .typing-dot:nth-child(3) { animation: typing-dot 1.2s .4s infinite; }
+
+    /* ── Stepper line ── */
+    .step-line {
+      width: 2px; flex-shrink: 0;
+      background: linear-gradient(to bottom, #4CAF50, rgba(76,175,80,0.2));
+    }
+
+    /* ── Section alternating backgrounds ── */
+    .bg-section-a { background: linear-gradient(160deg, #060e07 0%, #0d1f0f 100%); }
+    .bg-section-b { background: linear-gradient(160deg, #0d1f0f 0%, #1B0F2A 100%); }
+    .bg-section-c { background: linear-gradient(160deg, #060e07 0%, #0d2010 100%); }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════ NAVBAR ═══════════════════════════════ -->
+  <nav id="navbar">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="#hero" class="flex items-center gap-2.5 shrink-0">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center text-lg"
+             style="background:linear-gradient(135deg,#4CAF50,#2d4a1e);">🌿</div>
+        <span class="font-black text-lg tracking-tight text-text-main">GrowAI</span>
+      </a>
+      <div class="hidden md:flex items-center gap-7">
+        <a href="#funciones"  class="text-sm text-text-main/50 hover:text-text-main transition">Funciones</a>
+        <a href="#sensei"     class="text-sm text-text-main/50 hover:text-text-main transition">Sensei</a>
+        <a href="#reprocann"  class="text-sm text-text-main/50 hover:text-text-main transition">REPROCANN</a>
+        <a href="#planes"     class="text-sm text-text-main/50 hover:text-text-main transition">Planes</a>
       </div>
-    </header>
-    
-    <!-- Overlay para el drawer móvil -->
-    <div id="mobile-menu-overlay"></div>
-    <!-- Drawer móvil -->
-    <div
-      id="mobile-menu"
-      class="md:hidden hidden"
-    >
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-[#C9C3FF]">Menú</h2>
-        <button
-          id="close-menu-button"
-          class="p-2 rounded-full hover:bg-secondary/50 transition"
-          aria-label="Cerrar menú"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-[#C9C3FF]"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+      <div class="flex items-center gap-3">
+        <a href="https://app.growai.com.ar" target="_blank" rel="noopener noreferrer"
+           class="hidden md:inline-flex items-center gap-1.5 bg-green text-bg-deep text-sm font-bold px-5 py-2 rounded-full hover:bg-green-soft transition">
+          Abrir app
+        </a>
+        <button id="menu-btn" class="md:hidden flex flex-col gap-1.5 p-2 rounded-lg" aria-label="Abrir menú">
+          <span class="block w-5 h-0.5 bg-text-main/70 rounded"></span>
+          <span class="block w-5 h-0.5 bg-text-main/70 rounded"></span>
+          <span class="block w-5 h-0.5 bg-text-main/70 rounded"></span>
         </button>
       </div>
-      <nav class="flex flex-col gap-2">
-        <a href="#inicio">Inicio</a>
-        <a href="#funciones">Funciones</a>
-        <a href="#sensei">Sensei</a>
-        <a href="#contacto">Contacto</a>
-      </nav>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════ HERO ════════════════════════════════ -->
+  <section id="hero"
+    class="relative min-h-svh flex flex-col items-center justify-center overflow-hidden pt-16"
+    style="background:linear-gradient(160deg,#060e07 0%,#0d1f0f 45%,#1B0F2A 100%);">
+
+    <div class="pointer-events-none absolute -top-20 -right-20 w-96 h-96 rounded-full"
+         style="background:radial-gradient(circle,rgba(76,175,80,0.07) 0%,transparent 70%);"></div>
+    <div class="pointer-events-none absolute bottom-0 -left-16 w-64 h-64 rounded-full"
+         style="background:radial-gradient(circle,rgba(139,110,208,0.06) 0%,transparent 70%);"></div>
+
+    <div class="particle particle-a w-2 h-2 bg-green/50" style="top:18%;left:12%;"></div>
+    <div class="particle particle-b w-1.5 h-1.5 bg-green/30" style="top:65%;left:8%;animation-delay:1s;"></div>
+    <div class="particle particle-c w-1 h-1 bg-green-soft/40" style="top:35%;left:80%;animation-delay:2s;"></div>
+    <div class="particle particle-a w-2.5 h-2.5 bg-purple/30" style="top:75%;right:15%;animation-delay:3s;"></div>
+    <div class="particle particle-b w-1 h-1 bg-green/40" style="top:20%;right:25%;animation-delay:1.5s;"></div>
+    <div class="particle particle-c w-1.5 h-1.5 bg-green-soft/30" style="top:50%;left:45%;animation-delay:4s;"></div>
+
+    <div class="relative text-center px-6 max-w-2xl mx-auto flex flex-col items-center gap-6">
+      <span class="eyebrow reveal">Tu asistente de cultivo inteligente</span>
+      <h1 class="reveal reveal-delay-1 text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.08] text-text-main">
+        Tu cultivo,<br>guiado por IA
+      </h1>
+      <p class="reveal reveal-delay-2 text-base sm:text-lg text-text-main/60 max-w-lg leading-relaxed">
+        Registrá tus plantas, diagnosticá problemas con Sensei y gestioná tu REPROCANN — todo desde una app web para cualquier dispositivo.
+      </p>
+      <div class="reveal reveal-delay-3 flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="https://app.growai.com.ar" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center justify-center gap-2 bg-green text-bg-deep font-bold px-8 py-3.5 rounded-full text-base shadow-[0_4px_24px_rgba(76,175,80,0.35)] hover:shadow-[0_6px_32px_rgba(76,175,80,0.5)] hover:-translate-y-0.5 transition">
+          Abrir GrowAI →
+        </a>
+        <a href="#funciones"
+           class="inline-flex items-center justify-center gap-2 border border-green/30 text-green-soft font-medium px-7 py-3.5 rounded-full text-base hover:border-green/60 hover:bg-green/5 transition">
+          Ver funciones
+        </a>
+      </div>
+      <p class="text-xs text-text-main/30 mt-1">App web · cualquier dispositivo</p>
     </div>
 
-    <main id="inicio">
-      <section class="relative overflow-x-hidden bg-gradient-to-b from-primary via-primary to-secondary/40">
-        <div class="max-w-6xl mx-auto px-4">
-          <div class="hero-inicio-grid">
-            <div class="hero-inicio-copy space-y-6 md:space-y-7 max-w-2xl">
-              <span
-                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/70 text-[11px] md:text-xs font-semibold uppercase tracking-[0.12em] text-textPrimary"
-                >Cultivo inteligente con IA</span
-              >
-              <h1
-                class="text-3xl md:text-4xl lg:text-[2.75rem] font-extrabold leading-[1.12] tracking-tight text-textPrimary"
-              >
-                Tu cultivo, ordenado con IA
-              </h1>
-              <p class="text-base md:text-lg text-textPrimary/85 max-w-xl leading-relaxed">
-                Gestioná tus plantas, diagnosticá problemas y mejorá tus resultados desde una sola app.
-              </p>
-              <ul class="space-y-2.5 text-base md:text-lg text-textPrimary/90 max-w-xl" role="list">
-                <li class="flex gap-3 items-start">
-                  <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
-                  <span>Diagnóstico con IA</span>
-                </li>
-                <li class="flex gap-3 items-start">
-                  <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
-                  <span>Seguimiento completo</span>
-                </li>
-                <li class="flex gap-3 items-start">
-                  <span class="hero-benefit-mark shrink-0 mt-0.5 font-semibold" aria-hidden="true">✔</span>
-                  <span>Recomendaciones en tiempo real</span>
-                </li>
-              </ul>
-              <div class="flex flex-col items-start gap-2 pt-1">
-                <a
-                  href="#descargar"
-                  class="inline-flex items-center justify-center gap-2 bg-accent text-primary font-bold px-9 py-4 text-lg md:text-xl rounded-full shadow-[0_8px_32px_rgba(139,110,208,0.45)] ring-2 ring-accent/40 hover:ring-accent/70 hover:shadow-[0_12px_40px_rgba(139,110,208,0.55)] hover:-translate-y-0.5 active:translate-y-0 transition duration-200"
-                  >Descargar App</a
-                >
-                <p class="text-xs md:text-sm text-textPrimary/60 pl-1">Disponible en Android</p>
-              </div>
-            </div>
-            <aside class="hero-inicio-bulb" aria-label="Foco y cultivo simulado">
-              <div class="hero-bulb-controls-row">
-                <light-bulb class="hero-light-bulb" status="off">
-                  <div class="hero-bulb-svg-wrap">
-                    <svg class="bulb" viewBox="0 0 90 120" aria-hidden="true">
-                      <defs>
-                        <radialGradient id="hero-bulb-grad" cx="40%" cy="35%" r="60%">
-                          <stop offset="0%" stop-color="#fff9c4" class="bulb-stop-0" />
-                          <stop offset="100%" stop-color="#f0c030" class="bulb-stop-1" />
-                        </radialGradient>
-                      </defs>
-                      <path
-                        class="bulb-glass"
-                        d="M45 8 C20 8 10 28 10 46 C10 62 20 74 32 82 L32 96 C32 100 36 104 45 104 C54 104 58 100 58 96 L58 82 C70 74 80 62 80 46 C80 28 70 8 45 8Z"
-                        fill="#2a2a3a"
-                        stroke="#444"
-                        stroke-width="1.5"
-                      />
-                      <polyline
-                        class="bulb-filament"
-                        points="38,90 38,70 43,62 47,70 52,62 52,90"
-                        fill="none"
-                        stroke="#555"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <rect class="bulb-base-1" x="32" y="96" width="26" height="5" rx="2" fill="#444" />
-                      <rect class="bulb-base-2" x="34" y="101" width="22" height="5" rx="2" fill="#3a3a3a" />
-                      <rect class="bulb-base-3" x="36" y="106" width="18" height="6" rx="2" fill="#333" />
-                    </svg>
-                  </div>
-                  <div class="glow"></div>
-                  <div class="hero-plant-stage" aria-hidden="true">
-                    <div id="canvas_container_div">
-                      <canvas id="canvas" width="800" height="1000"></canvas>
-                    </div>
-                  </div>
-                </light-bulb>
-                <toggle-switch class="hero-bulb-toggle">
-                  <input type="checkbox" id="hero-bulb-switch" />
-                  <label for="hero-bulb-switch"
-                    ><span class="sr-only">Encender o apagar el foco decorativo</span></label
-                  >
-                </toggle-switch>
-              </div>
-            </aside>
-          </div>
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 scroll-indicator">
+      <span class="text-[10px] tracking-widest text-text-main/30 uppercase">scrolleá</span>
+      <div class="w-px h-6" style="background:linear-gradient(to bottom,rgba(76,175,80,0.4),transparent);"></div>
+      <div class="w-1.5 h-1.5 border-r border-b border-green/40 rotate-45"></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ EL PROBLEMA ═══════════════════════════════ -->
+  <section class="py-24 bg-section-b">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <span class="eyebrow reveal mb-4">El desafío</span>
+      <h2 class="reveal reveal-delay-1 text-3xl sm:text-4xl font-black tracking-tight leading-tight text-text-main mt-4 mb-4">
+        Cultivar sin guía es<br>frustrante y solitario
+      </h2>
+      <p class="reveal reveal-delay-2 text-text-main/50 text-base max-w-lg mx-auto mb-14 leading-relaxed">
+        La mayoría de los cultivadores navegan a ciegas entre errores, papeleo y diagnósticos imposibles.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div class="reveal reveal-delay-1 rounded-2xl p-6 text-left"
+             style="background:rgba(0,0,0,0.35);border:1px solid rgba(76,175,80,0.1);">
+          <div class="text-3xl mb-4">😓</div>
+          <h3 class="font-bold text-green-soft mb-2 text-sm">Sin diagnóstico</h3>
+          <p class="text-text-main/45 text-sm leading-relaxed">No sabés qué le pasa a tu planta y el tiempo corre sin respuestas.</p>
         </div>
-      </section>
-
-      <div id="funciones" class="funciones-experience border-y border-secondary/60">
-        <section id="sectionPinFunciones" class="funciones-pin-section" aria-label="Funciones en desplazamiento horizontal">
-          <div class="pin-wrap-funciones">
-            <div class="funciones-pin-lead">
-              <h2 class="funciones-pin-lead-title text-2xl md:text-3xl font-bold">
-                Tres pilares para un buen cultivador
-              </h2>
-              <ul class="funciones-pin-lead-list text-base md:text-lg font-semibold" role="list">
-                <li>Registro y seguimiento de mis cultivos</li>
-                <li>Sensei te ayuda con todos los problemas que tengas</li>
-                <li>Gestiona tu trámite REPROCANN</li>
-              </ul>
-            </div>
-            <div class="funciones-pin-video-wrap" aria-hidden="true">
-              <video
-                id="funciones-pin-video-el"
-                src="videos/cogollo-girando.mp4"
-                muted
-                loop
-                playsinline
-                autoplay
-                preload="auto"
-              ></video>
-            </div>
-            <div class="funciones-pin-spacer" aria-hidden="true"></div>
-            <article
-              class="funciones-pin-card rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition"
-              style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;"
-            >
-              <div class="flex items-center gap-4">
-                <span class="text-3xl" aria-hidden="true">🌱</span>
-                <div>
-                  <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">Mis Cultivos</h3>
-                  <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
-                    Gestiona cada etapa de tus plantas con seguimiento inteligente y alertas personalizadas.
-                  </p>
-                </div>
-              </div>
-              <div
-                class="rounded-2xl p-4 text-sm"
-                style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;"
-              >
-                <p style="color: #C9C3FF !important; opacity: 0.9;">
-                  <strong style="color: #C9C3FF !important;">Incluye:</strong> Registro por planta, historial, notas,
-                  recordatorios de riego y nutrición.
-                </p>
-                <p class="mt-2 font-medium" style="color: #FF9800 !important;">
-                  Descarga la app para gestionar tus cultivos en tiempo real.
-                </p>
-              </div>
-              <a
-                href="#descargar"
-                class="inline-flex justify-center items-center rounded-full py-2 font-semibold transition"
-                style="background-color: #8B6ED0 !important; color: #FFFFFF !important; box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);"
-                onmouseover="this.style.backgroundColor='#9B7EE0'; this.style.boxShadow='0 6px 25px rgba(139, 110, 208, 0.5)';"
-                onmouseout="this.style.backgroundColor='#8B6ED0'; this.style.boxShadow='0 4px 20px rgba(139, 110, 208, 0.4)';"
-                >Descarga la app para usar</a
-              >
-              <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
-                Esta función está disponible en la app móvil.
-              </p>
-            </article>
-            <article
-              class="funciones-pin-card rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition"
-              style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;"
-            >
-              <div class="flex items-center gap-4">
-                <span class="text-3xl" aria-hidden="true">🧘</span>
-                <div>
-                  <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">Sensei</h3>
-                  <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
-                    Chateá con tu asistente de IA: describí síntomas o compartí fotos y recibí orientación clara sobre
-                    tu cultivo.
-                  </p>
-                </div>
-              </div>
-              <div
-                class="rounded-2xl p-4 text-sm"
-                style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;"
-              >
-                <p style="color: #C9C3FF !important; opacity: 0.9;">
-                  <strong style="color: #C9C3FF !important;">Incluye:</strong> Conversaciones con contexto, seguimiento
-                  por chat y respuestas pensadas para cultivadores.
-                </p>
-                <p class="mt-2 font-medium" style="color: #FF9800 !important;">
-                  Disponible en la app; la web solo muestra información.
-                </p>
-              </div>
-              <a
-                href="#descargar"
-                class="inline-flex justify-center items-center rounded-full py-2 font-semibold transition"
-                style="background-color: #8B6ED0 !important; color: #FFFFFF !important; box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);"
-                onmouseover="this.style.backgroundColor='#9B7EE0'; this.style.boxShadow='0 6px 25px rgba(139, 110, 208, 0.5)';"
-                onmouseout="this.style.backgroundColor='#8B6ED0'; this.style.boxShadow='0 4px 20px rgba(139, 110, 208, 0.4)';"
-                >Descarga la app para usar</a
-              >
-              <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
-                Esta función está disponible en la app móvil.
-              </p>
-            </article>
-            <article
-              class="funciones-pin-card rounded-3xl p-6 flex flex-col gap-6 shadow-2xl border transition"
-              style="background-color: #1B0F2A !important; border-color: rgba(201, 195, 255, 0.4) !important;"
-            >
-              <div class="flex items-center gap-4">
-                <span class="text-3xl" aria-hidden="true">🏥</span>
-                <div>
-                  <h3 class="text-xl font-semibold" style="color: #C9C3FF !important;">REPROCANN</h3>
-                  <p class="text-sm" style="color: #C9C3FF !important; opacity: 0.9;">
-                    Acompañamiento en trámites legales, documentación y seguimiento normativo.
-                  </p>
-                </div>
-              </div>
-              <div
-                class="rounded-2xl p-4 text-sm"
-                style="background-color: rgba(42, 31, 58, 0.7) !important; border-color: rgba(201, 195, 255, 0.3) !important;"
-              >
-                <p style="color: #C9C3FF !important; opacity: 0.9;">
-                  <strong style="color: #C9C3FF !important;">Incluye:</strong> Checklist, alertas de renovación,
-                  vinculación profesional.
-                </p>
-                <p class="mt-2 font-medium" style="color: #FF9800 !important;">Gestiona tus trámites desde la app.</p>
-              </div>
-              <a
-                href="#descargar"
-                class="inline-flex justify-center items-center rounded-full py-2 font-semibold transition"
-                style="background-color: #8B6ED0 !important; color: #FFFFFF !important; box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);"
-                onmouseover="this.style.backgroundColor='#9B7EE0'; this.style.boxShadow='0 6px 25px rgba(139, 110, 208, 0.5)';"
-                onmouseout="this.style.backgroundColor='#8B6ED0'; this.style.boxShadow='0 4px 20px rgba(139, 110, 208, 0.4)';"
-                >Descarga la app para usar</a
-              >
-              <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
-                Esta función está disponible en la app móvil.
-              </p>
-            </article>
-          </div>
-        </section>
-
-        <section class="funciones-scroll-outro" aria-label="Cierre de funciones">
-          <div class="max-w-3xl mx-auto px-6 py-20 md:py-28 text-center flex flex-col items-center justify-center min-h-[min(72vh,640px)]">
-            <h2 class="text-3xl md:text-4xl font-bold text-[#1B0F2A]">¿Listo para probarlo?</h2>
-            <p class="mt-4 text-lg text-[#1B0F2A]/80 max-w-xl leading-relaxed">
-              Descargá GrowAi en Android y usá Mis Cultivos, Sensei y REPROCANN cuando quieras.
-            </p>
-            <a
-              href="#descargar"
-              class="mt-10 inline-flex items-center gap-2 rounded-full px-8 py-4 font-semibold text-[#C9C3FF] bg-[#1B0F2A] shadow-lg hover:bg-[#2A1F3A] transition"
-              >Ir a descargar →</a
-            >
-          </div>
-        </section>
+        <div class="reveal reveal-delay-2 rounded-2xl p-6 text-left"
+             style="background:rgba(0,0,0,0.35);border:1px solid rgba(76,175,80,0.1);">
+          <div class="text-3xl mb-4">📋</div>
+          <h3 class="font-bold text-green-soft mb-2 text-sm">Sin registro</h3>
+          <p class="text-text-main/45 text-sm leading-relaxed">Perdés el historial de cada ciclo y no podés mejorar tu técnica.</p>
+        </div>
+        <div class="reveal reveal-delay-3 rounded-2xl p-6 text-left"
+             style="background:rgba(0,0,0,0.35);border:1px solid rgba(76,175,80,0.1);">
+          <div class="text-3xl mb-4">📄</div>
+          <h3 class="font-bold text-green-soft mb-2 text-sm">Sin tramitar</h3>
+          <p class="text-text-main/45 text-sm leading-relaxed">El REPROCANN es confuso y no sabés por dónde empezar el registro.</p>
+        </div>
       </div>
+      <p class="reveal mt-10 text-text-main/35 text-sm tracking-wide">GrowAI resuelve los tres.</p>
+    </div>
+  </section>
 
-      <section
-        id="sensei"
-        class="py-20 bg-primary/80"
-      >
-        <div class="max-w-6xl mx-auto px-4">
-          <div class="grid md:grid-cols-2 gap-8 items-center">
-            <div class="space-y-6">
-              <span class="text-sm font-semibold text-accent uppercase tracking-wider"
-                >Sensei</span
-              >
-              <h2 class="text-2xl md:text-3xl font-bold">
-                Tu espacio con Sensei está en la app
-              </h2>
-              <p class="text-md md:text-lg text-textPrimary/80 max-w-xl">
-                Sensei es el asistente por chat con IA de GrowAi: describí síntomas o subí fotos y recibí orientación con calma y precisión. No hay cobro por diagnóstico en la web; el uso completo está en la aplicación móvil.
-              </p>
-              <ul class="space-y-3 text-sm text-textPrimary/70">
-                <li class="flex gap-3 items-start">
-                  <span class="text-success text-lg">●</span>
-                  <span>Conversaciones con contexto de cultivo y respuestas claras.</span>
-                </li>
-                <li class="flex gap-3 items-start">
-                  <span class="text-warning text-lg">●</span>
-                  <span>La app guarda tus chats y te permite profundizar cuando quieras.</span>
-                </li>
-                <li class="flex gap-3 items-start">
-                  <span class="text-accent text-lg">●</span>
-                  <span>Iniciá sesión en la app para abrir Sensei; desde la web solo mostramos esta información.</span>
-                </li>
-              </ul>
-            </div>
-            <div class="relative">
-              <div
-                class="absolute inset-0 -m-12 bg-accent/20 blur-3xl rounded-full"
-                aria-hidden="true"
-              ></div>
-              <div
-                class="relative bg-secondary rounded-3xl p-6 md:p-8 shadow-2xl border border-accent/30"
-                style="background-color: #1B0F2A !important;"
-              >
-                <div class="flex flex-col gap-5">
-                  <div class="space-y-2">
-                    <h3 class="text-2xl font-bold tracking-tight" style="color: #C9C3FF !important;">
-                      Sensei
-                    </h3>
-                    <p class="text-sm opacity-95" style="color: #C9C3FF !important; opacity: 0.9 !important;">
-                      Describí síntomas o subí fotos: Sensei orienta con calma y precisión. No reemplaza un diagnóstico profesional.
-                    </p>
-                  </div>
-                  <div class="preloader-inline" aria-hidden="true">
-                    <img src="https://s3.ca-central-1.amazonaws.com/test-public-420/loader.png" alt="" width="120" height="120" />
-                  </div>
-                  <p class="text-xs opacity-90" style="color: #C9C3FF !important; opacity: 0.85 !important;">
-                    Para chatear con Sensei necesitás la app GrowAi. No se ofrece pago por diagnóstico en este sitio.
-                  </p>
-                  <a
-                    href="#descargar"
-                    class="inline-flex items-center justify-center gap-2 rounded-full bg-[#8B6ED0] text-white font-bold px-5 py-3 shadow-[0_4px_20px_rgba(139,110,208,0.4)] hover:bg-[#9B7EE0] hover:shadow-[0_6px_25px_rgba(139,110,208,0.5)] transition text-center"
-                  >
-                    Ir a descargar la app
-                  </a>
-                </div>
-              </div>
-            </div>
+  <!-- ══════════════════════ FUNCIONES OVERVIEW ════════════════════════════ -->
+  <section id="funciones" class="py-24 bg-section-a">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="text-center mb-14">
+        <span class="eyebrow reveal mb-4">Funciones</span>
+        <h2 class="reveal reveal-delay-1 text-3xl sm:text-4xl font-black tracking-tight text-text-main mt-4">
+          Tres pilares. Una sola app.
+        </h2>
+      </div>
+      <div class="flex flex-col gap-4">
+        <a href="#mis-cultivos"
+           class="reveal reveal-delay-1 group flex items-start gap-5 rounded-2xl p-6 transition hover:scale-[1.01]"
+           style="background:rgba(76,175,80,0.05);border:1px solid rgba(76,175,80,0.18);">
+          <div class="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+               style="background:rgba(76,175,80,0.12);border:1px solid rgba(76,175,80,0.25);">🌱</div>
+          <div class="flex-1">
+            <h3 class="font-bold text-text-main mb-1">Mis Cultivos</h3>
+            <p class="text-sm text-text-main/50 leading-relaxed">Registrá cada planta, etapa y parámetro. Historial completo exportable en PDF. Hasta 5 en Básico, ilimitados en Pro.</p>
           </div>
-        </div>
-      </section>
-
-      <section
-        id="planes"
-        class="py-20 bg-secondary/50 border-y border-secondary/60"
-      >
-        <div class="max-w-6xl mx-auto px-4">
-          <div class="text-center max-w-3xl mx-auto mb-12 space-y-4">
-            <h2 class="text-2xl md:text-3xl font-bold">
-              Elige el plan que crece con tu proyecto de cultivo
-            </h2>
+          <span class="self-center text-green/40 group-hover:text-green transition text-lg">→</span>
+        </a>
+        <a href="#sensei"
+           class="reveal reveal-delay-2 group flex items-start gap-5 rounded-2xl p-6 transition hover:scale-[1.01]"
+           style="background:rgba(139,110,208,0.05);border:1px solid rgba(139,110,208,0.18);">
+          <div class="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+               style="background:rgba(139,110,208,0.12);border:1px solid rgba(139,110,208,0.25);">🤖</div>
+          <div class="flex-1">
+            <h3 class="font-bold text-text-main mb-1">Sensei IA</h3>
+            <p class="text-sm text-text-main/50 leading-relaxed">Describí síntomas o subí fotos. Sensei te orienta con precisión y contexto de tu cultivo. Conversaciones guardadas en la app.</p>
           </div>
-
-          <!-- Planes de pago -->
-          <div class="grid gap-6 md:grid-cols-2 mb-12">
-            <!-- Plan Básico -->
-            <article class="relative bg-white rounded-3xl p-6 flex flex-col gap-5 shadow-lg border border-accent/20">
-              <div>
-                <h3 class="text-xl font-semibold mb-3" style="color: #1B0F2A;">Plan Básico</h3>
-                <div class="flex items-center gap-2 mb-2">
-                  <span class="text-sm line-through" style="color: #999;">$12.990</span>
-                  <span class="text-xs bg-[#4CAF50] text-white px-2 py-1 rounded-full font-semibold">OFERTA</span>
-                </div>
-                <div class="flex items-baseline gap-2">
-                  <span class="text-3xl font-bold" style="color: #4CAF50;">$7.990</span>
-                  <span class="text-sm" style="color: #999;">/mes</span>
-                </div>
-              </div>
-              <ul class="space-y-3 text-sm flex-grow">
-                <li class="flex gap-3 items-start">
-                  <span class="text-success text-lg">✓</span>
-                  <span style="color: #1B0F2A;">10 chats con Sensei por mes</span>
-                </li>
-                <li class="flex gap-3 items-start">
-                  <span class="text-success text-lg">✓</span>
-                  <span style="color: #1B0F2A;">Hasta 5 cultivos activos</span>
-                </li>
-                <li class="flex gap-3 items-start">
-                  <span class="text-success text-lg">✓</span>
-                  <span style="color: #1B0F2A;">Historial completo visible</span>
-                </li>
-                <li class="flex gap-3 items-start">
-                  <span class="text-success text-lg">✓</span>
-                  <span style="color: #1B0F2A;">Exportar reportes PDF</span>
-                </li>
-                <li class="flex gap-3 items-start">
-                  <span class="text-success text-lg">✓</span>
-                  <span style="color: #1B0F2A;">Acceso a comunidad</span>
-                </li>
-              </ul>
-              <a
-                href="#descargar"
-                class="mt-auto inline-flex justify-center items-center gap-2 bg-[#4CAF50] text-white font-semibold py-3 rounded-full hover:bg-[#45a049] transition shadow-lg"
-                >Suscribirse Ahora</a
-              >
-            </article>
-
-            <!-- Plan Pro - MÁS POPULAR -->
-            <article class="relative bg-white rounded-3xl p-6 flex flex-col gap-5 shadow-xl border-2 border-accent/40">
-              <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2" style="background-color: #1B0F2A !important; color: #FFFFFF !important;">
-                <span>⭐</span>
-                <span style="color: #FFFFFF !important;">MÁS POPULAR</span>
-              </div>
-              <div class="mt-2">
-                <h3 class="text-xl font-semibold mb-3" style="color: #1B0F2A;">Plan Pro</h3>
-                <div class="flex items-center gap-2 mb-2">
-                  <span class="text-sm line-through" style="color: #999;">$24.990</span>
-                  <span class="text-xs bg-[#4CAF50] text-white px-2 py-1 rounded-full font-semibold">OFERTA</span>
-                </div>
-                <div class="flex items-baseline gap-2">
-                  <span class="text-3xl font-bold" style="color: #1B0F2A;">$19.990</span>
-                  <span class="text-sm" style="color: #999;">/mes</span>
-                </div>
-              </div>
-              <ul class="space-y-3 text-sm flex-grow">
-                <li class="flex gap-3 items-start">
-                  <span class="text-accent text-lg">✓</span>
-                  <span style="color: #1B0F2A;">Chats con Sensei ilimitados</span>
-                </li>
-                <li class="flex gap-3 items-start">
-                  <span class="text-accent text-lg">✓</span>
-                  <span style="color: #1B0F2A;">Cultivos ilimitados</span>
-                </li>
-                <li class="flex gap-3 items-start">
-                  <span class="text-accent text-lg">✓</span>
-                  <span style="color: #1B0F2A;">Historial completo visible</span>
-                </li>
-                <li class="flex gap-3 items-start">
-                  <span class="text-accent text-lg">✓</span>
-                  <span style="color: #1B0F2A;">Exportar reportes PDF</span>
-                </li>
-                <li class="flex gap-3 items-start">
-                  <span class="text-accent text-lg">✓</span>
-                  <span style="color: #1B0F2A;">Acceso a comunidad</span>
-                </li>
-              </ul>
-              <a
-                href="#descargar"
-                class="mt-auto inline-flex justify-center items-center gap-2 font-semibold py-3 rounded-full transition shadow-lg"
-                style="background-color: #1B0F2A !important; color: #FFFFFF !important;"
-                onmouseover="this.style.backgroundColor='#2A1F3A';"
-                onmouseout="this.style.backgroundColor='#1B0F2A';"
-                >Suscribirse Ahora</a
-              >
-            </article>
+          <span class="self-center text-purple/40 group-hover:text-purple transition text-lg">→</span>
+        </a>
+        <a href="#reprocann"
+           class="reveal reveal-delay-3 group flex items-start gap-5 rounded-2xl p-6 transition hover:scale-[1.01]"
+           style="background:rgba(76,175,80,0.05);border:1px solid rgba(76,175,80,0.18);">
+          <div class="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+               style="background:rgba(76,175,80,0.12);border:1px solid rgba(76,175,80,0.25);">📋</div>
+          <div class="flex-1">
+            <h3 class="font-bold text-text-main mb-1">REPROCANN</h3>
+            <p class="text-sm text-text-main/50 leading-relaxed">Gestioná tu trámite paso a paso desde la app. Sin burocracia confusa. GrowAI te guía en cada etapa del registro.</p>
           </div>
+          <span class="self-center text-green/40 group-hover:text-green transition text-lg">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
 
-          <!-- Todos los planes incluyen -->
-          <div class="bg-white rounded-3xl p-8 shadow-lg border border-accent/20">
-            <div class="text-center mb-6">
-              <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#1B0F2A] mb-3">
-                <span class="text-2xl">⭐</span>
-              </div>
-              <h3 class="text-xl font-semibold" style="color: #1B0F2A;">Todos los planes incluyen</h3>
-            </div>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div class="text-center">
-                <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-accent/20 mb-3">
-                  <svg class="w-6 h-6" style="color: #1B0F2A;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                </div>
-                <h4 class="font-semibold mb-1" style="color: #1B0F2A;">Garantía de satisfacción</h4>
-                <p class="text-sm" style="color: #666;">Cancela cuando quieras</p>
-              </div>
-              <div class="text-center">
-                <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-accent/20 mb-3">
-                  <svg class="w-6 h-6" style="color: #1B0F2A;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                  </svg>
-                </div>
-                <h4 class="font-semibold mb-1" style="color: #1B0F2A;">Actualizaciones automáticas</h4>
-                <p class="text-sm" style="color: #666;">Nuevas funciones sin costo</p>
-              </div>
-              <div class="text-center">
-                <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-accent/20 mb-3">
-                  <svg class="w-6 h-6" style="color: #1B0F2A;" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                  </svg>
-                </div>
-                <h4 class="font-semibold mb-1" style="color: #1B0F2A;">Seguridad garantizada</h4>
-                <p class="text-sm" style="color: #666;">Tus datos siempre protegidos</p>
-              </div>
-              <div class="text-center">
-                <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-accent/20 mb-3">
-                  <svg class="w-6 h-6" style="color: #1B0F2A;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                </div>
-                <h4 class="font-semibold mb-1" style="color: #1B0F2A;">Soporte técnico</h4>
-                <p class="text-sm" style="color: #666;">Ayuda cuando la necesites</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="descargar"
-        class="py-20 bg-primary/85"
-      >
-        <div class="max-w-4xl mx-auto px-4 text-center space-y-6">
-          <span class="text-sm font-semibold text-accent uppercase tracking-wider"
-            >Accede a GrowAi</span
-          >
-          <h2 class="text-2xl md:text-3xl font-bold">
-            Abre GrowAi desde cualquier dispositivo
+  <!-- ═══════════════════════ MIS CULTIVOS ════════════════════════════════ -->
+  <section id="mis-cultivos" class="py-24 bg-section-b">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="flex flex-col gap-6">
+          <span class="eyebrow reveal">Mis Cultivos</span>
+          <h2 class="reveal reveal-delay-1 text-3xl sm:text-4xl font-black tracking-tight text-text-main leading-tight">
+            Cada planta,<br>cada etapa, registrada
           </h2>
-          <p class="text-textPrimary/70">
-            Usa la app web en Android, iPhone y desktop con un solo enlace. Instala el acceso directo desde tu navegador para usarla como app.
+          <p class="reveal reveal-delay-2 text-text-main/55 text-base leading-relaxed">
+            Llevá un historial completo de tus cultivos: desde la germinación hasta la cosecha. Nunca más perdás el seguimiento de lo que funciona.
           </p>
-          <div class="flex justify-center">
-            <a
-              href="https://app.growai.com.ar"
-              class="inline-flex items-center gap-3 px-6 py-3 rounded-full transition shadow-lg"
-              style="background-color: #1B0F2A !important; color: #FFFFFF !important; border: 2px solid #1B0F2A !important;"
-              onmouseover="this.style.backgroundColor='#2A1F3A'; this.style.borderColor='#2A1F3A';"
-              onmouseout="this.style.backgroundColor='#1B0F2A'; this.style.borderColor='#1B0F2A';"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                class="w-6 h-6"
-                style="fill: #FFFFFF !important;"
-                aria-hidden="true"
-              >
-                <path d="M13 5l7 7-7 7-1.4-1.4 4.6-4.6H4v-2h12.2l-4.6-4.6L13 5z"></path>
-              </svg>
-              <div class="text-left text-sm">
-                <span class="block text-xs uppercase" style="color: rgba(255, 255, 255, 0.8) !important;">Entrar a</span>
-                <span class="block font-semibold" style="color: #FFFFFF !important;">GrowAi App Web</span>
-              </div>
+          <ul class="reveal reveal-delay-3 flex flex-col gap-3">
+            <li class="flex gap-3 items-start">
+              <span class="mt-1 w-5 h-5 rounded-full bg-green/15 border border-green/30 flex items-center justify-center shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-green block"></span>
+              </span>
+              <span class="text-sm text-text-main/65">Registro por etapa: germinación, vegetación, floración, cosecha</span>
+            </li>
+            <li class="flex gap-3 items-start">
+              <span class="mt-1 w-5 h-5 rounded-full bg-green/15 border border-green/30 flex items-center justify-center shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-green block"></span>
+              </span>
+              <span class="text-sm text-text-main/65">Historial completo de cada ciclo, siempre disponible</span>
+            </li>
+            <li class="flex gap-3 items-start">
+              <span class="mt-1 w-5 h-5 rounded-full bg-green/15 border border-green/30 flex items-center justify-center shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-green block"></span>
+              </span>
+              <span class="text-sm text-text-main/65">Exportar reportes en PDF con un solo toque</span>
+            </li>
+            <li class="flex gap-3 items-start">
+              <span class="mt-1 w-5 h-5 rounded-full bg-green/15 border border-green/30 flex items-center justify-center shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-green block"></span>
+              </span>
+              <span class="text-sm text-text-main/65">Hasta 5 cultivos activos en Básico · ilimitados en Pro</span>
+            </li>
+          </ul>
+          <div class="reveal">
+            <a href="https://app.growai.com.ar" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 bg-green text-bg-deep font-bold px-7 py-3 rounded-full text-sm shadow-[0_4px_20px_rgba(76,175,80,0.3)] hover:shadow-[0_6px_28px_rgba(76,175,80,0.45)] hover:-translate-y-0.5 transition">
+              Empezar a registrar →
             </a>
           </div>
-          <p class="text-xs text-textPrimary/50">
-            Android: "Instalar app". iPhone (Safari): Compartir -> "Agregar a pantalla de inicio".
-          </p>
         </div>
-      </section>
-
-      <section
-        id="contacto"
-        class="py-20 bg-secondary/60"
-      >
-        <div class="max-w-5xl mx-auto px-4">
-          <div class="grid lg:grid-cols-2 gap-12">
-            <div class="space-y-4">
-              <span class="text-sm font-semibold text-accent uppercase tracking-wider"
-                >Contacto</span
-              >
-              <h2 class="text-2xl md:text-3xl font-bold">
-                ¿Quieres colaborar o invertir en GrowAi?
-              </h2>
-              <p class="text-textPrimary/70">
-                Déjanos tus datos para recibir novedades, oportunidades de colaboración y actualizaciones de la plataforma.
-              </p>
-              <ul class="space-y-2 text-sm text-textPrimary/70">
-                <li>• growai.soporte@gmail.com</li>
-                <li>• Buenos Aires, Argentina</li>
-              </ul>
+        <div class="reveal reveal-delay-2">
+          <div class="rounded-3xl p-5 shadow-2xl"
+               style="background:rgba(6,14,7,0.8);border:1px solid rgba(76,175,80,0.18);">
+            <div class="flex items-center justify-between mb-4 pb-3"
+                 style="border-bottom:1px solid rgba(76,175,80,0.1);">
+              <span class="text-xs font-bold text-green-soft">Mis Cultivos</span>
+              <span class="text-xs text-text-main/30">3 activos</span>
             </div>
-            <form
-              id="contact-form"
-              class="rounded-3xl p-6 space-y-5 shadow-lg border"
-              style="background-color: rgba(42, 31, 58, 0.8) !important; border-color: rgba(201, 195, 255, 0.3) !important;"
-            >
-              <div>
-                <label for="name" class="block text-sm font-semibold mb-2" style="color: #C9C3FF !important;"
-                  >Nombre completo</label
-                >
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  required
-                  placeholder="Ingresa tu nombre"
-                  class="w-full rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition"
-                  style="background-color: rgba(27, 15, 42, 0.6) !important; border: 1px solid rgba(201, 195, 255, 0.3) !important; color: #C9C3FF !important;"
-                  oninput="this.style.color='#C9C3FF';"
-                  onfocus="this.style.borderColor='rgba(201, 195, 255, 0.6)'; this.style.boxShadow='0 0 0 3px rgba(201, 195, 255, 0.2)';"
-                  onblur="this.style.borderColor='rgba(201, 195, 255, 0.3)'; this.style.boxShadow='none';"
-                />
+            <div class="flex flex-col gap-3">
+              <div class="rounded-xl p-3 flex items-center gap-3"
+                   style="background:rgba(76,175,80,0.07);border:1px solid rgba(76,175,80,0.15);">
+                <div class="w-9 h-9 rounded-lg bg-green/15 flex items-center justify-center text-lg shrink-0">🌿</div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-xs font-semibold text-text-main">Planta #1 — OG Kush</div>
+                  <div class="text-[10px] text-text-main/40 mt-0.5">Floración · Día 42</div>
+                </div>
+                <div class="text-[10px] text-green font-semibold">En curso</div>
               </div>
-              <div>
-                <label for="email" class="block text-sm font-semibold mb-2" style="color: #C9C3FF !important;"
-                  >Correo electrónico</label
-                >
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  required
-                  placeholder="nombre@empresa.com"
-                  class="w-full rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition"
-                  style="background-color: rgba(27, 15, 42, 0.6) !important; border: 1px solid rgba(201, 195, 255, 0.3) !important; color: #C9C3FF !important;"
-                  oninput="this.style.color='#C9C3FF';"
-                  onfocus="this.style.borderColor='rgba(201, 195, 255, 0.6)'; this.style.boxShadow='0 0 0 3px rgba(201, 195, 255, 0.2)';"
-                  onblur="this.style.borderColor='rgba(201, 195, 255, 0.3)'; this.style.boxShadow='none';"
-                />
+              <div class="rounded-xl p-3 flex items-center gap-3"
+                   style="background:rgba(76,175,80,0.04);border:1px solid rgba(76,175,80,0.08);">
+                <div class="w-9 h-9 rounded-lg bg-green/10 flex items-center justify-center text-lg shrink-0">🌱</div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-xs font-semibold text-text-main">Planta #2 — White Widow</div>
+                  <div class="text-[10px] text-text-main/40 mt-0.5">Vegetación · Día 18</div>
+                </div>
+                <div class="text-[10px] text-text-main/40 font-semibold">En curso</div>
               </div>
-              <div>
-                <label for="phone" class="block text-sm font-semibold mb-2" style="color: #C9C3FF !important;"
-                  >Número telefónico <span class="text-xs font-normal opacity-70">(opcional)</span></label
-                >
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  placeholder="+54 11 1234 5678"
-                  class="w-full rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition"
-                  style="background-color: rgba(27, 15, 42, 0.6) !important; border: 1px solid rgba(201, 195, 255, 0.3) !important; color: #C9C3FF !important;"
-                  oninput="this.style.color='#C9C3FF';"
-                  onfocus="this.style.borderColor='rgba(201, 195, 255, 0.6)'; this.style.boxShadow='0 0 0 3px rgba(201, 195, 255, 0.2)';"
-                  onblur="this.style.borderColor='rgba(201, 195, 255, 0.3)'; this.style.boxShadow='none';"
-                />
+              <div class="rounded-xl p-3 flex items-center gap-3"
+                   style="background:rgba(76,175,80,0.04);border:1px solid rgba(76,175,80,0.08);">
+                <div class="w-9 h-9 rounded-lg bg-green/10 flex items-center justify-center text-lg shrink-0">🪴</div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-xs font-semibold text-text-main">Planta #3 — Blue Dream</div>
+                  <div class="text-[10px] text-text-main/40 mt-0.5">Germinación · Día 3</div>
+                </div>
+                <div class="text-[10px] text-text-main/40 font-semibold">En curso</div>
               </div>
-              <div>
-                <label for="interest" class="block text-sm font-semibold mb-2" style="color: #C9C3FF !important;"
-                  >Interés principal</label
-                >
-                <select
-                  id="interest"
-                  name="interest"
-                  required
-                  class="w-full rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition"
-                  style="background-color: rgba(27, 15, 42, 0.6) !important; border: 1px solid rgba(201, 195, 255, 0.3) !important; color: #C9C3FF !important;"
-                  onfocus="this.style.borderColor='rgba(201, 195, 255, 0.6)'; this.style.boxShadow='0 0 0 3px rgba(201, 195, 255, 0.2)';"
-                  onblur="this.style.borderColor='rgba(201, 195, 255, 0.3)'; this.style.boxShadow='none';"
-                  onchange="toggleOtherDescription(this.value)"
-                >
-                  <option value="">Selecciona una opción</option>
-                  <option value="cultivador">Soy cultivador</option>
-                  <option value="negocio">Represento un club/cannabis room</option>
-                  <option value="inversion">Me interesa invertir</option>
-                  <option value="alianza">Busco alianzas comerciales</option>
-                  <option value="prensa">Prensa / medios</option>
-                  <option value="otro">Otro</option>
-                </select>
+              <div class="mt-2 flex justify-end">
+                <div class="text-[10px] text-green-soft/60 border border-green/15 px-3 py-1.5 rounded-full">
+                  Exportar PDF ↓
+                </div>
               </div>
-              <div id="other-description-container" class="hidden">
-                <label for="other-description" class="block text-sm font-semibold mb-2" style="color: #C9C3FF !important;"
-                  >Describe tu interés</label
-                >
-                <textarea
-                  id="other-description"
-                  name="other-description"
-                  rows="3"
-                  placeholder="Cuéntanos sobre tu interés o consulta..."
-                  class="w-full rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition resize-none"
-                  style="background-color: rgba(27, 15, 42, 0.6) !important; border: 1px solid rgba(201, 195, 255, 0.3) !important; color: #C9C3FF !important;"
-                  oninput="this.style.color='#C9C3FF';"
-                  onfocus="this.style.borderColor='rgba(201, 195, 255, 0.6)'; this.style.boxShadow='0 0 0 3px rgba(201, 195, 255, 0.2)';"
-                  onblur="this.style.borderColor='rgba(201, 195, 255, 0.3)'; this.style.boxShadow='none';"
-                ></textarea>
-              </div>
-              <div id="contact-form-message" class="hidden rounded-2xl px-4 py-3 text-sm" style="background-color: rgba(27, 15, 42, 0.6) !important; border: 1px solid rgba(201, 195, 255, 0.3) !important;"></div>
-              <button
-                id="contact-submit"
-                type="submit"
-                class="w-full font-semibold py-3 rounded-full transition flex items-center justify-center gap-2"
-                style="background-color: #8B6ED0 !important; color: #FFFFFF !important; box-shadow: 0 4px 20px rgba(139, 110, 208, 0.4);"
-                onmouseover="this.style.backgroundColor='#9B7EE0'; this.style.boxShadow='0 6px 25px rgba(139, 110, 208, 0.5)';"
-                onmouseout="this.style.backgroundColor='#8B6ED0'; this.style.boxShadow='0 4px 20px rgba(139, 110, 208, 0.4)';"
-              >
-                <span>Quiero recibir novedades</span>
-              </button>
-              <p class="text-xs text-center" style="color: #C9C3FF !important; opacity: 0.8;">
-                Protección de datos garantizada. Consulta nuestra política de privacidad.
-              </p>
-            </form>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="bg-primary border-t border-secondary/70 py-10">
-      <div class="max-w-6xl mx-auto px-4 grid gap-8 md:grid-cols-4">
-        <div class="space-y-3">
-          <div class="flex items-center gap-3">
-            <div
-              class="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-primary font-semibold text-xl shadow-glow"
-            >
-              G
             </div>
-            <span class="text-xl font-semibold">GrowAi</span>
           </div>
-          <p class="text-sm text-textPrimary/70">
-            Cultiva con inteligencia, comunidad y respaldo legal. Descarga la app y potencia cada etapa de tu cultivo.
-          </p>
-        </div>
-        <div class="space-y-3">
-          <h3 class="text-sm font-semibold uppercase tracking-wider text-accent">
-            Navegación
-          </h3>
-          <ul class="space-y-2 text-sm text-textPrimary/70">
-            <li><a class="hover:text-white transition" href="#inicio">Inicio</a></li>
-            <li><a class="hover:text-white transition" href="#funciones">Funciones</a></li>
-            <li><a class="hover:text-white transition" href="#sensei">Sensei</a></li>
-            <li><a class="hover:text-white transition" href="#contacto">Contacto</a></li>
-          </ul>
-        </div>
-        <div class="space-y-3">
-          <h3 class="text-sm font-semibold uppercase tracking-wider text-accent">
-            Legal
-          </h3>
-          <ul class="space-y-2 text-sm text-textPrimary/70">
-            <li><a class="hover:text-white transition" href="#">Política de privacidad</a></li>
-            <li><a class="hover:text-white transition" href="#">Términos y condiciones</a></li>
-            <li><a class="hover:text-white transition" href="mailto:soporte@growai.app">Soporte</a></li>
-          </ul>
-        </div>
-        <div class="space-y-3">
-          <h3 class="text-sm font-semibold uppercase tracking-wider text-accent">
-            Síguenos
-          </h3>
-          <div class="flex gap-3 text-sm text-textPrimary/70">
-            <a class="hover:text-white transition" href="#">Instagram</a>
-            <a class="hover:text-white transition" href="#">LinkedIn</a>
-            <a class="hover:text-white transition" href="#">YouTube</a>
-          </div>
-          <p class="text-xs text-textPrimary/60">
-            © GrowAi 2025 · Hecho con IA y pasión por el cultivo responsable.
-          </p>
         </div>
       </div>
-    </footer>
+    </div>
+  </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-    <script>
-      (function () {
-        function initFuncionesHorizontalPin() {
-          if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
-          var pinSection = document.querySelector("#sectionPinFunciones");
-          var pinWrap = pinSection ? pinSection.querySelector(".pin-wrap-funciones") : null;
-          if (!pinSection || !pinWrap) return;
-          if (pinSection.dataset.gsapFuncionesPin === "1") return;
-          pinSection.dataset.gsapFuncionesPin = "1";
-          gsap.registerPlugin(ScrollTrigger);
-          var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-          var getScrollLength = function () {
-            var viewW = pinSection.clientWidth || window.innerWidth;
-            return Math.max(0, pinWrap.scrollWidth - viewW);
-          };
-          var introPx = function () {
-            return reduce
-              ? 0
-              : Math.min(520, Math.max(260, window.innerHeight * 0.38));
-          };
-          var outroPx = function () {
-            return Math.min(560, Math.max(320, window.innerHeight * 0.52));
-          };
-          var stConfig = {
-            trigger: pinSection,
-            pin: true,
-            scrub: 0.65,
-            start: "top top",
-            end: function () {
-              var sl = getScrollLength();
-              var o = outroPx();
-              if (reduce) return "+=" + (sl + o);
-              return "+=" + (introPx() + sl + o);
-            },
-            invalidateOnRefresh: true,
-            anticipatePin: 1,
-          };
-          if (reduce) {
-            var slR = getScrollLength();
-            var oR = outroPx();
-            var tR = slR + oR;
-            var dMoveR = tR ? slR / tR : 1;
-            var dHoldR = tR ? oR / tR : 0;
-            var tlR = gsap.timeline({ scrollTrigger: stConfig });
-            tlR.fromTo(
-              pinWrap,
-              { x: 0 },
-              {
-                x: function () {
-                  return -getScrollLength();
-                },
-                ease: "none",
-                duration: dMoveR,
-              },
-              0
-            );
-            if (dHoldR > 0) tlR.to({}, { duration: dHoldR }, dMoveR);
-            return;
-          }
-          pinSection.classList.add("funciones-pin-gsap");
-          var lead = pinSection.querySelector(".funciones-pin-lead");
-          var cardEls = pinSection.querySelectorAll(".funciones-pin-card");
-          var intro = introPx();
-          var sl = getScrollLength();
-          var outro = outroPx();
-          var total = intro + sl + outro;
-          var dIntro = total ? intro / total : 0;
-          var dMove = total ? sl / total : 0;
-          var dHold = total ? outro / total : 0;
-          var tl = gsap.timeline({ scrollTrigger: stConfig });
-          if (lead) {
-            tl.fromTo(
-              lead,
-              { opacity: 0, y: 22 },
-              {
-                opacity: 1,
-                y: 0,
-                duration: Math.max(0.08, dIntro * 0.62),
-                ease: "power2.out",
-              },
-              0
-            );
-          }
-          var videoWrap = pinSection.querySelector(".funciones-pin-video-wrap");
-          if (videoWrap) {
-            /* Visible desde el inicio del pin: antes quedaba opacity 0 hasta mucho scroll */
-            tl.fromTo(
-              videoWrap,
-              { opacity: 1, x: 10 },
-              {
-                opacity: 1,
-                x: 0,
-                duration: Math.max(0.08, dIntro * 0.35),
-                ease: "power2.out",
-              },
-              0
-            );
-          }
-          var firstCard = cardEls.length ? cardEls[0] : null;
-          var restCards = cardEls.length > 1 ? Array.prototype.slice.call(cardEls, 1) : [];
-          if (firstCard) {
-            tl.fromTo(
-              firstCard,
-              { opacity: 0.22, x: 12 },
-              {
-                opacity: 1,
-                x: 0,
-                duration: Math.max(0.12, dMove * 0.42),
-                ease: "power2.out",
-              },
-              dIntro
-            );
-          }
-          if (restCards.length) {
-            tl.fromTo(
-              restCards,
-              { opacity: 0, y: 28 },
-              {
-                opacity: 1,
-                y: 0,
-                duration: Math.max(0.1, dMove * 0.34),
-                stagger: 0.065,
-                ease: "power2.out",
-              },
-              dIntro + dMove * 0.14
-            );
-          }
-          tl.fromTo(
-            pinWrap,
-            { x: 0 },
-            {
-              x: function () {
-                return -getScrollLength();
-              },
-              duration: Math.max(0.05, dMove),
-              ease: "none",
-            },
-            dIntro
-          );
-          if (dHold > 0.001) tl.to({}, { duration: dHold }, dIntro + dMove);
-        }
-        function tryPlayFuncionesVideo(v) {
-          if (!v) return;
-          var p = v.play();
-          if (p && typeof p.catch === "function") p.catch(function () {});
-        }
-        function playFuncionesPinVideo() {
-          var v = document.getElementById("funciones-pin-video-el");
-          if (!v || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
-          v.addEventListener("error", function () {
-            if (!v.dataset.growaiFallbackSrc) {
-              v.dataset.growaiFallbackSrc = "1";
-              v.removeAttribute("src");
-              var s = v.querySelector("source");
-              if (s) s.src = "videos/cogollo-girando.mp4";
-              v.load();
-              tryPlayFuncionesVideo(v);
-              return;
-            }
-            console.warn(
-              "GrowAi: no se pudo cargar cogollo-girando.mp4 (revisá /videos/ en el hosting y video/mp4).",
-              v.error || ""
-            );
-          });
-          var sec = document.getElementById("funciones");
-          if (sec && typeof IntersectionObserver !== "undefined") {
-            var io = new IntersectionObserver(
-              function (entries) {
-                for (var i = 0; i < entries.length; i++) {
-                  if (entries[i].isIntersecting) {
-                    tryPlayFuncionesVideo(v);
-                    io.disconnect();
-                    return;
-                  }
-                }
-              },
-              { rootMargin: "120px", threshold: 0.02 }
-            );
-            io.observe(sec);
-          } else {
-            tryPlayFuncionesVideo(v);
-          }
-        }
-        function runAfterLayout() {
-          requestAnimationFrame(function () {
-            requestAnimationFrame(function () {
-              initFuncionesHorizontalPin();
-              playFuncionesPinVideo();
-              if (typeof ScrollTrigger !== "undefined") ScrollTrigger.refresh();
-            });
-          });
-        }
-        function initPingPong() {
-          var v = document.getElementById("funciones-pin-video-el");
-          if (!v) return;
-          var dir = 1, seeking = false, lastTs = 0, started = false;
-          v.addEventListener("seeked", function() { seeking = false; });
-          function tick(ts) {
-            requestAnimationFrame(tick);
-            if (!started || seeking || !v.duration) return;
-            var dt = Math.min((ts - lastTs) / 1000, 0.05);
-            lastTs = ts;
-            var t = v.currentTime + dir * dt;
-            if (t >= v.duration - 0.06) { t = v.duration - 0.06; dir = -1; }
-            else if (t <= 0.04) { t = 0.04; dir = 1; }
-            seeking = true;
-            v.currentTime = t;
-          }
-          function start() {
-            if (started) return;
-            started = true;
-            v.pause();
-            v.currentTime = 0;
-            lastTs = performance.now();
-            requestAnimationFrame(tick);
-          }
-          if (v.readyState >= 2) start();
-          else v.addEventListener("canplay", start);
-        }
-        window.addEventListener("load", function() { runAfterLayout(); initPingPong(); });
-        if (document.fonts && document.fonts.ready) {
-          document.fonts.ready.then(function () {
-            if (typeof ScrollTrigger !== "undefined") ScrollTrigger.refresh();
-          });
-        }
-        window.addEventListener("resize", function () {
-          if (typeof ScrollTrigger !== "undefined") ScrollTrigger.refresh();
-        });
-      })();
-    </script>
-    <script>
-      (function () {
-        var layer = document.getElementById("scroll-chrome-bg");
-        if (!layer) return;
+  <!-- ════════════════════════ SENSEI ═════════════════════════════════════ -->
+  <section id="sensei" class="py-24 bg-section-c">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="reveal order-2 md:order-1">
+          <div class="rounded-3xl p-5 shadow-2xl"
+               style="background:rgba(6,14,7,0.85);border:1px solid rgba(139,110,208,0.2);">
+            <div class="flex items-center gap-2 mb-4 pb-3"
+                 style="border-bottom:1px solid rgba(139,110,208,0.1);">
+              <div class="w-7 h-7 rounded-full bg-purple/20 border border-purple/30 flex items-center justify-center text-sm">🤖</div>
+              <span class="text-xs font-bold" style="color:#8B6ED0;">Sensei</span>
+              <div class="ml-auto flex items-center gap-1">
+                <div class="w-1.5 h-1.5 rounded-full bg-green animate-pulse"></div>
+                <span class="text-[10px] text-text-main/30">en línea</span>
+              </div>
+            </div>
+            <div id="chat-messages" class="flex flex-col gap-3 min-h-[160px]"></div>
+            <div id="typing-indicator" class="hidden flex gap-2 items-center mt-3 pl-1">
+              <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0"
+                   style="background:linear-gradient(135deg,#4CAF50,#2d4a1e);">S</div>
+              <div class="flex gap-1 px-3 py-2 rounded-2xl"
+                   style="background:rgba(76,175,80,0.08);border:1px solid rgba(76,175,80,0.15);">
+                <div class="typing-dot w-1.5 h-1.5 rounded-full bg-green"></div>
+                <div class="typing-dot w-1.5 h-1.5 rounded-full bg-green"></div>
+                <div class="typing-dot w-1.5 h-1.5 rounded-full bg-green"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col gap-6 order-1 md:order-2">
+          <span class="eyebrow reveal" style="color:#8B6ED0;">Sensei</span>
+          <h2 class="reveal reveal-delay-1 text-3xl sm:text-4xl font-black tracking-tight text-text-main leading-tight">
+            Tu experto IA,<br>siempre disponible
+          </h2>
+          <p class="reveal reveal-delay-2 text-text-main/55 text-base leading-relaxed">
+            Describí síntomas, subí fotos, preguntá lo que quieras. Sensei tiene contexto de tu cultivo y responde con precisión y calma.
+          </p>
+          <ul class="reveal reveal-delay-3 flex flex-col gap-3">
+            <li class="flex gap-3 items-start">
+              <span class="mt-1 w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+                    style="background:rgba(139,110,208,0.15);border:1px solid rgba(139,110,208,0.3);">
+                <span class="w-1.5 h-1.5 rounded-full block" style="background:#8B6ED0;"></span>
+              </span>
+              <span class="text-sm text-text-main/65">Conversaciones con contexto completo de tu cultivo</span>
+            </li>
+            <li class="flex gap-3 items-start">
+              <span class="mt-1 w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+                    style="background:rgba(139,110,208,0.15);border:1px solid rgba(139,110,208,0.3);">
+                <span class="w-1.5 h-1.5 rounded-full block" style="background:#8B6ED0;"></span>
+              </span>
+              <span class="text-sm text-text-main/65">Historial de chats guardado y accesible desde la app</span>
+            </li>
+            <li class="flex gap-3 items-start">
+              <span class="mt-1 w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+                    style="background:rgba(139,110,208,0.15);border:1px solid rgba(139,110,208,0.3);">
+                <span class="w-1.5 h-1.5 rounded-full block" style="background:#8B6ED0;"></span>
+              </span>
+              <span class="text-sm text-text-main/65">Diagnóstico por foto · 10 chats/mes en Básico, ilimitado en Pro</span>
+            </li>
+          </ul>
+          <div class="reveal">
+            <a href="https://app.growai.com.ar" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 font-bold px-7 py-3 rounded-full text-sm transition hover:-translate-y-0.5"
+               style="background:#8B6ED0;color:#fff;box-shadow:0 4px 20px rgba(139,110,208,0.35);">
+              Probar Sensei →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        if (reduced) {
-          layer.style.transition = "background-color 0.75s cubic-bezier(0.33, 1, 0.68, 1)";
-        }
+  <!-- ══════════════════════ REPROCANN ═════════════════════════════════════ -->
+  <section id="reprocann" class="py-24 bg-section-b">
+    <div class="max-w-3xl mx-auto px-6">
+      <div class="text-center mb-12">
+        <span class="eyebrow reveal mb-4">REPROCANN</span>
+        <h2 class="reveal reveal-delay-1 text-3xl sm:text-4xl font-black tracking-tight text-text-main mt-4">
+          Tu trámite, sin vueltas
+        </h2>
+        <p class="reveal reveal-delay-2 text-text-main/50 text-base mt-4 max-w-md mx-auto leading-relaxed">
+          GrowAI te guía paso a paso en el Registro del Programa de Cannabis de Argentina.
+        </p>
+      </div>
+      <div class="flex flex-col gap-0 max-w-xl mx-auto">
+        <div class="reveal reveal-delay-1 flex gap-5 items-start">
+          <div class="flex flex-col items-center shrink-0">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center font-black text-sm text-bg-deep bg-green shadow-[0_0_16px_rgba(76,175,80,0.35)]">1</div>
+            <div class="step-line h-14 mt-1"></div>
+          </div>
+          <div class="pt-1.5 pb-10">
+            <h3 class="font-bold text-text-main mb-1">Creá tu cuenta en GrowAI</h3>
+            <p class="text-sm text-text-main/45 leading-relaxed">Desde la app web, en menos de un minuto. Solo necesitás email.</p>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-2 flex gap-5 items-start">
+          <div class="flex flex-col items-center shrink-0">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center font-black text-sm text-text-main"
+                 style="background:rgba(76,175,80,0.15);border:1px solid rgba(76,175,80,0.35);">2</div>
+            <div class="step-line h-14 mt-1" style="background:linear-gradient(to bottom,rgba(76,175,80,0.35),rgba(76,175,80,0.1));"></div>
+          </div>
+          <div class="pt-1.5 pb-10">
+            <h3 class="font-bold text-text-main mb-1">Completá tu perfil REPROCANN</h3>
+            <p class="text-sm text-text-main/45 leading-relaxed">Datos personales y tipo de uso. La app te va guiando campo por campo, sin sorpresas.</p>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-3 flex gap-5 items-start">
+          <div class="flex flex-col items-center shrink-0">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center font-black text-sm text-text-main"
+                 style="background:rgba(76,175,80,0.1);border:1px solid rgba(76,175,80,0.2);">3</div>
+          </div>
+          <div class="pt-1.5">
+            <h3 class="font-bold text-text-main mb-1">Enviá y hacé seguimiento</h3>
+            <p class="text-sm text-text-main/45 leading-relaxed">GrowAI te notifica de cada cambio de estado de tu trámite. Sin tener que llamar a ningún lado.</p>
+          </div>
+        </div>
+      </div>
+      <div class="reveal text-center mt-10">
+        <a href="https://app.growai.com.ar" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-2 bg-green text-bg-deep font-bold px-7 py-3 rounded-full text-sm shadow-[0_4px_20px_rgba(76,175,80,0.3)] hover:shadow-[0_6px_28px_rgba(76,175,80,0.45)] hover:-translate-y-0.5 transition">
+          Gestionar mi REPROCANN →
+        </a>
+      </div>
+    </div>
+  </section>
 
-        var selectors = [
-          { sel: "main#inicio > section:first-of-type", t: 0 },
-          { sel: "#funciones", t: 1 },
-          { sel: "#sensei", t: 0 },
-          { sel: "#planes", t: 1 },
-          { sel: "#descargar", t: 0 },
-          { sel: "#contacto", t: 1 },
-          { sel: "body > footer", t: 0 },
-        ];
+  <!-- ════════════════════════ PLANES ═════════════════════════════════════ -->
+  <section id="planes" class="py-24 bg-section-a">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="text-center mb-12">
+        <span class="eyebrow reveal mb-4">Planes</span>
+        <h2 class="reveal reveal-delay-1 text-3xl sm:text-4xl font-black tracking-tight text-text-main mt-4">
+          Elegí el que crece con vos
+        </h2>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-5 mb-10">
+        <!-- Básico -->
+        <div class="reveal reveal-delay-1 rounded-3xl p-7 flex flex-col gap-5"
+             style="background:rgba(255,255,255,0.03);border:1px solid rgba(76,175,80,0.18);">
+          <div>
+            <h3 class="font-bold text-green-soft text-sm mb-3">Plan Básico</h3>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs line-through text-text-main/25">$12.990</span>
+              <span class="text-[10px] bg-green text-bg-deep px-2 py-0.5 rounded-full font-bold">OFERTA</span>
+            </div>
+            <div class="flex items-baseline gap-1.5">
+              <span class="text-4xl font-black text-text-main">$7.990</span>
+              <span class="text-sm text-text-main/35">/mes</span>
+            </div>
+          </div>
+          <ul class="flex flex-col gap-2.5 flex-1">
+            <li class="flex gap-2.5 items-start text-sm text-text-main/60"><span class="text-green mt-0.5 shrink-0">✓</span>10 chats con Sensei por mes</li>
+            <li class="flex gap-2.5 items-start text-sm text-text-main/60"><span class="text-green mt-0.5 shrink-0">✓</span>Hasta 5 cultivos activos</li>
+            <li class="flex gap-2.5 items-start text-sm text-text-main/60"><span class="text-green mt-0.5 shrink-0">✓</span>Historial completo visible</li>
+            <li class="flex gap-2.5 items-start text-sm text-text-main/60"><span class="text-green mt-0.5 shrink-0">✓</span>Exportar reportes PDF</li>
+            <li class="flex gap-2.5 items-start text-sm text-text-main/60"><span class="text-green mt-0.5 shrink-0">✓</span>Acceso a comunidad</li>
+          </ul>
+          <a href="https://app.growai.com.ar" target="_blank" rel="noopener noreferrer"
+             class="mt-auto block text-center border border-green/40 text-green-soft font-semibold py-3 rounded-full text-sm hover:border-green hover:bg-green/5 transition">
+            Suscribirse
+          </a>
+        </div>
+        <!-- Pro -->
+        <div class="reveal reveal-delay-2 rounded-3xl p-7 flex flex-col gap-5 relative"
+             style="background:rgba(76,175,80,0.06);border:2px solid rgba(76,175,80,0.4);">
+          <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-green text-bg-deep text-[10px] font-black px-4 py-1.5 rounded-full whitespace-nowrap shadow-[0_2px_12px_rgba(76,175,80,0.4)]">
+            ⭐ MÁS POPULAR
+          </div>
+          <div class="mt-2">
+            <h3 class="font-bold text-green text-sm mb-3">Plan Pro</h3>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs line-through text-text-main/25">$24.990</span>
+              <span class="text-[10px] bg-green text-bg-deep px-2 py-0.5 rounded-full font-bold">OFERTA</span>
+            </div>
+            <div class="flex items-baseline gap-1.5">
+              <span class="text-4xl font-black text-text-main">$19.990</span>
+              <span class="text-sm text-text-main/35">/mes</span>
+            </div>
+          </div>
+          <ul class="flex flex-col gap-2.5 flex-1">
+            <li class="flex gap-2.5 items-start text-sm text-text-main/60"><span class="text-green mt-0.5 shrink-0">✓</span>Chats con Sensei ilimitados</li>
+            <li class="flex gap-2.5 items-start text-sm text-text-main/60"><span class="text-green mt-0.5 shrink-0">✓</span>Cultivos ilimitados</li>
+            <li class="flex gap-2.5 items-start text-sm text-text-main/60"><span class="text-green mt-0.5 shrink-0">✓</span>Historial completo visible</li>
+            <li class="flex gap-2.5 items-start text-sm text-text-main/60"><span class="text-green mt-0.5 shrink-0">✓</span>Exportar reportes PDF</li>
+            <li class="flex gap-2.5 items-start text-sm text-text-main/60"><span class="text-green mt-0.5 shrink-0">✓</span>Comunidad + soporte prioritario</li>
+          </ul>
+          <a href="https://app.growai.com.ar" target="_blank" rel="noopener noreferrer"
+             class="mt-auto block text-center bg-green text-bg-deep font-bold py-3 rounded-full text-sm shadow-[0_4px_20px_rgba(76,175,80,0.35)] hover:shadow-[0_6px_28px_rgba(76,175,80,0.5)] transition">
+            Suscribirse
+          </a>
+        </div>
+      </div>
+      <!-- Todos los planes incluyen -->
+      <div class="reveal rounded-2xl p-6 grid grid-cols-2 sm:grid-cols-4 gap-6"
+           style="background:rgba(255,255,255,0.02);border:1px solid rgba(76,175,80,0.1);">
+        <div class="text-center">
+          <div class="text-2xl mb-2">🛡️</div>
+          <div class="text-xs font-semibold text-text-main mb-1">Garantía</div>
+          <div class="text-[11px] text-text-main/40">Cancelá cuando quieras</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl mb-2">🔄</div>
+          <div class="text-xs font-semibold text-text-main mb-1">Actualizaciones</div>
+          <div class="text-[11px] text-text-main/40">Nuevas funciones sin costo</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl mb-2">🔒</div>
+          <div class="text-xs font-semibold text-text-main mb-1">Seguridad</div>
+          <div class="text-[11px] text-text-main/40">Tus datos protegidos</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl mb-2">💬</div>
+          <div class="text-xs font-semibold text-text-main mb-1">Soporte</div>
+          <div class="text-[11px] text-text-main/40">Ayuda cuando la necesités</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        function colorFromMix(u) {
-          u = Math.max(0, Math.min(1, u));
-          var r = Math.round(27 + (42 - 27) * u);
-          var g = Math.round(15 + (31 - 15) * u);
-          var b = Math.round(42 + (58 - 42) * u);
-          return "rgb(" + r + "," + g + "," + b + ")";
-        }
+  <!-- ════════════════════ CTA FINAL ══════════════════════════════════════ -->
+  <section class="py-28 relative overflow-hidden bg-section-b">
+    <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
+      <div class="w-96 h-96 rounded-full"
+           style="background:radial-gradient(circle,rgba(76,175,80,0.06),transparent 70%);"></div>
+    </div>
+    <div class="relative max-w-2xl mx-auto px-6 text-center flex flex-col items-center gap-6">
+      <span class="eyebrow reveal">Empezá hoy</span>
+      <h2 class="reveal reveal-delay-1 text-3xl sm:text-5xl font-black tracking-tight text-text-main leading-tight mt-2">
+        Todo lo que necesitás<br>para cultivar mejor
+      </h2>
+      <p class="reveal reveal-delay-2 text-text-main/45 text-base leading-relaxed">
+        App web para cualquier dispositivo · Sin instalación · Siempre actualizada
+      </p>
+      <div class="reveal reveal-delay-3">
+        <a href="https://app.growai.com.ar" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-2 bg-green text-bg-deep font-black px-10 py-4 rounded-full text-lg shadow-[0_8px_32px_rgba(76,175,80,0.4)] hover:shadow-[0_12px_40px_rgba(76,175,80,0.55)] hover:-translate-y-1 transition">
+          Abrir GrowAI →
+        </a>
+      </div>
+      <p class="text-xs text-text-main/25">app.growai.com.ar</p>
+    </div>
+  </section>
 
-        var rangesCache = [];
+  <!-- ══════════════════════ CONTACTO ══════════════════════════════════════ -->
+  <section id="contacto" class="py-20 bg-section-a">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-12 items-start">
+        <div class="flex flex-col gap-4">
+          <span class="eyebrow reveal">Contacto</span>
+          <h2 class="reveal reveal-delay-1 text-2xl sm:text-3xl font-black text-text-main">¿Tenés alguna consulta?</h2>
+          <p class="reveal reveal-delay-2 text-text-main/50 text-sm leading-relaxed">
+            Completá el formulario y te respondemos. También podés escribirnos si querés saber más sobre inversiones, alianzas o prensa.
+          </p>
+        </div>
+        <form id="contact-form" class="reveal reveal-delay-1 flex flex-col gap-4" novalidate>
+          <div>
+            <label for="name" class="block text-xs font-semibold text-text-main/60 mb-1.5">Nombre completo</label>
+            <input type="text" id="name" name="name" required placeholder="Tu nombre"
+                   class="w-full rounded-xl px-4 py-3 text-sm text-text-main placeholder-text-main/25 focus:outline-none transition"
+                   style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);"
+                   onfocus="this.style.borderColor='rgba(76,175,80,0.4)';this.style.boxShadow='0 0 0 3px rgba(76,175,80,0.1)'"
+                   onblur="this.style.borderColor='rgba(255,255,255,0.08)';this.style.boxShadow='none'" />
+          </div>
+          <div>
+            <label for="email" class="block text-xs font-semibold text-text-main/60 mb-1.5">Correo electrónico</label>
+            <input type="email" id="email" name="email" required placeholder="vos@ejemplo.com"
+                   class="w-full rounded-xl px-4 py-3 text-sm text-text-main placeholder-text-main/25 focus:outline-none transition"
+                   style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);"
+                   onfocus="this.style.borderColor='rgba(76,175,80,0.4)';this.style.boxShadow='0 0 0 3px rgba(76,175,80,0.1)'"
+                   onblur="this.style.borderColor='rgba(255,255,255,0.08)';this.style.boxShadow='none'" />
+          </div>
+          <div>
+            <label for="interest" class="block text-xs font-semibold text-text-main/60 mb-1.5">Interés principal</label>
+            <select id="interest" name="interest" required
+                    class="w-full rounded-xl px-4 py-3 text-sm text-text-main focus:outline-none transition appearance-none"
+                    style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);"
+                    onfocus="this.style.borderColor='rgba(76,175,80,0.4)';this.style.boxShadow='0 0 0 3px rgba(76,175,80,0.1)'"
+                    onblur="this.style.borderColor='rgba(255,255,255,0.08)';this.style.boxShadow='none'"
+                    onchange="toggleOtherDescription(this.value)">
+              <option value="">Seleccioná una opción</option>
+              <option value="cultivador">Soy cultivador</option>
+              <option value="negocio">Represento un club/cannabis room</option>
+              <option value="inversion">Me interesa invertir</option>
+              <option value="alianza">Busco alianzas comerciales</option>
+              <option value="prensa">Prensa / medios</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+          <div id="other-description-container" class="hidden">
+            <label for="other-description" class="block text-xs font-semibold text-text-main/60 mb-1.5">Describí tu interés</label>
+            <textarea id="other-description" name="other_description" rows="2" placeholder="Contanos..."
+                      class="w-full rounded-xl px-4 py-3 text-sm text-text-main placeholder-text-main/25 focus:outline-none resize-none transition"
+                      style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);"
+                      onfocus="this.style.borderColor='rgba(76,175,80,0.4)';this.style.boxShadow='0 0 0 3px rgba(76,175,80,0.1)'"
+                      onblur="this.style.borderColor='rgba(255,255,255,0.08)';this.style.boxShadow='none'"></textarea>
+          </div>
+          <div>
+            <label for="message" class="block text-xs font-semibold text-text-main/60 mb-1.5">Mensaje</label>
+            <textarea id="message" name="message" rows="3" placeholder="Tu consulta..."
+                      class="w-full rounded-xl px-4 py-3 text-sm text-text-main placeholder-text-main/25 focus:outline-none resize-none transition"
+                      style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);"
+                      onfocus="this.style.borderColor='rgba(76,175,80,0.4)';this.style.boxShadow='0 0 0 3px rgba(76,175,80,0.1)'"
+                      onblur="this.style.borderColor='rgba(255,255,255,0.08)';this.style.boxShadow='none'"></textarea>
+          </div>
+          <div id="form-message" class="hidden text-sm rounded-xl px-4 py-3"></div>
+          <button type="submit" id="contact-submit"
+                  class="w-full bg-green text-bg-deep font-bold py-3.5 rounded-full text-sm shadow-[0_4px_20px_rgba(76,175,80,0.3)] hover:shadow-[0_6px_28px_rgba(76,175,80,0.45)] hover:-translate-y-0.5 transition">
+            Enviar mensaje
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
 
-        function refreshRanges() {
-          var list = [];
-          for (var i = 0; i < selectors.length; i++) {
-            var item = selectors[i];
-            var el = document.querySelector(item.sel);
-            if (!el) continue;
-            var top = window.scrollY + el.getBoundingClientRect().top;
-            var bottom = top + el.offsetHeight;
-            list.push({ top: top, bottom: bottom, t: item.t });
-          }
-          list.sort(function (a, b) {
-            return a.top - b.top;
-          });
-          rangesCache = list;
-        }
+  <!-- ════════════════════════ FOOTER ═════════════════════════════════════ -->
+  <footer class="py-10 border-t" style="border-color:rgba(76,175,80,0.08);">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded-md flex items-center justify-center text-sm"
+             style="background:linear-gradient(135deg,#4CAF50,#2d4a1e);">🌿</div>
+        <span class="font-black text-text-main/70 text-sm">GrowAI</span>
+      </div>
+      <div class="flex gap-6">
+        <a href="#funciones"  class="text-xs text-text-main/30 hover:text-text-main/60 transition">Funciones</a>
+        <a href="#planes"     class="text-xs text-text-main/30 hover:text-text-main/60 transition">Planes</a>
+        <a href="#contacto"   class="text-xs text-text-main/30 hover:text-text-main/60 transition">Contacto</a>
+      </div>
+      <p class="text-xs text-text-main/20">© 2026 GrowAI · Argentina</p>
+    </div>
+  </footer>
 
-        function colorAtY(y) {
-          var rs = rangesCache;
-          if (!rs.length) return colorFromMix(0);
-          var blend = reduced ? 100 : Math.min(420, window.innerHeight * 0.32);
+  <!-- ══════════════════════ MOBILE DRAWER ═════════════════════════════════ -->
+  <div id="mobile-drawer">
+    <div id="drawer-overlay"></div>
+    <div id="drawer-panel">
+      <div class="flex justify-between items-center mb-8">
+        <span class="font-black text-text-main">GrowAI</span>
+        <button id="drawer-close" class="text-text-main/50 hover:text-text-main transition text-xl">✕</button>
+      </div>
+      <nav class="flex flex-col gap-1">
+        <a href="#funciones"  class="drawer-link px-3 py-2.5 rounded-lg text-sm text-text-main/70 hover:text-text-main hover:bg-green/10 transition">Funciones</a>
+        <a href="#sensei"     class="drawer-link px-3 py-2.5 rounded-lg text-sm text-text-main/70 hover:text-text-main hover:bg-green/10 transition">Sensei</a>
+        <a href="#reprocann"  class="drawer-link px-3 py-2.5 rounded-lg text-sm text-text-main/70 hover:text-text-main hover:bg-green/10 transition">REPROCANN</a>
+        <a href="#planes"     class="drawer-link px-3 py-2.5 rounded-lg text-sm text-text-main/70 hover:text-text-main hover:bg-green/10 transition">Planes</a>
+      </nav>
+      <a href="https://app.growai.com.ar" target="_blank" rel="noopener noreferrer"
+         class="mt-auto inline-flex justify-center bg-green text-bg-deep font-bold py-3 rounded-full text-sm">
+        Abrir GrowAI →
+      </a>
+    </div>
+  </div>
 
-          if (y <= rs[0].top) return colorFromMix(rs[0].t);
-          if (y >= rs[rs.length - 1].bottom) return colorFromMix(rs[rs.length - 1].t);
-
-          for (var i = 0; i < rs.length; i++) {
-            var r = rs[i];
-            var p = rs[i - 1];
-            var n = rs[i + 1];
-
-            if (y >= r.top && y < r.bottom) {
-              var u = r.t;
-              if (p && y < r.top + blend) {
-                var k = (y - r.top) / blend;
-                k = Math.max(0, Math.min(1, k));
-                u = p.t + (r.t - p.t) * k;
-              } else if (n && y > r.bottom - blend) {
-                var k2 = (y - (r.bottom - blend)) / blend;
-                k2 = Math.max(0, Math.min(1, k2));
-                u = r.t + (n.t - r.t) * k2;
-              }
-              if (reduced) u = Math.round(u);
-              return colorFromMix(u);
-            }
-
-            var n2 = rs[i + 1];
-            if (n2 && y >= r.bottom && y < n2.top) {
-              var span = n2.top - r.bottom;
-              var kk = span > 0 ? (y - r.bottom) / span : 0.5;
-              kk = Math.max(0, Math.min(1, kk));
-              var uu = r.t + (n2.t - r.t) * kk;
-              if (reduced) uu = Math.round(uu);
-              return colorFromMix(uu);
-            }
-          }
-          return colorFromMix(0);
-        }
-
-        var raf = 0;
-        function paint() {
-          raf = 0;
-          var y = window.scrollY + window.innerHeight * 0.3;
-          layer.style.backgroundColor = colorAtY(y);
-        }
-
-        function onScrollOrResize() {
-          if (raf) return;
-          raf = requestAnimationFrame(paint);
-        }
-
-        refreshRanges();
-        paint();
-
-        window.addEventListener("scroll", onScrollOrResize, { passive: true });
-        window.addEventListener("resize", function () {
-          refreshRanges();
-          paint();
-        });
-        window.addEventListener("load", function () {
-          refreshRanges();
-          paint();
-        });
-
-        if (typeof ScrollTrigger !== "undefined") {
-          ScrollTrigger.addEventListener("refresh", function () {
-            refreshRanges();
-            paint();
-          });
-        }
-      })();
-    </script>
-    <script>
-      const menuButton = document.getElementById('menu-button');
-      const mobileMenu = document.getElementById('mobile-menu');
-      const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
-      const closeMenuButton = document.getElementById('close-menu-button');
-      const menuIcon = document.getElementById('menu-icon');
-      
-      function openMobileMenu() {
-        mobileMenu.classList.remove('hidden');
-        mobileMenuOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        menuButton.setAttribute('aria-expanded', 'true');
-        menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>';
-      }
-      
-      function closeMobileMenu() {
-        mobileMenu.classList.add('hidden');
-        mobileMenuOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-        menuButton.setAttribute('aria-expanded', 'false');
-        menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>';
-      }
-      const contactForm = document.getElementById('contact-form');
-      const contactSubmit = document.getElementById('contact-submit');
-
-      menuButton?.addEventListener('click', () => {
-        if (mobileMenu.classList.contains('hidden')) {
-          openMobileMenu();
-        } else {
-          closeMobileMenu();
+  <!-- ════════════════════════ SCRIPTS ════════════════════════════════════ -->
+  <script>
+    // ── Reveal on scroll (IntersectionObserver) ──
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
         }
       });
-      
-      closeMenuButton?.addEventListener('click', () => {
-        closeMobileMenu();
-      });
-      
-      mobileMenuOverlay?.addEventListener('click', () => {
-        closeMobileMenu();
-      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-      // Autoscroll suave para enlaces del navbar
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener('click', function (e) {
-          const href = this.getAttribute('href');
-          if (href === '#' || href === '#!') return;
-          
-          e.preventDefault();
-          const targetId = href.substring(1);
-          const targetElement = document.getElementById(targetId) || document.querySelector(`main[id="${targetId}"]`);
-          
-          if (targetElement) {
-            const headerOffset = 80;
-            const elementPosition = targetElement.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+    // ── Navbar scroll ──
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
 
-            window.scrollTo({
-              top: offsetPosition,
-              behavior: 'smooth'
-            });
-          }
-          
-          // Cerrar menú móvil si está abierto
-          closeMobileMenu();
-        });
-      });
+    // ── Mobile drawer ──
+    const drawer   = document.getElementById('mobile-drawer');
+    const menuBtn  = document.getElementById('menu-btn');
+    const closeBtn = document.getElementById('drawer-close');
+    const overlay  = document.getElementById('drawer-overlay');
+    function openDrawer()  { drawer.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeDrawer() { drawer.classList.remove('open'); document.body.style.overflow = ''; }
+    menuBtn.addEventListener('click', openDrawer);
+    closeBtn.addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+    document.querySelectorAll('.drawer-link').forEach(l => l.addEventListener('click', closeDrawer));
 
-      (function initHeaderTubelight() {
-        const nav = document.getElementById('header-section-nav');
-        if (!nav) return;
-        const track = nav.querySelector('.header-tubelight-track');
-        const light = track ? track.querySelector('.tubelight') : null;
-        const links = Array.from(nav.querySelectorAll('.header-tubelight-track > a.nav-header-link[href^="#"]'));
-        const sectionSelectors = ['main#inicio', '#funciones', '#sensei', '#contacto'];
-        if (!track || !light || links.length !== sectionSelectors.length) return;
-
-        function positionLight(anchor) {
-          if (!light || !anchor || !track) return;
-          const tr = track.getBoundingClientRect();
-          const ar = anchor.getBoundingClientRect();
-          const cx = ar.left - tr.left + ar.width / 2;
-          const w = Math.max(28, Math.round(ar.width * 0.92));
-          light.style.left = cx + 'px';
-          light.style.width = w + 'px';
-        }
-
-        function setActiveByIndex(i) {
-          const idx = Math.max(0, Math.min(i, links.length - 1));
-          links.forEach((a, j) => {
-            const on = j === idx;
-            a.classList.toggle('active', on);
-            if (on) a.setAttribute('aria-current', 'page');
-            else a.removeAttribute('aria-current');
-          });
-          positionLight(links[idx]);
-        }
-
-        function activeIndexFromScroll() {
-          const probe = window.scrollY + Math.min(180, window.innerHeight * 0.2);
-          let idx = 0;
-          for (let i = sectionSelectors.length - 1; i >= 0; i--) {
-            const el = document.querySelector(sectionSelectors[i]);
-            if (!el) continue;
-            const top = el.getBoundingClientRect().top + window.scrollY;
-            if (top <= probe) {
-              idx = i;
-              break;
-            }
-          }
-          return idx;
-        }
-
-        let ticking = false;
-        function onScrollOrResize() {
-          if (ticking) return;
-          ticking = true;
-          requestAnimationFrame(function () {
-            ticking = false;
-            setActiveByIndex(activeIndexFromScroll());
-          });
-        }
-
-        links.forEach(function (a, i) {
-          a.addEventListener('click', function () {
-            window.setTimeout(function () {
-              setActiveByIndex(i);
-            }, 0);
-          });
-        });
-
-        window.addEventListener('scroll', onScrollOrResize, { passive: true });
-        window.addEventListener('resize', onScrollOrResize);
-        if (document.fonts && document.fonts.ready) {
-          document.fonts.ready.then(function () {
-            setActiveByIndex(activeIndexFromScroll());
-          });
-        }
-        setActiveByIndex(activeIndexFromScroll());
-        if (typeof ScrollTrigger !== 'undefined') {
-          ScrollTrigger.addEventListener('refresh', function () {
-            requestAnimationFrame(function () {
-              setActiveByIndex(activeIndexFromScroll());
-            });
-          });
-        }
-      })();
-
-      // Función para mostrar/ocultar el campo de descripción "Otro"
-      function toggleOtherDescription(value) {
-        const otherContainer = document.getElementById('other-description-container');
-        const otherDescription = document.getElementById('other-description');
-        if (value === 'otro') {
-          otherContainer.classList.remove('hidden');
-          otherDescription.required = true;
-        } else {
-          otherContainer.classList.add('hidden');
-          otherDescription.required = false;
-          otherDescription.value = '';
-        }
+    // ── Sensei chat animation ──
+    const chatMessages    = document.getElementById('chat-messages');
+    const typingIndicator = document.getElementById('typing-indicator');
+    const CHAT_CONVERSATION = [
+      { type: 'user',   text: 'Las hojas se están amarillando en los bordes 🍂' },
+      { type: 'sensei', text: 'Puede ser deficiencia de potasio o magnesio. ¿Podés subir una foto para un diagnóstico más preciso?' },
+      { type: 'user',   text: '📷 [foto adjunta]' },
+      { type: 'sensei', text: 'Confirmo: deficiencia de magnesio. Te recomiendo aplicar sulfato de magnesio foliar esta semana.' },
+    ];
+    function buildMessage(msg) {
+      const el = document.createElement('div');
+      if (msg.type === 'user') {
+        el.className = 'flex justify-end';
+        el.innerHTML = `<div class="max-w-[80%] px-3 py-2 rounded-2xl rounded-br-sm text-xs text-text-main" style="background:rgba(139,110,208,0.18);border:1px solid rgba(139,110,208,0.25);">${msg.text}</div>`;
+      } else {
+        el.className = 'flex gap-2 items-start';
+        el.innerHTML = `<div class="w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0" style="background:linear-gradient(135deg,#4CAF50,#2d4a1e);">S</div><div class="max-w-[85%] px-3 py-2 rounded-2xl rounded-tl-sm text-xs leading-relaxed" style="background:rgba(76,175,80,0.08);border:1px solid rgba(76,175,80,0.15);color:rgba(240,253,244,0.8);">${msg.text}</div>`;
       }
-
-      // Inicializar EmailJS (el usuario necesitará configurar sus credenciales)
-      // Para usar EmailJS, el usuario debe:
-      // 1. Crear una cuenta en https://www.emailjs.com/
-      // 2. Crear un servicio de email (Gmail, Outlook, etc.)
-      // 3. Crear un template de email
-      // 4. Reemplazar estos valores con sus propias credenciales:
-      //    - PUBLIC_KEY: Su clave pública de EmailJS
-      //    - SERVICE_ID: ID del servicio de email
-      //    - TEMPLATE_ID: ID del template de email
-      
-      // Por ahora, usaremos una implementación que funciona sin EmailJS configurado
-      // pero que puede ser fácilmente actualizada cuando el usuario configure EmailJS
-      
-      const EMAILJS_PUBLIC_KEY = 'tTEucjRzFoBdNc2U3'; // Public Key de EmailJS
-      const EMAILJS_SERVICE_ID = 'service_1gaeqai'; // Service ID de Gmail
-      const EMAILJS_TEMPLATE_ID = 'template_l8awfeq'; // Template ID del formulario de contacto
-
-      // Función para validar el formulario
-      function validateContactForm() {
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const interest = document.getElementById('interest').value;
-        const otherDescription = document.getElementById('other-description').value.trim();
-        const messageDiv = document.getElementById('contact-form-message');
-        
-        // Limpiar mensajes anteriores
-        messageDiv.classList.add('hidden');
-        messageDiv.classList.remove('border-success/40', 'border-error/40');
-        
-        // Validar nombre
-        if (!name || name.length < 2) {
-          showFormMessage('Por favor, ingresa un nombre válido (mínimo 2 caracteres).', 'error');
-          return false;
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(8px)';
+      el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      return el;
+    }
+    async function playChatAnimation() {
+      if (!chatMessages) return;
+      chatMessages.innerHTML = '';
+      for (let i = 0; i < CHAT_CONVERSATION.length; i++) {
+        const msg = CHAT_CONVERSATION[i];
+        await new Promise(r => setTimeout(r, i === 0 ? 400 : 1000));
+        if (msg.type === 'sensei') {
+          typingIndicator.classList.remove('hidden');
+          await new Promise(r => setTimeout(r, 900));
+          typingIndicator.classList.add('hidden');
         }
-        
-        // Validar email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!email || !emailRegex.test(email)) {
-          showFormMessage('Por favor, ingresa un correo electrónico válido.', 'error');
-          return false;
-        }
-        
-        // Validar teléfono (opcional, pero si se ingresa debe tener formato válido)
-        if (phone) {
-          // Permitir números, espacios, guiones, paréntesis y el símbolo +
-          const phoneRegex = /^[\d\s\-\+\(\)]{8,20}$/;
-          if (!phoneRegex.test(phone)) {
-            showFormMessage('Por favor, ingresa un número telefónico válido (mínimo 8 dígitos).', 'error');
-            return false;
-          }
-        }
-        
-        // Validar interés
-        if (!interest) {
-          showFormMessage('Por favor, selecciona un interés principal.', 'error');
-          return false;
-        }
-        
-        // Validar descripción si se seleccionó "Otro"
-        if (interest === 'otro' && (!otherDescription || otherDescription.length < 10)) {
-          showFormMessage('Por favor, describe tu interés (mínimo 10 caracteres).', 'error');
-          return false;
-        }
-        
-        return true;
+        const el = buildMessage(msg);
+        chatMessages.appendChild(el);
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }));
       }
-      
-      // Función para mostrar mensajes en el formulario
-      function showFormMessage(message, type) {
-        const messageDiv = document.getElementById('contact-form-message');
-        messageDiv.textContent = message;
-        messageDiv.classList.remove('hidden');
-        if (type === 'error') {
-          messageDiv.style.color = '#FF6B6B';
-          messageDiv.style.borderColor = 'rgba(255, 107, 107, 0.4)';
-        } else {
-          messageDiv.style.color = '#4CAF50';
-          messageDiv.style.borderColor = 'rgba(76, 175, 80, 0.4)';
+    }
+    let chatPlayed = false;
+    const chatSection = document.getElementById('sensei');
+    if (chatSection) {
+      const chatObs = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting && !chatPlayed) {
+          chatPlayed = true;
+          playChatAnimation();
         }
-        
-        // Scroll al mensaje
-        messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-      
-      // Función para enviar email usando EmailJS o fallback
-      async function sendContactEmail(formData) {
-        const name = formData.get('name');
-        const email = formData.get('email');
-        const phone = formData.get('phone') || '';
-        const interest = formData.get('interest');
-        const otherDescription = formData.get('other-description') || '';
-        
-        // Mapear valores de interés a texto legible
-        const interestMap = {
-          'cultivador': 'Soy cultivador',
-          'negocio': 'Represento un club/cannabis room',
-          'inversion': 'Me interesa invertir',
-          'alianza': 'Busco alianzas comerciales',
-          'prensa': 'Prensa / medios',
-          'otro': 'Otro'
+      }, { threshold: 0.3 });
+      chatObs.observe(chatSection);
+    }
+
+    // ── EmailJS Contact Form ──
+    const EMAILJS_PUBLIC_KEY  = 'tTEucjRzFoBdNc2U3';
+    const EMAILJS_SERVICE_ID  = 'service_1gaeqai';
+    const EMAILJS_TEMPLATE_ID = 'template_l8awfeq';
+
+    function toggleOtherDescription(value) {
+      const container = document.getElementById('other-description-container');
+      if (container) container.classList.toggle('hidden', value !== 'otro');
+    }
+
+    const contactForm = document.getElementById('contact-form');
+    const formMessage = document.getElementById('form-message');
+    const submitBtn   = document.getElementById('contact-submit');
+
+    if (contactForm) {
+      contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enviando…';
+        const data = {
+          name:              document.getElementById('name').value.trim(),
+          email:             document.getElementById('email').value.trim(),
+          interest:          document.getElementById('interest').value,
+          other_description: document.getElementById('other-description')?.value.trim() || '',
+          message:           document.getElementById('message').value.trim(),
         };
-        
-        const interestText = interestMap[interest] || interest;
-        const finalInterest = interest === 'otro' && otherDescription 
-          ? `${interestText}: ${otherDescription}` 
-          : interestText;
-        
-        // Construir mensaje con teléfono si está disponible
-        const phoneInfo = phone ? `\nTeléfono: ${phone}` : '';
-        const messageContent = `Nuevo contacto desde la web:\n\nNombre: ${name}\nEmail: ${email}${phoneInfo}\nInterés: ${finalInterest}`;
-        
-        // Si EmailJS está configurado, usarlo
-        if (EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY' && 
-            EMAILJS_SERVICE_ID !== 'YOUR_SERVICE_ID' && 
-            EMAILJS_TEMPLATE_ID !== 'YOUR_TEMPLATE_ID') {
-          try {
-            emailjs.init(EMAILJS_PUBLIC_KEY);
-            await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-              to_email: 'growai.soporte@gmail.com',
-              from_name: name,
-              from_email: email,
-              phone: phone || 'No proporcionado',
-              interest: finalInterest,
-              message: messageContent
-            });
-            return { success: true };
-          } catch (error) {
-            console.error('Error al enviar email con EmailJS:', error);
-            return { success: false, error: 'Error al enviar el email. Por favor, intenta nuevamente.' };
-          }
-        } else {
-          // Fallback: usar mailto (abrir cliente de email)
-          // Esto es una solución temporal hasta que se configure EmailJS
-          const subject = encodeURIComponent('Nuevo contacto desde GrowAi Web');
-          const body = encodeURIComponent(messageContent + '\n\nPor favor, contacta a este usuario.');
-          window.location.href = `mailto:growai.soporte@gmail.com?subject=${subject}&body=${body}`;
-          
-          // Retornar éxito después de un pequeño delay para que el mailto se abra
-          return new Promise((resolve) => {
-            setTimeout(() => {
-              resolve({ success: true, fallback: true });
-            }, 500);
-          });
-        }
-      }
-
-      contactForm?.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        
-        // Validar formulario
-        if (!validateContactForm()) {
-          return;
-        }
-        
-        // Ocultar mensajes anteriores
-        const messageDiv = document.getElementById('contact-form-message');
-        messageDiv.classList.add('hidden');
-        
-        // Deshabilitar botón y mostrar loading
-        contactSubmit.disabled = true;
-        contactSubmit.innerHTML =
-          '<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3.6-3.6A8 8 0 014 12z"></path></svg><span>Enviando...</span>';
-
-        const formData = new FormData(contactForm);
-        const name = formData.get('name');
-        
         try {
-          const result = await sendContactEmail(formData);
-          
-          if (result.success) {
-            if (result.fallback) {
-              showFormMessage('¡Gracias! Se abrió tu cliente de email. Por favor, envía el mensaje para completar el proceso.', 'success');
-            } else {
-              showFormMessage(`¡Gracias, ${name}! Hemos recibido tu información. Pronto recibirás novedades exclusivas de GrowAi.`, 'success');
-            }
-            
-            // Resetear formulario
-            contactForm.reset();
-            document.getElementById('other-description-container').classList.add('hidden');
-            document.getElementById('other-description').required = false;
-          } else {
-            showFormMessage(result.error || 'Hubo un error al enviar tu información. Por favor, intenta nuevamente.', 'error');
-          }
-        } catch (error) {
-          console.error('Error:', error);
-          showFormMessage('Hubo un error inesperado. Por favor, intenta nuevamente más tarde.', 'error');
+          emailjs.init(EMAILJS_PUBLIC_KEY);
+          await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, data);
+          formMessage.textContent = '¡Mensaje enviado! Te respondemos pronto.';
+          formMessage.style.cssText = 'background:rgba(76,175,80,0.08);border:1px solid rgba(76,175,80,0.2);color:#81c784;';
+          formMessage.classList.remove('hidden');
+          contactForm.reset();
+        } catch (err) {
+          formMessage.textContent = 'Hubo un error al enviar. Intentá de nuevo.';
+          formMessage.style.cssText = 'background:rgba(255,107,107,0.08);border:1px solid rgba(255,107,107,0.2);color:#ff6b6b;';
+          formMessage.classList.remove('hidden');
         } finally {
-          contactSubmit.disabled = false;
-          contactSubmit.innerHTML = '<span>Quiero recibir novedades</span>';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Enviar mensaje';
         }
       });
-    </script>
-    <script>
-      (function () {
-        class LightBulb extends HTMLElement {
-          static get observedAttributes() {
-            return ["status"];
-          }
-          connectedCallback() {
-            this.glass = this.querySelector(".bulb-glass");
-            this.filament = this.querySelector(".bulb-filament");
-            this.base1 = this.querySelector(".bulb-base-1");
-            this.base2 = this.querySelector(".bulb-base-2");
-            this.base3 = this.querySelector(".bulb-base-3");
-            this.g0 = this.querySelector(".bulb-stop-0");
-            this.g1 = this.querySelector(".bulb-stop-1");
-            var st = this.getAttribute("status") || "off";
-            this.attributeChangedCallback("status", null, st);
-          }
-          attributeChangedCallback(name, oldValue, newValue) {
-            if (name !== "status" || !this.glass) return;
-            if (newValue === "on") {
-              this.glass.setAttribute("fill", "url(#hero-bulb-grad)");
-              this.glass.setAttribute("stroke", "#e8b820");
-              this.filament && this.filament.setAttribute("stroke", "#fff8dc");
-              this.base1 && this.base1.setAttribute("fill", "#c8960a");
-              this.base2 && this.base2.setAttribute("fill", "#b07800");
-              this.base3 && this.base3.setAttribute("fill", "#906000");
-              this.g0 && this.g0.setAttribute("stop-color", "#fff9c4");
-              this.g1 && this.g1.setAttribute("stop-color", "#f0c030");
-            } else {
-              this.glass.setAttribute("fill", "#2a2a3a");
-              this.glass.setAttribute("stroke", "#444");
-              this.filament && this.filament.setAttribute("stroke", "#555");
-              this.base1 && this.base1.setAttribute("fill", "#444");
-              this.base2 && this.base2.setAttribute("fill", "#3a3a3a");
-              this.base3 && this.base3.setAttribute("fill", "#333");
-            }
-          }
-        }
-        class ToggleSwitch extends HTMLElement {
-          connectedCallback() {
-            this._input = this.querySelector('input[type="checkbox"]');
-            this._onChange = this._onChange.bind(this);
-            this._input && this._input.addEventListener("change", this._onChange);
-          }
-          disconnectedCallback() {
-            this._input && this._input.removeEventListener("change", this._onChange);
-          }
-          _onChange(evt) {
-            this.dispatchEvent(
-              new CustomEvent("toggle", { detail: { status: evt.target.checked }, bubbles: true })
-            );
-          }
-        }
-        if (!customElements.get("light-bulb")) {
-          customElements.define("light-bulb", LightBulb);
-        }
-        if (!customElements.get("toggle-switch")) {
-          customElements.define("toggle-switch", ToggleSwitch);
-        }
-        var bulbEl = document.querySelector("light-bulb.hero-light-bulb");
-        var switchEl = document.querySelector("toggle-switch.hero-bulb-toggle");
-        switchEl &&
-          switchEl.addEventListener("toggle", function (evt) {
-            if (!bulbEl) return;
-            bulbEl.setAttribute("status", evt.detail.status ? "on" : "off");
-          });
-      })();
-    </script>
-    <script
-      src="js/plant-life-hero.js"
-      onerror="console.error('GrowAi: no se pudo cargar js/plant-life-hero.js (revisá despliegue y ruta /js/).');"
-    ></script>
-  </body>
+    }
+  </script>
+</body>
 </html>
-
