@@ -627,13 +627,11 @@
         min-height: 220px;
         aspect-ratio: 9 / 16;
         margin-right: min(3vw, 1.25rem);
-        border-radius: 1rem;
+        border-radius: 1.25rem;
         overflow: hidden;
-        background-color: #1b0f2a;
-        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
+        background-color: #000;
+        box-shadow: 0 0 0 1px rgba(139,110,208,0.18), 0 12px 40px rgba(0,0,0,0.55);
         pointer-events: none;
-        isolation: isolate;
-        transform: translateZ(0);
       }
       #funciones .funciones-pin-video-wrap video {
         display: block;
@@ -642,8 +640,6 @@
         max-width: none;
         object-fit: cover;
         object-position: center;
-        mix-blend-mode: screen;
-        transform: translateZ(0);
       }
       @media (prefers-reduced-motion: reduce) {
         #funciones .funciones-pin-video-wrap {
