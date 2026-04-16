@@ -183,8 +183,18 @@
 
   <!-- ═══════════════════════════════ HERO ════════════════════════════════ -->
   <section id="hero"
-    class="relative min-h-svh flex flex-col items-center justify-center overflow-hidden pt-16"
-    style="background:linear-gradient(160deg,#060e07 0%,#0d1f0f 45%,#1B0F2A 100%);">
+    class="relative min-h-svh flex flex-col items-center justify-center overflow-hidden pt-16">
+
+    <!-- Video de fondo -->
+    <video
+      class="absolute inset-0 w-full h-full object-cover"
+      src="videos/Hero.mp4"
+      autoplay muted loop playsinline
+      style="opacity:0.45;"></video>
+
+    <!-- Overlay oscuro sobre el video -->
+    <div class="absolute inset-0 pointer-events-none"
+         style="background:linear-gradient(160deg,rgba(6,14,7,0.88) 0%,rgba(13,31,15,0.78) 45%,rgba(27,15,42,0.82) 100%);"></div>
 
     <div class="pointer-events-none absolute -top-20 -right-20 w-96 h-96 rounded-full"
          style="background:radial-gradient(circle,rgba(76,175,80,0.07) 0%,transparent 70%);"></div>
@@ -259,6 +269,31 @@
       <p class="reveal mt-10 text-text-main/35 text-sm tracking-wide">GrowAI resuelve los tres.</p>
     </div>
   </section>
+
+  <!-- ══════════════════════ COGOLLO SCROLL-SCRUB ════════════════════════ -->
+  <!-- El div exterior tiene altura 250vh → da "recorrido" de scroll -->
+  <!-- El inner sticky se queda fijo en pantalla mientras se scrollea dentro -->
+  <div id="cogollo-section" style="height:250vh;position:relative;">
+    <div style="position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#060e07;">
+      <!-- Video scrubbed por scroll -->
+      <video
+        id="cogollo-video"
+        src="videos/cogollo-girando.mp4"
+        muted playsinline preload="auto"
+        style="width:100%;height:100%;object-fit:cover;opacity:0.85;"></video>
+      <!-- Overlay gradiente arriba y abajo para transición suave con secciones vecinas -->
+      <div class="pointer-events-none absolute inset-0"
+           style="background:linear-gradient(to bottom,#060e07 0%,transparent 18%,transparent 82%,#060e07 100%);"></div>
+      <!-- Texto superpuesto centrado -->
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none">
+        <span class="eyebrow mb-3" style="opacity:0.8;">Naturaleza + tecnología</span>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-text-main leading-tight"
+            style="text-shadow:0 2px 24px rgba(6,14,7,0.8);">
+          Cultivá con precisión
+        </h2>
+      </div>
+    </div>
+  </div>
 
   <!-- ══════════════════════ FUNCIONES OVERVIEW ════════════════════════════ -->
   <section id="funciones" class="py-24 bg-section-a">
@@ -835,6 +870,24 @@
         }
       }, { threshold: 0.3 });
       chatObs.observe(chatSection);
+    }
+
+    // ── Cogollo scroll-scrub ──
+    const scrubSection = document.getElementById('cogollo-section');
+    const scrubVideo   = document.getElementById('cogollo-video');
+    if (scrubSection && scrubVideo) {
+      scrubVideo.pause();
+      scrubVideo.currentTime = 0;
+      const updateScrub = () => {
+        const rect         = scrubSection.getBoundingClientRect();
+        const scrollable   = scrubSection.offsetHeight - window.innerHeight;
+        const scrolled     = -rect.top;
+        const progress     = Math.max(0, Math.min(1, scrolled / scrollable));
+        if (scrubVideo.readyState >= 2) {
+          scrubVideo.currentTime = progress * scrubVideo.duration;
+        }
+      };
+      window.addEventListener('scroll', updateScrub, { passive: true });
     }
 
     // ── EmailJS Contact Form ──
