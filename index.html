@@ -185,11 +185,12 @@
   <section id="hero"
     class="relative min-h-svh flex flex-col items-center justify-center overflow-hidden pt-16">
 
-    <!-- Video de fondo -->
+    <!-- Video de fondo (ping-pong via JS, sin loop nativo) -->
     <video
+      id="hero-video"
       class="absolute inset-0 w-full h-full object-cover"
       src="videos/Hero.mp4"
-      autoplay muted loop playsinline
+      muted playsinline preload="auto"
       style="opacity:0.45;"></video>
 
     <!-- Overlay oscuro sobre el video -->
@@ -286,11 +287,12 @@
            style="background:linear-gradient(to bottom,#060e07 0%,transparent 18%,transparent 82%,#060e07 100%);"></div>
       <!-- Texto superpuesto centrado -->
       <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none">
-        <span class="eyebrow mb-3" style="opacity:0.8;">Naturaleza + tecnología</span>
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-text-main leading-tight"
-            style="text-shadow:0 2px 24px rgba(6,14,7,0.8);">
-          Cultivá con precisión
-        </h2>
+        <div style="background:rgba(6,14,7,0.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:1.5rem 2.5rem;">
+          <span class="block text-[0.65rem] font-semibold tracking-[0.2em] uppercase mb-3" style="color:rgba(240,253,244,0.6);">Naturaleza + tecnología</span>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-text-main leading-tight">
+            Cultivá con precisión
+          </h2>
+        </div>
       </div>
     </div>
   </div>
@@ -870,6 +872,29 @@
         }
       }, { threshold: 0.3 });
       chatObs.observe(chatSection);
+    }
+
+    // ── Hero video ping-pong ──
+    const heroVideo = document.getElementById('hero-video');
+    if (heroVideo) {
+      let forward  = true;
+      let lastTs   = null;
+      const SPEED  = 1.0; // velocidad normal
+
+      function stepHero(ts) {
+        if (lastTs === null) lastTs = ts;
+        const dt = Math.min((ts - lastTs) / 1000, 0.05); // cap para evitar saltos
+        lastTs = ts;
+
+        if (heroVideo.readyState >= 2 && heroVideo.duration) {
+          let t = heroVideo.currentTime + (forward ? 1 : -1) * dt * SPEED;
+          if (t >= heroVideo.duration) { t = heroVideo.duration; forward = false; }
+          if (t <= 0)                  { t = 0;                  forward = true;  }
+          heroVideo.currentTime = t;
+        }
+        requestAnimationFrame(stepHero);
+      }
+      requestAnimationFrame(stepHero);
     }
 
     // ── Cogollo scroll-scrub ──
