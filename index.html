@@ -876,40 +876,104 @@
       chatObs.observe(chatSection);
     }
 
-    // ── Hero video ping-pong ──
-    // Forward: nativo play() — suave por hardware
-    // Reverse: RAF con delta real — más preciso que setInterval, sin jitter
+    // ── Hero video ping-pong — canvas frame capture ──
+    // Los browsers no pueden reproducir video hacia atrás de forma suave.
+    // Solución: capturar frames a 15fps durante la reproducción forward,
+    // luego dibujarlos al revés en un canvas (completamente suave).
     const heroVideo = document.getElementById('hero-video');
     if (heroVideo) {
-      const REVERSE_FPS  = 24;
-      const REVERSE_STEP = 1 / REVERSE_FPS;
-      let reversing      = false;
-      let lastRafTime    = 0;
-      let rafId          = null;
+      const CAPTURE_FPS = 15;
+      const frames = [];        // ImageBitmap[] capturados
+      let capturing = true;
+      let captureTimer = null;
+      let playing = 'init';    // 'forward' | 'reverse'
 
-      function reverseFrame(ts) {
-        if (!reversing) return;
-        if (ts - lastRafTime >= 1000 / REVERSE_FPS) {
-          lastRafTime = ts;
-          const next = heroVideo.currentTime - REVERSE_STEP;
-          if (next <= 0) {
-            reversing = false;
+      // Canvas superpuesto con mismas dimensiones que el video
+      const heroCanvas = document.createElement('canvas');
+      heroCanvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.45;display:none;';
+      heroVideo.parentNode.insertBefore(heroCanvas, heroVideo.nextSibling);
+      const ctx = heroCanvas.getContext('2d');
+
+      // Dibuja un ImageBitmap con comportamiento cover
+      function drawCover(bitmap) {
+        const cw = heroCanvas.width, ch = heroCanvas.height;
+        const vw = bitmap.width,     vh = bitmap.height;
+        const srcAR = vw / vh, dstAR = cw / ch;
+        let sx = 0, sy = 0, sw = vw, sh = vh;
+        if (srcAR > dstAR) { sw = vh * dstAR; sx = (vw - sw) / 2; }
+        else                { sh = vw / dstAR; sy = (vh - sh) / 2; }
+        ctx.drawImage(bitmap, sx, sy, sw, sh, 0, 0, cw, ch);
+      }
+
+      // Captura frames del video durante forward play
+      let pendingCapture = false;
+      function scheduleCapture() {
+        captureTimer = setTimeout(async () => {
+          if (capturing && heroVideo.readyState >= 2 && !heroVideo.paused && !heroVideo.ended) {
+            if (!pendingCapture) {
+              pendingCapture = true;
+              try {
+                const bmp = await createImageBitmap(heroVideo);
+                if (capturing) frames.push(bmp);
+              } catch(e) {}
+              pendingCapture = false;
+            }
+          }
+          if (capturing) scheduleCapture();
+        }, 1000 / CAPTURE_FPS);
+      }
+
+      // Reverse playback desde canvas
+      let revIdx = 0, lastRevTs = 0;
+      function playReverse(ts) {
+        if (ts - lastRevTs >= 1000 / CAPTURE_FPS) {
+          lastRevTs = ts;
+          if (revIdx < 0) {
+            // Fin de reverse → volver a forward
+            heroCanvas.style.display = 'none';
+            heroVideo.style.display  = '';
+            frames.forEach(b => b.close());
+            frames.length = 0;
+            capturing = true;
             heroVideo.currentTime = 0;
             heroVideo.play().catch(() => {});
+            playing = 'forward';
+            scheduleCapture();
             return;
           }
-          heroVideo.currentTime = next;
+          drawCover(frames[revIdx]);
+          revIdx--;
         }
-        rafId = requestAnimationFrame(reverseFrame);
+        requestAnimationFrame(playReverse);
       }
 
       heroVideo.addEventListener('ended', () => {
-        if (reversing) return;
-        reversing   = true;
-        lastRafTime = performance.now();
-        rafId       = requestAnimationFrame(reverseFrame);
+        if (playing === 'reverse') return;
+        capturing = false;
+        clearTimeout(captureTimer);
+        if (frames.length < 3) {
+          // Muy pocos frames: fallback a loop simple
+          heroVideo.currentTime = 0;
+          heroVideo.play().catch(() => {});
+          return;
+        }
+        // Dimensionar canvas al viewport del hero
+        heroCanvas.width  = window.innerWidth;
+        heroCanvas.height = window.innerHeight;
+        heroVideo.style.display  = 'none';
+        heroCanvas.style.display = '';
+        revIdx      = frames.length - 1;
+        lastRevTs   = 0;
+        playing     = 'reverse';
+        requestAnimationFrame(playReverse);
       });
 
+      // Arrancar captura al comenzar a reproducir
+      heroVideo.addEventListener('play', () => {
+        if (capturing && playing !== 'reverse') scheduleCapture();
+      }, { once: true });
+
+      playing = 'forward';
       heroVideo.play().catch(() => {});
     }
 
