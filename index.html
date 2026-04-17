@@ -874,45 +874,56 @@
       chatObs.observe(chatSection);
     }
 
-    // ── Hero video ping-pong ──
+    // ── Hero video ping-pong (playbackRate, nativo y suave) ──
     const heroVideo = document.getElementById('hero-video');
     if (heroVideo) {
-      let forward  = true;
-      let lastTs   = null;
-      const SPEED  = 1.0; // velocidad normal
+      let going = 1; // 1 = adelante, -1 = atrás
+      heroVideo.play().catch(() => {});
 
-      function stepHero(ts) {
-        if (lastTs === null) lastTs = ts;
-        const dt = Math.min((ts - lastTs) / 1000, 0.05); // cap para evitar saltos
-        lastTs = ts;
-
-        if (heroVideo.readyState >= 2 && heroVideo.duration) {
-          let t = heroVideo.currentTime + (forward ? 1 : -1) * dt * SPEED;
-          if (t >= heroVideo.duration) { t = heroVideo.duration; forward = false; }
-          if (t <= 0)                  { t = 0;                  forward = true;  }
-          heroVideo.currentTime = t;
+      heroVideo.addEventListener('timeupdate', () => {
+        if (!heroVideo.duration) return;
+        if (going === 1 && heroVideo.currentTime >= heroVideo.duration - 0.15) {
+          going = -1;
+          try { heroVideo.playbackRate = -1; } catch(e) {}
+        } else if (going === -1 && heroVideo.currentTime <= 0.15) {
+          going = 1;
+          heroVideo.playbackRate = 1;
         }
-        requestAnimationFrame(stepHero);
-      }
-      requestAnimationFrame(stepHero);
+      });
     }
 
-    // ── Cogollo scroll-scrub ──
+    // ── Cogollo scroll-scrub con lerp ──
     const scrubSection = document.getElementById('cogollo-section');
     const scrubVideo   = document.getElementById('cogollo-video');
     if (scrubSection && scrubVideo) {
       scrubVideo.pause();
       scrubVideo.currentTime = 0;
-      const updateScrub = () => {
-        const rect         = scrubSection.getBoundingClientRect();
-        const scrollable   = scrubSection.offsetHeight - window.innerHeight;
-        const scrolled     = -rect.top;
-        const progress     = Math.max(0, Math.min(1, scrolled / scrollable));
-        if (scrubVideo.readyState >= 2) {
-          scrubVideo.currentTime = progress * scrubVideo.duration;
+
+      let scrubTarget  = 0; // tiempo objetivo según scroll
+      let scrubCurrent = 0; // tiempo actual (lerpeado)
+      const LERP = 0.08;    // suavidad: más bajo = más lento/suave, más alto = más reactivo
+
+      // Scroll → actualiza solo el target
+      window.addEventListener('scroll', () => {
+        const rect       = scrubSection.getBoundingClientRect();
+        const scrollable = scrubSection.offsetHeight - window.innerHeight;
+        const scrolled   = -rect.top;
+        const progress   = Math.max(0, Math.min(1, scrolled / scrollable));
+        if (scrubVideo.duration) scrubTarget = progress * scrubVideo.duration;
+      }, { passive: true });
+
+      // RAF → lerp suave del currentTime hacia el target
+      function smoothScrub() {
+        if (scrubVideo.readyState >= 2 && scrubVideo.duration) {
+          const diff = scrubTarget - scrubCurrent;
+          if (Math.abs(diff) > 0.001) {
+            scrubCurrent += diff * LERP;
+            scrubVideo.currentTime = scrubCurrent;
+          }
         }
-      };
-      window.addEventListener('scroll', updateScrub, { passive: true });
+        requestAnimationFrame(smoothScrub);
+      }
+      smoothScrub();
     }
 
     // ── EmailJS Contact Form ──
