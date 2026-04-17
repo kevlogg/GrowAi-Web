@@ -205,6 +205,113 @@
     .mol-card-title { font-size: 19px; font-weight: 800; color: #f0fdf4; margin-bottom: 10px; }
     .mol-card-body  { font-size: 13.5px; color: rgba(240,253,244,0.62); line-height: 1.65; margin-bottom: 12px; }
     .mol-card-formula { font-size: 13px; font-weight: 600; color: rgba(240,253,244,0.28); font-family: 'Courier New', monospace; letter-spacing: 0.06em; }
+
+    /* ── Funciones Plant Scroll ── */
+    #funciones { position: relative; height: 380vh; }
+    #funciones-sticky {
+      position: sticky; top: 0; height: 100vh; overflow: hidden;
+      background: linear-gradient(160deg,#060e07 0%,#0d1f0f 60%,#0d2010 100%);
+    }
+    #fp-header {
+      position: absolute; top: 4.5rem; left: 0; right: 0;
+      text-align: center; z-index: 10; padding: 0 1rem;
+    }
+    #fp-panels {
+      position: absolute; left: 6%; top: 50%; transform: translateY(-50%);
+      width: 40%; max-width: 420px; z-index: 10;
+    }
+    .fp-panel {
+      position: absolute; top: 0; left: 0; width: 100%;
+      opacity: 0; transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+      pointer-events: none;
+    }
+    .fp-panel.fp-active {
+      opacity: 1; transform: translateY(0);
+      pointer-events: auto; position: relative;
+    }
+    #fp-plant-wrap {
+      position: absolute; right: 0; bottom: 0;
+      width: clamp(260px, 46%, 640px); height: 88vh;
+      pointer-events: none; z-index: 3;
+    }
+    #fp-plant-img {
+      width: 100%; height: 100%;
+      object-fit: contain; object-position: bottom center;
+      will-change: transform;
+      filter: drop-shadow(0 0 48px rgba(76,175,80,0.22));
+    }
+    .fp-hotspot {
+      position: absolute; display: flex; align-items: center;
+      gap: 8px; z-index: 10; transition: opacity 0.4s ease;
+    }
+    .fp-hotspot-btn {
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 1.5px solid rgba(76,175,80,0.8);
+      background: rgba(6,14,7,0.65); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      color: #4CAF50; font-size: 17px; font-weight: 300; flex-shrink: 0;
+      animation: fp-pulse 2.5s ease-in-out infinite;
+      transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+    }
+    @keyframes fp-pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(76,175,80,0.45); }
+      50%      { box-shadow: 0 0 0 8px rgba(76,175,80,0); }
+    }
+    .fp-hotspot-label {
+      font-size: 10px; font-weight: 700; color: #81c784;
+      letter-spacing: 0.07em;
+      background: rgba(6,14,7,0.65); backdrop-filter: blur(4px);
+      padding: 3px 9px; border-radius: 20px;
+      border: 1px solid rgba(76,175,80,0.3); white-space: nowrap;
+      transition: color 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+    }
+    .fp-hotspot.fp-hs-active .fp-hotspot-btn {
+      border-color: #4CAF50; background: rgba(76,175,80,0.18);
+      transform: scale(1.18); box-shadow: 0 0 12px rgba(76,175,80,0.35);
+    }
+    .fp-hotspot.fp-hs-active .fp-hotspot-label {
+      color: #f0fdf4; border-color: rgba(76,175,80,0.55);
+      background: rgba(76,175,80,0.12);
+    }
+    #fp-dots {
+      position: absolute; right: 1.5rem; top: 50%;
+      transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 10px; z-index: 10;
+    }
+    .fp-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      border: 1.5px solid rgba(76,175,80,0.4); background: transparent;
+      transition: background 0.35s, border-color 0.35s, transform 0.35s;
+    }
+    .fp-dot.fp-dot-active { background: #4CAF50; border-color: #4CAF50; transform: scale(1.3); }
+    #fp-scroll-hint {
+      position: absolute; bottom: 1.75rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      opacity: 0.4; font-size: 9px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: #4CAF50; font-weight: 700;
+      z-index: 10; animation: scroll-bounce 2s ease-in-out infinite;
+      transition: opacity 0.4s;
+    }
+    #fp-scroll-hint.fp-hint-hidden { opacity: 0; pointer-events: none; }
+    @media (max-width: 767px) {
+      #funciones { height: auto; }
+      #funciones-sticky {
+        position: relative; top: auto; height: auto;
+        padding: 5.5rem 1.25rem 4rem;
+        display: flex; flex-direction: column; align-items: center;
+      }
+      #fp-header { position: relative; top: auto; margin-bottom: 1.5rem; }
+      #fp-plant-wrap {
+        position: relative; right: auto; bottom: auto;
+        width: 80vw; height: 55vw; max-height: 300px; margin: 0 auto 2rem;
+      }
+      #fp-panels { position: relative; left: auto; top: auto; transform: none; width: 100%; max-width: 100%; }
+      .fp-panel { position: relative; top: auto; }
+      .fp-panel:not(.fp-active) { display: none; }
+      #fp-dots, #fp-scroll-hint { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -406,50 +513,94 @@
   </section>
 
   <!-- ══════════════════════ FUNCIONES OVERVIEW ════════════════════════════ -->
-  <section id="funciones" class="py-24 bg-section-a">
-    <div class="max-w-5xl mx-auto px-6">
-      <div class="text-center mb-14">
-        <span class="eyebrow reveal mb-4">Funciones</span>
-        <h2 class="reveal reveal-delay-1 text-3xl sm:text-4xl font-black tracking-tight text-text-main mt-4">
-          Tres pilares. Una sola app.
-        </h2>
+  <!-- ═══════════════════════ FUNCIONES — PLANT SCROLL ════════════════════ -->
+  <section id="funciones">
+    <div id="funciones-sticky">
+
+      <!-- Header centrado -->
+      <div id="fp-header">
+        <span class="eyebrow">Funciones</span>
+        <h2 style="font-size:clamp(1.35rem,2.8vw,1.9rem);font-weight:900;letter-spacing:-0.02em;color:#f0fdf4;margin-top:0.4rem;">Tres pilares. Una sola app.</h2>
       </div>
-      <div class="flex flex-col gap-4">
-        <a href="#mis-cultivos"
-           class="reveal reveal-delay-1 group flex items-start gap-5 rounded-2xl p-6 transition hover:scale-[1.01]"
-           style="background:rgba(76,175,80,0.05);border:1px solid rgba(76,175,80,0.18);">
-          <div class="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
-               style="background:rgba(76,175,80,0.12);border:1px solid rgba(76,175,80,0.25);">🌱</div>
-          <div class="flex-1">
-            <h3 class="font-bold text-text-main mb-1">Mis Cultivos</h3>
-            <p class="text-sm text-text-main/50 leading-relaxed">Registrá cada planta, etapa y parámetro. Historial completo exportable en PDF. Hasta 5 en Básico, ilimitados en Pro.</p>
-          </div>
-          <span class="self-center text-green/40 group-hover:text-green transition text-lg">→</span>
-        </a>
-        <a href="#sensei"
-           class="reveal reveal-delay-2 group flex items-start gap-5 rounded-2xl p-6 transition hover:scale-[1.01]"
-           style="background:rgba(139,110,208,0.05);border:1px solid rgba(139,110,208,0.18);">
-          <div class="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
-               style="background:rgba(139,110,208,0.12);border:1px solid rgba(139,110,208,0.25);">🤖</div>
-          <div class="flex-1">
-            <h3 class="font-bold text-text-main mb-1">Sensei IA</h3>
-            <p class="text-sm text-text-main/50 leading-relaxed">Describí síntomas o subí fotos. Sensei te orienta con precisión y contexto de tu cultivo. Conversaciones guardadas en la app.</p>
-          </div>
-          <span class="self-center text-purple/40 group-hover:text-purple transition text-lg">→</span>
-        </a>
-        <a href="#reprocann"
-           class="reveal reveal-delay-3 group flex items-start gap-5 rounded-2xl p-6 transition hover:scale-[1.01]"
-           style="background:rgba(76,175,80,0.05);border:1px solid rgba(76,175,80,0.18);">
-          <div class="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
-               style="background:rgba(76,175,80,0.12);border:1px solid rgba(76,175,80,0.25);">📋</div>
-          <div class="flex-1">
-            <h3 class="font-bold text-text-main mb-1">REPROCANN</h3>
-            <p class="text-sm text-text-main/50 leading-relaxed">Gestioná tu trámite paso a paso desde la app. Sin burocracia confusa. GrowAI te guía en cada etapa del registro.</p>
-          </div>
-          <span class="self-center text-green/40 group-hover:text-green transition text-lg">→</span>
-        </a>
+
+      <!-- Paneles de texto (izquierda) -->
+      <div id="fp-panels">
+
+        <!-- Panel 0: Mis Cultivos -->
+        <div class="fp-panel fp-active" data-panel="0">
+          <span class="eyebrow" style="color:#4CAF50;">🌱 &nbsp;Mis Cultivos</span>
+          <h3 style="font-size:clamp(1.55rem,2.8vw,2.3rem);font-weight:900;letter-spacing:-0.02em;color:#f0fdf4;margin:0.9rem 0 0.7rem;line-height:1.15;">Cada planta,<br>cada etapa,<br>registrada</h3>
+          <p style="color:rgba(240,253,244,0.52);font-size:0.9rem;line-height:1.72;margin-bottom:1.1rem;">Llevá un historial completo de tus cultivos: desde la germinación hasta la cosecha. Nunca más perdás el seguimiento de lo que funciona.</p>
+          <ul style="display:flex;flex-direction:column;gap:0.55rem;">
+            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(76,175,80,0.13);border:1px solid rgba(76,175,80,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#4CAF50;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Registro por etapa: germinación, vegetación, floración, cosecha</span></li>
+            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(76,175,80,0.13);border:1px solid rgba(76,175,80,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#4CAF50;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Historial completo de cada ciclo, siempre disponible</span></li>
+            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(76,175,80,0.13);border:1px solid rgba(76,175,80,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#4CAF50;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Hasta 5 cultivos activos en Básico · ilimitados en Pro</span></li>
+          </ul>
+        </div>
+
+        <!-- Panel 1: Sensei IA -->
+        <div class="fp-panel" data-panel="1">
+          <span class="eyebrow" style="color:#8B6ED0;">🤖 &nbsp;Sensei IA</span>
+          <h3 style="font-size:clamp(1.55rem,2.8vw,2.3rem);font-weight:900;letter-spacing:-0.02em;color:#f0fdf4;margin:0.9rem 0 0.7rem;line-height:1.15;">Describí síntomas.<br>Sensei te<br>orienta.</h3>
+          <p style="color:rgba(240,253,244,0.52);font-size:0.9rem;line-height:1.72;margin-bottom:1.1rem;">Describí síntomas o subí fotos. Sensei te orienta con precisión y contexto de tu cultivo. Conversaciones guardadas en la app.</p>
+          <ul style="display:flex;flex-direction:column;gap:0.55rem;">
+            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(139,110,208,0.13);border:1px solid rgba(139,110,208,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#8B6ED0;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Diagnóstico por foto o descripción de síntomas</span></li>
+            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(139,110,208,0.13);border:1px solid rgba(139,110,208,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#8B6ED0;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Respuestas con contexto de tu cultivo específico</span></li>
+            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(139,110,208,0.13);border:1px solid rgba(139,110,208,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#8B6ED0;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Historial de conversaciones guardado en la app</span></li>
+          </ul>
+        </div>
+
+        <!-- Panel 2: REPROCANN -->
+        <div class="fp-panel" data-panel="2">
+          <span class="eyebrow" style="color:#4CAF50;">📋 &nbsp;REPROCANN</span>
+          <h3 style="font-size:clamp(1.55rem,2.8vw,2.3rem);font-weight:900;letter-spacing:-0.02em;color:#f0fdf4;margin:0.9rem 0 0.7rem;line-height:1.15;">Sin burocracia.<br>GrowAI te guía<br>paso a paso.</h3>
+          <p style="color:rgba(240,253,244,0.52);font-size:0.9rem;line-height:1.72;margin-bottom:1.1rem;">Gestioná tu trámite REPROCANN paso a paso desde la app. GrowAI te guía en cada etapa del registro sin confusiones.</p>
+          <ul style="display:flex;flex-direction:column;gap:0.55rem;">
+            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(76,175,80,0.13);border:1px solid rgba(76,175,80,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#4CAF50;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Checklist interactivo del trámite</span></li>
+            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(76,175,80,0.13);border:1px solid rgba(76,175,80,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#4CAF50;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Notificaciones de vencimientos y renovaciones</span></li>
+            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(76,175,80,0.13);border:1px solid rgba(76,175,80,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#4CAF50;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Documentación centralizada, siempre disponible</span></li>
+          </ul>
+        </div>
+
+      </div><!-- /#fp-panels -->
+
+      <!-- Planta (derecha) con hotspots -->
+      <div id="fp-plant-wrap">
+        <img id="fp-plant-img" src="planta.png" alt="Planta de cannabis" />
+
+        <!-- Hotspot 0: Cogollo → Mis Cultivos -->
+        <div class="fp-hotspot fp-hs-active" data-hs="0" style="top:13%;left:46%;">
+          <div class="fp-hotspot-btn">+</div>
+          <span class="fp-hotspot-label">Mis Cultivos</span>
+        </div>
+
+        <!-- Hotspot 1: Tallo/centro → Sensei IA -->
+        <div class="fp-hotspot" data-hs="1" style="top:52%;left:34%;opacity:0.35;">
+          <div class="fp-hotspot-btn" style="animation-delay:0.85s;">+</div>
+          <span class="fp-hotspot-label">Sensei IA</span>
+        </div>
+
+        <!-- Hotspot 2: Hojas bajas → REPROCANN -->
+        <div class="fp-hotspot" data-hs="2" style="top:78%;left:62%;opacity:0.35;">
+          <div class="fp-hotspot-btn" style="animation-delay:1.7s;">+</div>
+          <span class="fp-hotspot-label">REPROCANN</span>
+        </div>
+      </div><!-- /#fp-plant-wrap -->
+
+      <!-- Puntos de progreso -->
+      <div id="fp-dots">
+        <div class="fp-dot fp-dot-active"></div>
+        <div class="fp-dot"></div>
+        <div class="fp-dot"></div>
       </div>
-    </div>
+
+      <!-- Scroll hint -->
+      <div id="fp-scroll-hint">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        Scroll
+      </div>
+
+    </div><!-- /#funciones-sticky -->
   </section>
 
   <!-- ═══════════════════════ MIS CULTIVOS ════════════════════════════════ -->
@@ -1406,6 +1557,59 @@
     const contactForm = document.getElementById('contact-form');
     const formMessage = document.getElementById('form-message');
     const submitBtn   = document.getElementById('contact-submit');
+
+    // ── Funciones: scroll-driven plant panels + mouse parallax ──
+    (function () {
+      var section  = document.getElementById('funciones');
+      if (!section) return;
+      var panels   = section.querySelectorAll('.fp-panel');
+      var dots     = section.querySelectorAll('.fp-dot');
+      var hotspots = section.querySelectorAll('.fp-hotspot');
+      var hint     = document.getElementById('fp-scroll-hint');
+      var cur      = -1;
+
+      function setPanel(idx) {
+        if (idx === cur) return;
+        cur = idx;
+        panels.forEach(function (p, i) { p.classList.toggle('fp-active', i === idx); });
+        dots.forEach(function (d, i)   { d.classList.toggle('fp-dot-active', i === idx); });
+        hotspots.forEach(function (h, i) {
+          h.style.opacity = i === idx ? '1' : '0.35';
+          h.classList.toggle('fp-hs-active', i === idx);
+        });
+        if (hint) hint.classList.toggle('fp-hint-hidden', idx > 0);
+      }
+
+      function onScroll() {
+        var rect     = section.getBoundingClientRect();
+        var sectionH = section.offsetHeight;
+        var vh       = window.innerHeight;
+        if (sectionH <= vh + 10) return;
+        var scrolled = -rect.top;
+        var total    = sectionH - vh;
+        var progress = Math.max(0, Math.min(1, scrolled / total));
+        setPanel(progress > 0.66 ? 2 : progress > 0.33 ? 1 : 0);
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      setPanel(0);
+
+      // Parallax de la planta con el mouse
+      var plantImg = document.getElementById('fp-plant-img');
+      if (plantImg) {
+        var lx = 0, ly = 0, tx = 0, ty = 0;
+        window.addEventListener('mousemove', function (e) {
+          tx = (e.clientX - window.innerWidth  / 2) / (window.innerWidth  / 2) * -14;
+          ty = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2) * -9;
+        }, { passive: true });
+        (function tick() {
+          lx += (tx - lx) * 0.06;
+          ly += (ty - ly) * 0.06;
+          plantImg.style.transform = 'translate(' + lx.toFixed(2) + 'px,' + ly.toFixed(2) + 'px)';
+          requestAnimationFrame(tick);
+        })();
+      }
+    })();
 
     if (contactForm) {
       contactForm.addEventListener('submit', async (e) => {
