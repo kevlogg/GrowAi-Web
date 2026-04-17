@@ -877,30 +877,39 @@
     }
 
     // ── Hero video ping-pong ──
-    // Forward: nativo con play() para máxima suavidad
-    // Reverse: setInterval a 25fps al llegar al final, sin freeze
+    // Forward: nativo play() — suave por hardware
+    // Reverse: RAF con delta real — más preciso que setInterval, sin jitter
     const heroVideo = document.getElementById('hero-video');
     if (heroVideo) {
-      const FPS  = 25;
-      const STEP = 1 / FPS;
-      let reverseTimer = null;
+      const REVERSE_FPS  = 24;
+      const REVERSE_STEP = 1 / REVERSE_FPS;
+      let reversing      = false;
+      let lastRafTime    = 0;
+      let rafId          = null;
 
-      function startReverse() {
-        if (reverseTimer) return;
-        reverseTimer = setInterval(() => {
-          const next = heroVideo.currentTime - STEP;
+      function reverseFrame(ts) {
+        if (!reversing) return;
+        if (ts - lastRafTime >= 1000 / REVERSE_FPS) {
+          lastRafTime = ts;
+          const next = heroVideo.currentTime - REVERSE_STEP;
           if (next <= 0) {
-            clearInterval(reverseTimer);
-            reverseTimer = null;
+            reversing = false;
             heroVideo.currentTime = 0;
             heroVideo.play().catch(() => {});
-          } else {
-            heroVideo.currentTime = next;
+            return;
           }
-        }, 1000 / FPS);
+          heroVideo.currentTime = next;
+        }
+        rafId = requestAnimationFrame(reverseFrame);
       }
 
-      heroVideo.addEventListener('ended', startReverse);
+      heroVideo.addEventListener('ended', () => {
+        if (reversing) return;
+        reversing   = true;
+        lastRafTime = performance.now();
+        rafId       = requestAnimationFrame(reverseFrame);
+      });
+
       heroVideo.play().catch(() => {});
     }
 
