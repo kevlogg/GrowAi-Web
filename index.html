@@ -895,6 +895,9 @@
     </div>
   </div>
 
+  <!-- Three.js — cargado antes del script inline para garantizar que THREE esté disponible -->
+  <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+
   <!-- ════════════════════════ SCRIPTS ════════════════════════════════════ -->
   <script>
     // ── Reveal on scroll (IntersectionObserver) ──
@@ -1165,18 +1168,18 @@
       let renderer, scene, camera, thcGroup, cbdGroup, tmpV;
       let animRunning = false;
 
-      // Carga Three.js bajo demanda (solo cuando la sección entra al viewport)
       function loadThreeAndInit() {
         if (typeof THREE !== 'undefined') { initScene(); return; }
+        // Fallback: carga dinámica si el script síncrono falló
         const s = document.createElement('script');
-        s.src = 'https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.min.js';
+        s.src = 'https://unpkg.com/three@0.158.0/build/three.min.js';
         s.onload = initScene;
         document.head.appendChild(s);
       }
 
       function initScene() {
         if (renderer) return;
-        const W = container.clientWidth;
+        const W = container.clientWidth || container.offsetWidth || 800;
 
         renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
         renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -1384,14 +1387,8 @@
         updateBtns();
       }
 
-      // Lazy-load: Three.js se carga solo cuando la sección entra al viewport
-      const obs = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
-          loadThreeAndInit();
-          obs.disconnect();
-        }
-      }, { threshold: 0.05 });
-      obs.observe(container);
+      // Three.js ya está cargado sincrónicamente — init directo
+      loadThreeAndInit();
     })();
 
     // ── EmailJS Contact Form ──
