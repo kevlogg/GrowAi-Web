@@ -165,20 +165,19 @@
     #mol-cbd  { animation-name: float-mol-b; animation-duration: 11s; }
 
     .mol-hotspot {
-      position: absolute; bottom: -14px; left: 50%;
-      transform: translateX(-50%);
-      display: flex; align-items: center; gap: 6px;
-      padding: 6px 14px; border-radius: 20px;
-      border: 1px solid rgba(76,175,80,0.35);
-      background: rgba(6,14,7,0.75); backdrop-filter: blur(8px);
-      cursor: pointer; font-size: 12px; font-weight: 700;
-      color: #81c784; white-space: nowrap;
-      transition: background 0.2s, transform 0.2s;
+      /* posición manejada por JS vía left/top inline */
+      display: flex; align-items: center; gap: 5px;
+      padding: 5px 12px; border-radius: 20px;
+      border: 1px solid rgba(76,175,80,0.5);
+      background: rgba(6,14,7,0.6); backdrop-filter: blur(6px);
+      cursor: pointer; font-size: 11px; font-weight: 700;
+      color: #81c784; white-space: nowrap; z-index: 10;
+      transition: background 0.2s, border-color 0.2s;
     }
-    .mol-hotspot:hover { background: rgba(76,175,80,0.18); transform: translateX(-50%) scale(1.06); }
-    .mol-hotspot-purple { border-color: rgba(139,110,208,0.35); color: #b39ddc; }
-    .mol-hotspot-purple:hover { background: rgba(139,110,208,0.18); }
-    .mol-plus { font-size: 15px; font-weight: 400; line-height: 1; }
+    .mol-hotspot:hover { background: rgba(76,175,80,0.22); border-color: rgba(76,175,80,0.8); }
+    .mol-hotspot-purple { border-color: rgba(139,110,208,0.5); color: #b39ddc; }
+    .mol-hotspot-purple:hover { background: rgba(139,110,208,0.22); border-color: rgba(139,110,208,0.8); }
+    .mol-plus { font-size: 14px; font-weight: 400; line-height: 1; }
 
     .mol-card {
       margin: 32px auto 0; max-width: 460px; position: relative;
@@ -1187,33 +1186,35 @@
         renderer.setClearColor(0x000000, 0);
 
         scene  = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(50, W / MOL_H, 0.1, 100);
-        camera.position.set(0, 0.4, 12);
+        camera = new THREE.PerspectiveCamera(65, W / MOL_H, 0.1, 100);
+        camera.position.set(0, 0.2, 8);
         camera.lookAt(0, 0, 0);
         tmpV = new THREE.Vector3();
 
-        // Iluminación
-        scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-        const sun = new THREE.DirectionalLight(0xffffff, 1.0);
-        sun.position.set(4, 8, 6); scene.add(sun);
-        const pG = new THREE.PointLight(0x4CAF50, 3.0, 28);
-        pG.position.set(-5, 3, 7); scene.add(pG);
-        const pP = new THREE.PointLight(0x9B7FE0, 3.0, 28);
-        pP.position.set(5, -2, 7); scene.add(pP);
+        // Iluminación — más potente para que las moléculas sean visibles
+        scene.add(new THREE.AmbientLight(0xffffff, 1.2));
+        const sun = new THREE.DirectionalLight(0xffffff, 1.5);
+        sun.position.set(3, 6, 5); scene.add(sun);
+        const sun2 = new THREE.DirectionalLight(0xffffff, 0.8);
+        sun2.position.set(-3, -4, 4); scene.add(sun2);
+        const pG = new THREE.PointLight(0x4CAF50, 6.0, 30);
+        pG.position.set(-4, 2, 6); scene.add(pG);
+        const pP = new THREE.PointLight(0x9B7FE0, 6.0, 30);
+        pP.position.set(4, -1, 6); scene.add(pP);
 
-        // Geometrías compartidas
-        const gC = new THREE.SphereGeometry(0.22, 14, 14);
-        const gO = new THREE.SphereGeometry(0.30, 14, 14);
+        // Geometrías compartidas — átomos más grandes para mejor visibilidad
+        const gC = new THREE.SphereGeometry(0.28, 14, 14);
+        const gO = new THREE.SphereGeometry(0.36, 14, 14);
 
-        // Materiales THC (verde)
-        const mCG = new THREE.MeshStandardMaterial({ color:0x1e3d20, roughness:0.3, metalness:0.3, emissive:0x0d1f0f, emissiveIntensity:0.6 });
-        const mOG = new THREE.MeshStandardMaterial({ color:0xd32f2f, roughness:0.2, metalness:0.1, emissive:0x3d0000, emissiveIntensity:0.3 });
-        const mBG = new THREE.MeshStandardMaterial({ color:0x4CAF50, roughness:0.4, metalness:0.05, emissive:0x1a4020, emissiveIntensity:0.55 });
+        // Materiales THC (verde) — átomos con color visible + fuerte emissive
+        const mCG = new THREE.MeshStandardMaterial({ color:0x4CAF50, roughness:0.35, metalness:0.15, emissive:0x2d7a32, emissiveIntensity:0.7 });
+        const mOG = new THREE.MeshStandardMaterial({ color:0xff5252, roughness:0.2,  metalness:0.1,  emissive:0x8b0000, emissiveIntensity:0.5 });
+        const mBG = new THREE.MeshStandardMaterial({ color:0x66BB6A, roughness:0.4,  metalness:0.05, emissive:0x2d7a32, emissiveIntensity:0.6 });
 
-        // Materiales CBD (púrpura)
-        const mCP = new THREE.MeshStandardMaterial({ color:0x2d1e4d, roughness:0.3, metalness:0.3, emissive:0x110920, emissiveIntensity:0.6 });
-        const mOP = new THREE.MeshStandardMaterial({ color:0xd32f2f, roughness:0.2, metalness:0.1, emissive:0x3d0000, emissiveIntensity:0.3 });
-        const mBP = new THREE.MeshStandardMaterial({ color:0x8B6ED0, roughness:0.4, metalness:0.05, emissive:0x2a1050, emissiveIntensity:0.55 });
+        // Materiales CBD (púrpura) — átomos con color visible + fuerte emissive
+        const mCP = new THREE.MeshStandardMaterial({ color:0x8B6ED0, roughness:0.35, metalness:0.15, emissive:0x5b3fa0, emissiveIntensity:0.7 });
+        const mOP = new THREE.MeshStandardMaterial({ color:0xff5252, roughness:0.2,  metalness:0.1,  emissive:0x8b0000, emissiveIntensity:0.5 });
+        const mBP = new THREE.MeshStandardMaterial({ color:0xAB8FE0, roughness:0.4,  metalness:0.05, emissive:0x5b3fa0, emissiveIntensity:0.6 });
 
         // Crea cilindro-enlace entre dos posiciones [x,y,z]
         function mkBond(a, b, mat) {
@@ -1337,10 +1338,10 @@
         thcGroup = mkMol(thcA, thcB, mCG, mOG, mBG);
         cbdGroup = mkMol(cbdA, cbdB, mCP, mOP, mBP);
 
-        thcGroup.scale.setScalar(0.42);
-        cbdGroup.scale.setScalar(0.42);
-        thcGroup.position.set(-3.0, 0, 0);
-        cbdGroup.position.set( 3.0, 0, 0);
+        thcGroup.scale.setScalar(0.62);
+        cbdGroup.scale.setScalar(0.62);
+        thcGroup.position.set(-2.6, 0.2, 0);
+        cbdGroup.position.set( 2.8, 0.2, 0);
 
         scene.add(thcGroup);
         scene.add(cbdGroup);
