@@ -47,6 +47,10 @@
       overflow-x: hidden;
     }
     ::selection { background: #4CAF50; color: #060e07; }
+    select option {
+      background-color: #0d1f0f;
+      color: #f0fdf4;
+    }
 
     /* ── Reveal on scroll ── */
     .reveal {
@@ -935,7 +939,6 @@
       { type: 'user',   text: 'Las hojas se están amarillando en los bordes 🍂' },
       { type: 'sensei', text: 'Puede ser deficiencia de potasio o magnesio. ¿Podés subir una foto para un diagnóstico más preciso?' },
       { type: 'user',   text: '📷 [foto adjunta]' },
-      { type: 'sensei', text: 'Confirmo: deficiencia de magnesio. Te recomiendo aplicar sulfato de magnesio foliar esta semana.' },
     ];
     function buildMessage(msg) {
       const el = document.createElement('div');
@@ -1412,6 +1415,7 @@
         submitBtn.disabled = true;
         submitBtn.textContent = 'Enviando…';
         const data = {
+          to_email:          'growai.soporte@gmail.com',
           name:              document.getElementById('name').value.trim(),
           email:             document.getElementById('email').value.trim(),
           interest:          document.getElementById('interest').value,
