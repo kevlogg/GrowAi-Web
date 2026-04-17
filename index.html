@@ -288,8 +288,10 @@
       <!-- Texto superpuesto centrado -->
       <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none">
         <div style="background:rgba(6,14,7,0.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:1.5rem 2.5rem;">
-          <span class="block text-[0.65rem] font-semibold tracking-[0.2em] uppercase mb-3" style="color:rgba(240,253,244,0.6);">Naturaleza + tecnología</span>
-          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-text-main leading-tight">
+          <span id="cogollo-eyebrow" class="block text-[0.65rem] font-semibold tracking-[0.2em] uppercase mb-3"
+                style="color:rgba(240,253,244,0.6);opacity:0;transform:translateY(16px);transition:opacity 0.4s ease,transform 0.4s ease;">Naturaleza + tecnología</span>
+          <h2 id="cogollo-h2" class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-text-main leading-tight"
+              style="opacity:0;transform:translateY(20px);transition:opacity 0.5s ease,transform 0.5s ease;">
             Cultivá con precisión
           </h2>
         </div>
@@ -874,22 +876,32 @@
       chatObs.observe(chatSection);
     }
 
-    // ── Hero video ping-pong (playbackRate, nativo y suave) ──
+    // ── Hero video ping-pong ──
+    // Forward: nativo con play() para máxima suavidad
+    // Reverse: setInterval a 25fps al llegar al final, sin freeze
     const heroVideo = document.getElementById('hero-video');
     if (heroVideo) {
-      let going = 1; // 1 = adelante, -1 = atrás
-      heroVideo.play().catch(() => {});
+      const FPS  = 25;
+      const STEP = 1 / FPS;
+      let reverseTimer = null;
 
-      heroVideo.addEventListener('timeupdate', () => {
-        if (!heroVideo.duration) return;
-        if (going === 1 && heroVideo.currentTime >= heroVideo.duration - 0.15) {
-          going = -1;
-          try { heroVideo.playbackRate = -1; } catch(e) {}
-        } else if (going === -1 && heroVideo.currentTime <= 0.15) {
-          going = 1;
-          heroVideo.playbackRate = 1;
-        }
-      });
+      function startReverse() {
+        if (reverseTimer) return;
+        reverseTimer = setInterval(() => {
+          const next = heroVideo.currentTime - STEP;
+          if (next <= 0) {
+            clearInterval(reverseTimer);
+            reverseTimer = null;
+            heroVideo.currentTime = 0;
+            heroVideo.play().catch(() => {});
+          } else {
+            heroVideo.currentTime = next;
+          }
+        }, 1000 / FPS);
+      }
+
+      heroVideo.addEventListener('ended', startReverse);
+      heroVideo.play().catch(() => {});
     }
 
     // ── Cogollo scroll-scrub con lerp ──
@@ -912,8 +924,20 @@
         if (scrubVideo.duration) scrubTarget = progress * scrubVideo.duration;
       }, { passive: true });
 
-      // RAF → lerp suave del currentTime hacia el target
+      const cogolloEyebrow = document.getElementById('cogollo-eyebrow');
+      const cogolloH2      = document.getElementById('cogollo-h2');
+
+      // Mapea progress [a,b] → opacidad 0→1
+      function revealRange(progress, start, end) {
+        return Math.max(0, Math.min(1, (progress - start) / (end - start)));
+      }
+
+      // RAF → lerp suave del currentTime hacia el target + texto scroll-reveal
       function smoothScrub() {
+        const rect       = scrubSection.getBoundingClientRect();
+        const scrollable = scrubSection.offsetHeight - window.innerHeight;
+        const progress   = Math.max(0, Math.min(1, -rect.top / scrollable));
+
         if (scrubVideo.readyState >= 2 && scrubVideo.duration) {
           const diff = scrubTarget - scrubCurrent;
           if (Math.abs(diff) > 0.001) {
@@ -921,6 +945,22 @@
             scrubVideo.currentTime = scrubCurrent;
           }
         }
+
+        // Eyebrow: aparece entre 20%–40% del scroll
+        if (cogolloEyebrow) {
+          const op = revealRange(progress, 0.20, 0.40);
+          const ty = (1 - op) * 16;
+          cogolloEyebrow.style.opacity   = op;
+          cogolloEyebrow.style.transform = `translateY(${ty}px)`;
+        }
+        // H2: aparece entre 38%–60% del scroll
+        if (cogolloH2) {
+          const op = revealRange(progress, 0.38, 0.60);
+          const ty = (1 - op) * 20;
+          cogolloH2.style.opacity   = op;
+          cogolloH2.style.transform = `translateY(${ty}px)`;
+        }
+
         requestAnimationFrame(smoothScrub);
       }
       smoothScrub();
