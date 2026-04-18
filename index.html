@@ -207,77 +207,101 @@
     .mol-card-formula { font-size: 13px; font-weight: 600; color: rgba(240,253,244,0.28); font-family: 'Courier New', monospace; letter-spacing: 0.06em; }
 
     /* ── Funciones Plant Scroll ── */
-    #funciones { position: relative; height: 380vh; }
+    #funciones { position: relative; height: 500vh; }
     #funciones-sticky {
       position: sticky; top: 0; height: 100vh; overflow: hidden;
       background: linear-gradient(160deg,#060e07 0%,#0d1f0f 60%,#0d2010 100%);
     }
     #fp-header {
       position: absolute; top: 4.5rem; left: 0; right: 0;
-      text-align: center; z-index: 10; padding: 0 1rem;
+      text-align: center; z-index: 20; padding: 0 1rem;
     }
+    /* Left: text panels */
     #fp-panels {
-      position: absolute; left: 6%; top: 50%; transform: translateY(-50%);
-      width: 40%; max-width: 420px; z-index: 10;
+      position: absolute; left: 5%; top: 50%; transform: translateY(-50%);
+      width: 40%; max-width: 400px; z-index: 10;
     }
     .fp-panel {
       position: absolute; top: 0; left: 0; width: 100%;
-      opacity: 0; transform: translateY(22px);
-      transition: opacity 0.55s ease, transform 0.55s ease;
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1);
       pointer-events: none;
     }
     .fp-panel.fp-active {
-      opacity: 1; transform: translateY(0);
-      pointer-events: auto; position: relative;
+      opacity: 1; transform: translateY(0); pointer-events: auto; position: relative;
     }
+    .fp-panel.fp-exit-up {
+      opacity: 0 !important; transform: translateY(-28px) !important;
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    /* Right: plant with overflow-hidden (camera frame) */
     #fp-plant-wrap {
-      position: absolute; right: 0; bottom: 0;
-      width: clamp(260px, 46%, 640px); height: 88vh;
-      pointer-events: none; z-index: 3;
+      position: absolute; right: 0; top: 0;
+      width: 52%; height: 100vh; overflow: hidden; z-index: 3;
+    }
+    /* Moving layer — gets translateY scrubbed by JS */
+    #fp-plant-inner {
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 200vh; will-change: transform;
     }
     #fp-plant-img {
-      width: 100%; height: 100%;
-      object-fit: contain; object-position: bottom center;
-      will-change: transform;
-      filter: drop-shadow(0 0 48px rgba(76,175,80,0.22));
+      position: absolute; top: 0; left: 50%;
+      transform: translateX(-50%);
+      height: 100%; width: auto;
+      filter: drop-shadow(0 0 60px rgba(76,175,80,0.2));
     }
+    /* Hotspots move WITH the plant */
     .fp-hotspot {
       position: absolute; display: flex; align-items: center;
-      gap: 8px; z-index: 10; transition: opacity 0.4s ease;
+      gap: 8px; z-index: 10; transition: opacity 0.5s ease;
     }
     .fp-hotspot-btn {
-      width: 30px; height: 30px; border-radius: 50%;
-      border: 1.5px solid rgba(76,175,80,0.8);
-      background: rgba(6,14,7,0.65); backdrop-filter: blur(4px);
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1.5px solid rgba(76,175,80,0.7);
+      background: rgba(6,14,7,0.7); backdrop-filter: blur(4px);
       display: flex; align-items: center; justify-content: center;
-      color: #4CAF50; font-size: 17px; font-weight: 300; flex-shrink: 0;
+      color: #4CAF50; font-size: 18px; font-weight: 300; flex-shrink: 0;
       animation: fp-pulse 2.5s ease-in-out infinite;
-      transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+      transition: transform 0.35s ease, border-color 0.35s, background 0.35s;
     }
     @keyframes fp-pulse {
-      0%,100% { box-shadow: 0 0 0 0 rgba(76,175,80,0.45); }
-      50%      { box-shadow: 0 0 0 8px rgba(76,175,80,0); }
+      0%,100% { box-shadow: 0 0 0 0 rgba(76,175,80,0.4); }
+      50%      { box-shadow: 0 0 0 9px rgba(76,175,80,0); }
     }
     .fp-hotspot-label {
-      font-size: 10px; font-weight: 700; color: #81c784;
-      letter-spacing: 0.07em;
-      background: rgba(6,14,7,0.65); backdrop-filter: blur(4px);
-      padding: 3px 9px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; color: #81c784;
+      letter-spacing: 0.06em;
+      background: rgba(6,14,7,0.75); backdrop-filter: blur(6px);
+      padding: 4px 11px; border-radius: 20px;
       border: 1px solid rgba(76,175,80,0.3); white-space: nowrap;
-      transition: color 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+      transition: color 0.35s, background 0.35s, border-color 0.35s;
     }
     .fp-hotspot.fp-hs-active .fp-hotspot-btn {
-      border-color: #4CAF50; background: rgba(76,175,80,0.18);
-      transform: scale(1.18); box-shadow: 0 0 12px rgba(76,175,80,0.35);
+      border-color: #4CAF50; background: rgba(76,175,80,0.2);
+      transform: scale(1.22);
+      box-shadow: 0 0 18px rgba(76,175,80,0.45) !important;
     }
     .fp-hotspot.fp-hs-active .fp-hotspot-label {
-      color: #f0fdf4; border-color: rgba(76,175,80,0.55);
-      background: rgba(76,175,80,0.12);
+      color: #f0fdf4; border-color: rgba(76,175,80,0.6);
+      background: rgba(76,175,80,0.15);
     }
+    /* Subtle focal line at center of right panel */
+    #fp-focal-line {
+      position: absolute; right: 0; top: calc(50% - 0.5px);
+      width: 52%; height: 1px; z-index: 7; pointer-events: none;
+      background: linear-gradient(90deg, transparent 0%, rgba(76,175,80,0.2) 30%, rgba(76,175,80,0.2) 70%, transparent 100%);
+    }
+    /* Vertical separator */
+    #fp-divider {
+      position: absolute; left: 48%; top: 15%; bottom: 15%;
+      width: 1px; z-index: 5; pointer-events: none;
+      background: linear-gradient(to bottom, transparent, rgba(76,175,80,0.12) 30%, rgba(76,175,80,0.12) 70%, transparent);
+    }
+    /* Progress dots */
     #fp-dots {
       position: absolute; right: 1.5rem; top: 50%;
       transform: translateY(-50%);
-      display: flex; flex-direction: column; gap: 10px; z-index: 10;
+      display: flex; flex-direction: column; gap: 12px; z-index: 20;
     }
     .fp-dot {
       width: 7px; height: 7px; border-radius: 50%;
@@ -291,7 +315,7 @@
       display: flex; flex-direction: column; align-items: center; gap: 6px;
       opacity: 0.4; font-size: 9px; letter-spacing: 0.14em;
       text-transform: uppercase; color: #4CAF50; font-weight: 700;
-      z-index: 10; animation: scroll-bounce 2s ease-in-out infinite;
+      z-index: 20; animation: scroll-bounce 2s ease-in-out infinite;
       transition: opacity 0.4s;
     }
     #fp-scroll-hint.fp-hint-hidden { opacity: 0; pointer-events: none; }
@@ -304,13 +328,15 @@
       }
       #fp-header { position: relative; top: auto; margin-bottom: 1.5rem; }
       #fp-plant-wrap {
-        position: relative; right: auto; bottom: auto;
-        width: 80vw; height: 55vw; max-height: 300px; margin: 0 auto 2rem;
+        position: relative; right: auto; top: auto;
+        width: 85vw; height: 60vw; max-height: 340px;
+        margin: 0 auto 2.5rem;
       }
+      #fp-plant-inner { height: 200%; }
       #fp-panels { position: relative; left: auto; top: auto; transform: none; width: 100%; max-width: 100%; }
       .fp-panel { position: relative; top: auto; }
       .fp-panel:not(.fp-active) { display: none; }
-      #fp-dots, #fp-scroll-hint { display: none; }
+      #fp-dots, #fp-scroll-hint, #fp-focal-line, #fp-divider { display: none; }
     }
   </style>
 </head>
@@ -517,13 +543,16 @@
   <section id="funciones">
     <div id="funciones-sticky">
 
-      <!-- Header centrado -->
+      <!-- Header -->
       <div id="fp-header">
         <span class="eyebrow">Funciones</span>
         <h2 style="font-size:clamp(1.35rem,2.8vw,1.9rem);font-weight:900;letter-spacing:-0.02em;color:#f0fdf4;margin-top:0.4rem;">Tres pilares. Una sola app.</h2>
       </div>
 
-      <!-- Paneles de texto (izquierda) -->
+      <!-- Separador vertical -->
+      <div id="fp-divider"></div>
+
+      <!-- Izquierda: paneles de texto -->
       <div id="fp-panels">
 
         <!-- Panel 0: Mis Cultivos -->
@@ -564,28 +593,34 @@
 
       </div><!-- /#fp-panels -->
 
-      <!-- Planta (derecha) con hotspots -->
+      <!-- Derecha: planta con cámara descendente -->
       <div id="fp-plant-wrap">
-        <img id="fp-plant-img" src="planta.png" alt="Planta de cannabis" />
+        <!-- fp-plant-inner se traslada en Y vía JS (simula cámara que baja) -->
+        <div id="fp-plant-inner">
+          <img id="fp-plant-img" src="planta.png" alt="Planta de cannabis" />
 
-        <!-- Hotspot 0: Cogollo → Mis Cultivos -->
-        <div class="fp-hotspot fp-hs-active" data-hs="0" style="top:13%;left:46%;">
-          <div class="fp-hotspot-btn">+</div>
-          <span class="fp-hotspot-label">Mis Cultivos</span>
-        </div>
+          <!-- Hotspot 0: Cogollo (10% de la altura del inner = ~20vh desde arriba) -->
+          <div class="fp-hotspot fp-hs-active" data-hs="0" style="top:10%;left:46%;">
+            <div class="fp-hotspot-btn">+</div>
+            <span class="fp-hotspot-label">Mis Cultivos</span>
+          </div>
 
-        <!-- Hotspot 1: Tallo/centro → Sensei IA -->
-        <div class="fp-hotspot" data-hs="1" style="top:52%;left:34%;opacity:0.35;">
-          <div class="fp-hotspot-btn" style="animation-delay:0.85s;">+</div>
-          <span class="fp-hotspot-label">Sensei IA</span>
-        </div>
+          <!-- Hotspot 1: Tallo medio (50% del inner = 100vh desde arriba) -->
+          <div class="fp-hotspot" data-hs="1" style="top:50%;left:36%;opacity:0.28;">
+            <div class="fp-hotspot-btn" style="animation-delay:0.85s;">+</div>
+            <span class="fp-hotspot-label">Sensei IA</span>
+          </div>
 
-        <!-- Hotspot 2: Hojas bajas → REPROCANN -->
-        <div class="fp-hotspot" data-hs="2" style="top:78%;left:62%;opacity:0.35;">
-          <div class="fp-hotspot-btn" style="animation-delay:1.7s;">+</div>
-          <span class="fp-hotspot-label">REPROCANN</span>
+          <!-- Hotspot 2: Hojas bajas (82% del inner = 164vh desde arriba) -->
+          <div class="fp-hotspot" data-hs="2" style="top:82%;left:56%;opacity:0.28;">
+            <div class="fp-hotspot-btn" style="animation-delay:1.7s;">+</div>
+            <span class="fp-hotspot-label">REPROCANN</span>
+          </div>
         </div>
       </div><!-- /#fp-plant-wrap -->
+
+      <!-- Línea focal en el centro del panel de la planta -->
+      <div id="fp-focal-line"></div>
 
       <!-- Puntos de progreso -->
       <div id="fp-dots">
@@ -596,7 +631,7 @@
 
       <!-- Scroll hint -->
       <div id="fp-scroll-hint">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
         Scroll
       </div>
 
@@ -1558,23 +1593,33 @@
     const formMessage = document.getElementById('form-message');
     const submitBtn   = document.getElementById('contact-submit');
 
-    // ── Funciones: scroll-driven plant panels + mouse parallax ──
+    // ── Funciones: cámara descendente por la planta + paneles por scroll ──
     (function () {
       var section  = document.getElementById('funciones');
       if (!section) return;
+      var inner    = document.getElementById('fp-plant-inner');
       var panels   = section.querySelectorAll('.fp-panel');
       var dots     = section.querySelectorAll('.fp-dot');
       var hotspots = section.querySelectorAll('.fp-hotspot');
       var hint     = document.getElementById('fp-scroll-hint');
       var cur      = -1;
+      var lerpY    = 0;
+      var targetY  = 0;
 
       function setPanel(idx) {
         if (idx === cur) return;
+        var prev = cur;
         cur = idx;
-        panels.forEach(function (p, i) { p.classList.toggle('fp-active', i === idx); });
-        dots.forEach(function (d, i)   { d.classList.toggle('fp-dot-active', i === idx); });
+        // Panel anterior sale hacia arriba (sensación de descenso)
+        if (prev >= 0 && panels[prev]) {
+          panels[prev].classList.remove('fp-active');
+          panels[prev].classList.add('fp-exit-up');
+          setTimeout(function () { if (panels[prev]) panels[prev].classList.remove('fp-exit-up'); }, 550);
+        }
+        if (panels[idx]) panels[idx].classList.add('fp-active');
+        dots.forEach(function (d, i) { d.classList.toggle('fp-dot-active', i === idx); });
         hotspots.forEach(function (h, i) {
-          h.style.opacity = i === idx ? '1' : '0.35';
+          h.style.opacity = i === idx ? '1' : '0.28';
           h.classList.toggle('fp-hs-active', i === idx);
         });
         if (hint) hint.classList.toggle('fp-hint-hidden', idx > 0);
@@ -1584,31 +1629,26 @@
         var rect     = section.getBoundingClientRect();
         var sectionH = section.offsetHeight;
         var vh       = window.innerHeight;
-        if (sectionH <= vh + 10) return;
-        var scrolled = -rect.top;
+        if (sectionH <= vh + 10) return; // mobile: no sticky
+        var scrolled = Math.max(0, -rect.top);
         var total    = sectionH - vh;
-        var progress = Math.max(0, Math.min(1, scrolled / total));
+        var progress = Math.min(1, scrolled / total);
+        // Planta viaja de 0 a -100vh (inner mide 200vh, container 100vh)
+        targetY = -progress * vh;
+        // Cambio de panel en 3 tercios iguales
         setPanel(progress > 0.66 ? 2 : progress > 0.33 ? 1 : 0);
       }
 
       window.addEventListener('scroll', onScroll, { passive: true });
       setPanel(0);
 
-      // Parallax de la planta con el mouse
-      var plantImg = document.getElementById('fp-plant-img');
-      if (plantImg) {
-        var lx = 0, ly = 0, tx = 0, ty = 0;
-        window.addEventListener('mousemove', function (e) {
-          tx = (e.clientX - window.innerWidth  / 2) / (window.innerWidth  / 2) * -14;
-          ty = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2) * -9;
-        }, { passive: true });
-        (function tick() {
-          lx += (tx - lx) * 0.06;
-          ly += (ty - ly) * 0.06;
-          plantImg.style.transform = 'translate(' + lx.toFixed(2) + 'px,' + ly.toFixed(2) + 'px)';
-          requestAnimationFrame(tick);
-        })();
-      }
+      // Lerp suavizado para el descenso cinematográfico de la planta
+      (function tick() {
+        requestAnimationFrame(tick);
+        if (!inner) return;
+        lerpY += (targetY - lerpY) * 0.07;
+        inner.style.transform = 'translateY(' + lerpY.toFixed(2) + 'px)';
+      })();
     })();
 
     if (contactForm) {
