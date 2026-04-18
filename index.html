@@ -248,7 +248,7 @@
       position: absolute; top: 0; left: 50%;
       transform: translateX(-50%);
       height: 100%; width: auto;
-      filter: drop-shadow(0 0 60px rgba(76,175,80,0.2));
+      animation: fp-breathe 6s ease-in-out infinite;
     }
     /* Hotspots move WITH the plant */
     .fp-hotspot {
@@ -285,30 +285,34 @@
       color: #f0fdf4; border-color: rgba(76,175,80,0.6);
       background: rgba(76,175,80,0.15);
     }
-    /* Subtle focal line at center of right panel */
-    #fp-focal-line {
-      position: absolute; right: 0; top: calc(50% - 0.5px);
-      width: 52%; height: 1px; z-index: 7; pointer-events: none;
-      background: linear-gradient(90deg, transparent 0%, rgba(76,175,80,0.2) 30%, rgba(76,175,80,0.2) 70%, transparent 100%);
+    /* SVG path progress line */
+    #fp-path-line {
+      position: absolute; left: 48%; top: 12%; bottom: 12%;
+      width: 40px; transform: translateX(-50%); z-index: 6; pointer-events: none;
     }
-    /* Vertical separator */
-    #fp-divider {
-      position: absolute; left: 48%; top: 15%; bottom: 15%;
-      width: 1px; z-index: 5; pointer-events: none;
-      background: linear-gradient(to bottom, transparent, rgba(76,175,80,0.12) 30%, rgba(76,175,80,0.12) 70%, transparent);
+    #fp-path-line svg { width: 100%; height: 100%; overflow: visible; }
+    .fp-path-stroke { stroke: rgba(76,175,80,0.13); stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .fp-path-fill   { stroke: #4CAF50; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .fp-node-ring { fill: rgba(6,14,7,0.85); stroke: rgba(76,175,80,0.28); stroke-width: 1.4; transition: fill 0.4s, stroke 0.4s; }
+    .fp-node-ring.fp-node-active { fill: rgba(76,175,80,0.16); stroke: #4CAF50; }
+    .fp-node-dot  { fill: rgba(76,175,80,0.3); transition: fill 0.4s, filter 0.4s; }
+    .fp-node-dot.fp-node-active { fill: #4CAF50; filter: drop-shadow(0 0 4px rgba(76,175,80,0.9)); }
+    /* Plant image breathing glow */
+    @keyframes fp-breathe {
+      0%,100% { filter: drop-shadow(0 0 50px rgba(76,175,80,0.22)) drop-shadow(0 0 15px rgba(76,175,80,0.1)); }
+      50%      { filter: drop-shadow(0 0 90px rgba(76,175,80,0.45)) drop-shadow(0 0 32px rgba(76,175,80,0.28)); }
     }
-    /* Progress dots */
-    #fp-dots {
-      position: absolute; right: 1.5rem; top: 50%;
-      transform: translateY(-50%);
-      display: flex; flex-direction: column; gap: 12px; z-index: 20;
+    @keyframes fp-float-up {
+      0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+      15%  { opacity: 0.75; }
+      100% { transform: translateY(-90px) translateX(var(--fx)) scale(0.35); opacity: 0; }
     }
-    .fp-dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      border: 1.5px solid rgba(76,175,80,0.4); background: transparent;
-      transition: background 0.35s, border-color 0.35s, transform 0.35s;
+    .fp-pollen {
+      position: absolute; border-radius: 50%;
+      width: 3px; height: 3px; background: #66bb6a;
+      pointer-events: none; z-index: 4;
+      animation: fp-float-up var(--fd) ease-in var(--fdelay) infinite;
     }
-    .fp-dot.fp-dot-active { background: #4CAF50; border-color: #4CAF50; transform: scale(1.3); }
     #fp-scroll-hint {
       position: absolute; bottom: 1.75rem; left: 50%;
       transform: translateX(-50%);
@@ -336,7 +340,7 @@
       #fp-panels { position: relative; left: auto; top: auto; transform: none; width: 100%; max-width: 100%; }
       .fp-panel { position: relative; top: auto; }
       .fp-panel:not(.fp-active) { display: none; }
-      #fp-dots, #fp-scroll-hint, #fp-focal-line, #fp-divider { display: none; }
+      #fp-path-line, #fp-scroll-hint, .fp-pollen { display: none; }
     }
   </style>
 </head>
@@ -599,34 +603,51 @@
         <div id="fp-plant-inner">
           <img id="fp-plant-img" src="planta.png" alt="Planta de cannabis" />
 
-          <!-- Hotspot 0: Cogollo (10% de la altura del inner = ~20vh desde arriba) -->
-          <div class="fp-hotspot fp-hs-active" data-hs="0" style="top:10%;left:46%;">
+          <!-- Partículas de polen flotante -->
+          <span class="fp-pollen" style="--fx:-14px;--fd:4.8s;--fdelay:0s;   bottom:22%;left:51%;"></span>
+          <span class="fp-pollen" style="--fx:10px; --fd:5.6s;--fdelay:1.3s; bottom:18%;left:48%;"></span>
+          <span class="fp-pollen" style="--fx:-8px; --fd:6.2s;--fdelay:0.7s; bottom:26%;left:53%;"></span>
+          <span class="fp-pollen" style="--fx:16px; --fd:4.4s;--fdelay:2.5s; bottom:32%;left:44%;"></span>
+          <span class="fp-pollen" style="--fx:-18px;--fd:7.0s;--fdelay:3.8s; bottom:19%;left:56%;"></span>
+          <span class="fp-pollen" style="--fx:6px;  --fd:5.1s;--fdelay:1.9s; bottom:24%;left:49%;"></span>
+
+          <!-- Hotspot 0: Cogollo (~38vh en inner de 200vh → aparece centrado a scroll=0) -->
+          <div class="fp-hotspot fp-hs-active" data-hs="0" style="top:19%;left:46%;">
             <div class="fp-hotspot-btn">+</div>
             <span class="fp-hotspot-label">Mis Cultivos</span>
           </div>
 
-          <!-- Hotspot 1: Tallo medio (50% del inner = 100vh desde arriba) -->
+          <!-- Hotspot 1: Tallo medio (100vh en inner → pantalla 50vh a scroll=50%) -->
           <div class="fp-hotspot" data-hs="1" style="top:50%;left:36%;opacity:0.28;">
             <div class="fp-hotspot-btn" style="animation-delay:0.85s;">+</div>
             <span class="fp-hotspot-label">Sensei IA</span>
           </div>
 
-          <!-- Hotspot 2: Hojas bajas (82% del inner = 164vh desde arriba) -->
-          <div class="fp-hotspot" data-hs="2" style="top:82%;left:56%;opacity:0.28;">
+          <!-- Hotspot 2: Hojas bajas (162vh en inner → pantalla 62vh a scroll=100%) -->
+          <div class="fp-hotspot" data-hs="2" style="top:81%;left:56%;opacity:0.28;">
             <div class="fp-hotspot-btn" style="animation-delay:1.7s;">+</div>
             <span class="fp-hotspot-label">REPROCANN</span>
           </div>
         </div>
       </div><!-- /#fp-plant-wrap -->
 
-      <!-- Línea focal en el centro del panel de la planta -->
-      <div id="fp-focal-line"></div>
-
-      <!-- Puntos de progreso -->
-      <div id="fp-dots">
-        <div class="fp-dot fp-dot-active"></div>
-        <div class="fp-dot"></div>
-        <div class="fp-dot"></div>
+      <!-- Línea de progreso SVG (reemplaza puntos) -->
+      <div id="fp-path-line">
+        <svg viewBox="0 0 40 560" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Fantasma siempre visible (guía tenue) -->
+          <path class="fp-path-stroke" d="M20,15 C34,100 6,185 20,280 C34,375 6,460 20,545"/>
+          <!-- Trazo que se dibuja con scroll -->
+          <path id="fp-fill-path" class="fp-path-fill" d="M20,15 C34,100 6,185 20,280 C34,375 6,460 20,545"/>
+          <!-- Nodo 0 — panel Mis Cultivos -->
+          <circle class="fp-node-ring fp-node-active" id="fp-node-ring-0" cx="20" cy="93"  r="7"/>
+          <circle class="fp-node-dot  fp-node-active" id="fp-node-dot-0"  cx="20" cy="93"  r="3"/>
+          <!-- Nodo 1 — panel Sensei IA -->
+          <circle class="fp-node-ring" id="fp-node-ring-1" cx="20" cy="280" r="7"/>
+          <circle class="fp-node-dot"  id="fp-node-dot-1"  cx="20" cy="280" r="3"/>
+          <!-- Nodo 2 — panel REPROCANN -->
+          <circle class="fp-node-ring" id="fp-node-ring-2" cx="20" cy="467" r="7"/>
+          <circle class="fp-node-dot"  id="fp-node-dot-2"  cx="20" cy="467" r="3"/>
+        </svg>
       </div>
 
       <!-- Scroll hint -->
@@ -1593,31 +1614,52 @@
     const formMessage = document.getElementById('form-message');
     const submitBtn   = document.getElementById('contact-submit');
 
-    // ── Funciones: cámara descendente por la planta + paneles por scroll ──
+    // ── Funciones: descenso por la planta + línea SVG de progreso ──
     (function () {
       var section  = document.getElementById('funciones');
       if (!section) return;
       var inner    = document.getElementById('fp-plant-inner');
       var panels   = section.querySelectorAll('.fp-panel');
-      var dots     = section.querySelectorAll('.fp-dot');
       var hotspots = section.querySelectorAll('.fp-hotspot');
       var hint     = document.getElementById('fp-scroll-hint');
-      var cur      = -1;
-      var lerpY    = 0;
-      var targetY  = 0;
+      var fillPath = document.getElementById('fp-fill-path');
+      var nodeRings = [
+        document.getElementById('fp-node-ring-0'),
+        document.getElementById('fp-node-ring-1'),
+        document.getElementById('fp-node-ring-2')
+      ];
+      var nodeDots = [
+        document.getElementById('fp-node-dot-0'),
+        document.getElementById('fp-node-dot-1'),
+        document.getElementById('fp-node-dot-2')
+      ];
+
+      var cur     = -1;
+      var lerpY   = 0;
+      var targetY = 0;
+      var pathLen = 0;
+
+      // Inicializar stroke-dashoffset en el path SVG
+      if (fillPath) {
+        pathLen = fillPath.getTotalLength();
+        fillPath.style.strokeDasharray  = pathLen;
+        fillPath.style.strokeDashoffset = pathLen; // comienza oculto
+      }
 
       function setPanel(idx) {
         if (idx === cur) return;
         var prev = cur;
         cur = idx;
-        // Panel anterior sale hacia arriba (sensación de descenso)
         if (prev >= 0 && panels[prev]) {
           panels[prev].classList.remove('fp-active');
           panels[prev].classList.add('fp-exit-up');
           setTimeout(function () { if (panels[prev]) panels[prev].classList.remove('fp-exit-up'); }, 550);
         }
         if (panels[idx]) panels[idx].classList.add('fp-active');
-        dots.forEach(function (d, i) { d.classList.toggle('fp-dot-active', i === idx); });
+        // Nodos SVG
+        nodeRings.forEach(function (r, i) { r && r.classList.toggle('fp-node-active', i === idx); });
+        nodeDots.forEach(function  (d, i) { d && d.classList.toggle('fp-node-active', i === idx); });
+        // Hotspots
         hotspots.forEach(function (h, i) {
           h.style.opacity = i === idx ? '1' : '0.28';
           h.classList.toggle('fp-hs-active', i === idx);
@@ -1629,20 +1671,25 @@
         var rect     = section.getBoundingClientRect();
         var sectionH = section.offsetHeight;
         var vh       = window.innerHeight;
-        if (sectionH <= vh + 10) return; // mobile: no sticky
+        if (sectionH <= vh + 10) return;
         var scrolled = Math.max(0, -rect.top);
         var total    = sectionH - vh;
         var progress = Math.min(1, scrolled / total);
-        // Planta viaja de 0 a -100vh (inner mide 200vh, container 100vh)
+
         targetY = -progress * vh;
-        // Cambio de panel en 3 tercios iguales
+
+        // Dibujar la línea SVG según el progreso total del scroll
+        if (fillPath && pathLen > 0) {
+          fillPath.style.strokeDashoffset = (pathLen * (1 - progress)).toFixed(2);
+        }
+
         setPanel(progress > 0.66 ? 2 : progress > 0.33 ? 1 : 0);
       }
 
       window.addEventListener('scroll', onScroll, { passive: true });
       setPanel(0);
 
-      // Lerp suavizado para el descenso cinematográfico de la planta
+      // Lerp suavizado para el descenso cinematográfico
       (function tick() {
         requestAnimationFrame(tick);
         if (!inner) return;
