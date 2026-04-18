@@ -206,7 +206,7 @@
     .mol-card-body  { font-size: 13.5px; color: rgba(240,253,244,0.62); line-height: 1.65; margin-bottom: 12px; }
     .mol-card-formula { font-size: 13px; font-weight: 600; color: rgba(240,253,244,0.28); font-family: 'Courier New', monospace; letter-spacing: 0.06em; }
 
-    /* ── Funciones Plant Scroll ── */
+    /* ── Funciones Timeline ── */
     #funciones { position: relative; height: 500vh; }
     #funciones-sticky {
       position: sticky; top: 0; height: 100vh; overflow: hidden;
@@ -216,131 +216,116 @@
       position: absolute; top: 4.5rem; left: 0; right: 0;
       text-align: center; z-index: 20; padding: 0 1rem;
     }
-    /* Left: text panels */
-    #fp-panels {
-      position: absolute; left: 5%; top: 50%; transform: translateY(-50%);
-      width: 40%; max-width: 400px; z-index: 10;
+    /* Vertical line container */
+    #fp-tl-line {
+      position: absolute; left: 36%; top: 17%; bottom: 13%;
+      width: 2px; transform: translateX(-50%); z-index: 3; pointer-events: none;
     }
-    .fp-panel {
-      position: absolute; top: 0; left: 0; width: 100%;
-      opacity: 0; transform: translateY(32px);
-      transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1);
+    #fp-tl-line svg { width: 100%; height: 100%; }
+    .fp-path-stroke { stroke: rgba(76,175,80,0.12); stroke-width: 2; fill: none; stroke-linecap: round; }
+    .fp-path-fill   { stroke: #4CAF50; stroke-width: 2; fill: none; stroke-linecap: round; }
+    /* Node groups */
+    .fp-tl-node {
+      position: absolute; left: 36%; z-index: 10;
+      display: flex; align-items: center;
+      transform: translateY(-50%);
+    }
+    /* Step counter left of line */
+    .fp-tl-step {
+      position: absolute; right: calc(100% + 22px);
+      font-size: 0.58rem; font-weight: 900; letter-spacing: 0.18em;
+      color: rgba(76,175,80,0.22); text-transform: uppercase;
+      white-space: nowrap; transition: color 0.45s;
+    }
+    .fp-tl-node.fp-tl-active .fp-tl-step { color: rgba(76,175,80,0.65); }
+    /* Circle node */
+    .fp-tl-circle {
+      position: relative; flex-shrink: 0; overflow: visible;
+      width: 14px; height: 14px; border-radius: 50%;
+      border: 2px solid rgba(76,175,80,0.3); background: rgba(6,14,7,0.9);
+      display: flex; align-items: center; justify-content: center;
+      transition: width .55s cubic-bezier(.34,1.56,.64,1),
+                  height .55s cubic-bezier(.34,1.56,.64,1),
+                  border-color .4s, background .4s, box-shadow .4s;
+    }
+    .fp-tl-node.fp-tl-active .fp-tl-circle {
+      width: 58px; height: 58px;
+      border-color: rgba(76,175,80,0.65); border-width: 1.5px;
+      background: rgba(76,175,80,0.1);
+      box-shadow: 0 0 44px rgba(76,175,80,0.2), 0 0 0 1px rgba(76,175,80,0.1);
+    }
+    /* Icon inside */
+    .fp-tl-icon {
+      font-size: 0; opacity: 0; pointer-events: none; line-height: 1;
+      transition: font-size .3s .12s, opacity .3s .12s;
+    }
+    .fp-tl-node.fp-tl-active .fp-tl-icon { font-size: 1.55rem; opacity: 1; }
+    /* Burst ring */
+    .fp-tl-burst {
+      position: absolute; top: 50%; left: 50%;
+      width: 58px; height: 58px; border-radius: 50%;
+      border: 1px solid rgba(76,175,80,0.55);
+      transform: translate(-50%,-50%) scale(1); opacity: 0;
       pointer-events: none;
     }
-    .fp-panel.fp-active {
-      opacity: 1; transform: translateY(0); pointer-events: auto; position: relative;
+    .fp-tl-burst.fp-bursting { animation: fp-burst .75s cubic-bezier(.16,1,.3,1) forwards; }
+    @keyframes fp-burst {
+      0%   { transform: translate(-50%,-50%) scale(1);   opacity: 0.85; }
+      100% { transform: translate(-50%,-50%) scale(3.6); opacity: 0; }
     }
-    .fp-panel.fp-exit-up {
-      opacity: 0 !important; transform: translateY(-28px) !important;
-      transition: opacity 0.45s ease, transform 0.45s ease;
+    /* Content card right of node */
+    .fp-tl-card {
+      margin-left: 28px; max-width: 420px;
+      opacity: 0; transform: translateX(-14px);
+      transition: opacity .5s .08s, transform .5s .08s;
+      pointer-events: none;
     }
-    /* Right: plant with overflow-hidden (camera frame) */
-    #fp-plant-wrap {
-      position: absolute; right: 0; top: 0;
-      width: 52%; height: 100vh; overflow: hidden; z-index: 3;
+    .fp-tl-node.fp-tl-active .fp-tl-card { opacity: 1; transform: translateX(0); pointer-events: auto; }
+    .fp-tl-card h3 {
+      font-size: clamp(1.45rem,2.6vw,2.2rem); font-weight: 900;
+      letter-spacing: -0.02em; color: #f0fdf4;
+      margin: 0.65rem 0 0.55rem; line-height: 1.15;
     }
-    /* Moving layer — gets translateY scrubbed by JS */
-    #fp-plant-inner {
-      position: absolute; top: 0; left: 0; right: 0;
-      height: 200vh; will-change: transform;
+    .fp-tl-card p { color: rgba(240,253,244,0.5); font-size: 0.88rem; line-height: 1.72; margin-bottom: 0.95rem; }
+    .fp-tl-card ul { display: flex; flex-direction: column; gap: 0.48rem; list-style: none; }
+    .fp-tl-card li { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.78rem; color: rgba(240,253,244,0.58); }
+    .fp-tl-card li::before {
+      content: ''; margin-top: 5px; width: 5px; height: 5px;
+      border-radius: 50%; background: currentColor; flex-shrink: 0; opacity: 0.85;
     }
-    #fp-plant-img {
-      position: absolute; top: 0; left: 50%;
-      transform: translateX(-50%);
-      height: 100%; width: auto;
-      animation: fp-breathe 6s ease-in-out infinite;
-    }
-    /* Hotspots move WITH the plant */
-    .fp-hotspot {
-      position: absolute; display: flex; align-items: center;
-      gap: 8px; z-index: 10; transition: opacity 0.5s ease;
-    }
-    .fp-hotspot-btn {
-      width: 32px; height: 32px; border-radius: 50%;
-      border: 1.5px solid rgba(76,175,80,0.7);
-      background: rgba(6,14,7,0.7); backdrop-filter: blur(4px);
-      display: flex; align-items: center; justify-content: center;
-      color: #4CAF50; font-size: 18px; font-weight: 300; flex-shrink: 0;
-      animation: fp-pulse 2.5s ease-in-out infinite;
-      transition: transform 0.35s ease, border-color 0.35s, background 0.35s;
-    }
-    @keyframes fp-pulse {
-      0%,100% { box-shadow: 0 0 0 0 rgba(76,175,80,0.4); }
-      50%      { box-shadow: 0 0 0 9px rgba(76,175,80,0); }
-    }
-    .fp-hotspot-label {
-      font-size: 11px; font-weight: 700; color: #81c784;
-      letter-spacing: 0.06em;
-      background: rgba(6,14,7,0.75); backdrop-filter: blur(6px);
-      padding: 4px 11px; border-radius: 20px;
-      border: 1px solid rgba(76,175,80,0.3); white-space: nowrap;
-      transition: color 0.35s, background 0.35s, border-color 0.35s;
-    }
-    .fp-hotspot.fp-hs-active .fp-hotspot-btn {
-      border-color: #4CAF50; background: rgba(76,175,80,0.2);
-      transform: scale(1.22);
-      box-shadow: 0 0 18px rgba(76,175,80,0.45) !important;
-    }
-    .fp-hotspot.fp-hs-active .fp-hotspot-label {
-      color: #f0fdf4; border-color: rgba(76,175,80,0.6);
-      background: rgba(76,175,80,0.15);
-    }
-    /* SVG path progress line */
-    #fp-path-line {
-      position: absolute; left: 48%; top: 12%; bottom: 12%;
-      width: 40px; transform: translateX(-50%); z-index: 6; pointer-events: none;
-    }
-    #fp-path-line svg { width: 100%; height: 100%; overflow: visible; }
-    .fp-path-stroke { stroke: rgba(76,175,80,0.13); stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-    .fp-path-fill   { stroke: #4CAF50; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-    .fp-node-ring { fill: rgba(6,14,7,0.85); stroke: rgba(76,175,80,0.28); stroke-width: 1.4; transition: fill 0.4s, stroke 0.4s; }
-    .fp-node-ring.fp-node-active { fill: rgba(76,175,80,0.16); stroke: #4CAF50; }
-    .fp-node-dot  { fill: rgba(76,175,80,0.3); transition: fill 0.4s, filter 0.4s; }
-    .fp-node-dot.fp-node-active { fill: #4CAF50; filter: drop-shadow(0 0 4px rgba(76,175,80,0.9)); }
-    /* Plant image breathing glow */
-    @keyframes fp-breathe {
-      0%,100% { filter: drop-shadow(0 0 50px rgba(76,175,80,0.22)) drop-shadow(0 0 15px rgba(76,175,80,0.1)); }
-      50%      { filter: drop-shadow(0 0 90px rgba(76,175,80,0.45)) drop-shadow(0 0 32px rgba(76,175,80,0.28)); }
-    }
-    @keyframes fp-float-up {
-      0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
-      15%  { opacity: 0.75; }
-      100% { transform: translateY(-90px) translateX(var(--fx)) scale(0.35); opacity: 0; }
-    }
-    .fp-pollen {
-      position: absolute; border-radius: 50%;
-      width: 3px; height: 3px; background: #66bb6a;
-      pointer-events: none; z-index: 4;
-      animation: fp-float-up var(--fd) ease-in var(--fdelay) infinite;
-    }
+    .fp-tl-card.fp-purple li::before { color: #8B6ED0; }
+    .fp-tl-card.fp-green  li::before { color: #4CAF50; }
+    /* Scroll hint */
     #fp-scroll-hint {
-      position: absolute; bottom: 1.75rem; left: 50%;
-      transform: translateX(-50%);
+      position: absolute; bottom: 1.75rem; left: 50%; transform: translateX(-50%);
       display: flex; flex-direction: column; align-items: center; gap: 6px;
-      opacity: 0.4; font-size: 9px; letter-spacing: 0.14em;
-      text-transform: uppercase; color: #4CAF50; font-weight: 700;
-      z-index: 20; animation: scroll-bounce 2s ease-in-out infinite;
-      transition: opacity 0.4s;
+      opacity: 0.4; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #4CAF50; font-weight: 700; z-index: 20;
+      animation: scroll-bounce 2s ease-in-out infinite; transition: opacity 0.4s;
     }
     #fp-scroll-hint.fp-hint-hidden { opacity: 0; pointer-events: none; }
     @media (max-width: 767px) {
       #funciones { height: auto; }
       #funciones-sticky {
         position: relative; top: auto; height: auto;
-        padding: 5.5rem 1.25rem 4rem;
-        display: flex; flex-direction: column; align-items: center;
+        padding: 5.5rem 1.5rem 4rem;
+        display: flex; flex-direction: column; gap: 2.5rem;
       }
-      #fp-header { position: relative; top: auto; margin-bottom: 1.5rem; }
-      #fp-plant-wrap {
-        position: relative; right: auto; top: auto;
-        width: 85vw; height: 60vw; max-height: 340px;
-        margin: 0 auto 2.5rem;
+      #fp-header { position: relative; top: auto; margin-bottom: 0.5rem; }
+      #fp-tl-line { display: none; }
+      .fp-tl-node {
+        position: relative; left: auto; top: auto !important;
+        transform: none; flex-direction: column; align-items: flex-start;
       }
-      #fp-plant-inner { height: 200%; }
-      #fp-panels { position: relative; left: auto; top: auto; transform: none; width: 100%; max-width: 100%; }
-      .fp-panel { position: relative; top: auto; }
-      .fp-panel:not(.fp-active) { display: none; }
-      #fp-path-line, #fp-scroll-hint, .fp-pollen { display: none; }
+      .fp-tl-step { position: relative; right: auto; margin-bottom: 0.5rem; }
+      .fp-tl-circle {
+        width: 50px !important; height: 50px !important;
+        border-color: rgba(76,175,80,0.6) !important;
+        background: rgba(76,175,80,0.1) !important;
+      }
+      .fp-tl-icon { font-size: 1.3rem !important; opacity: 1 !important; }
+      .fp-tl-card { margin-left: 0; margin-top: 1.1rem; opacity: 1 !important; transform: none !important; max-width: 100%; }
+      #fp-scroll-hint { display: none; }
     }
   </style>
 </head>
@@ -542,8 +527,7 @@
     </div>
   </section>
 
-  <!-- ══════════════════════ FUNCIONES OVERVIEW ════════════════════════════ -->
-  <!-- ═══════════════════════ FUNCIONES — PLANT SCROLL ════════════════════ -->
+  <!-- ════════════════════ FUNCIONES — TIMELINE ═══════════════════════════ -->
   <section id="funciones">
     <div id="funciones-sticky">
 
@@ -553,101 +537,69 @@
         <h2 style="font-size:clamp(1.35rem,2.8vw,1.9rem);font-weight:900;letter-spacing:-0.02em;color:#f0fdf4;margin-top:0.4rem;">Tres pilares. Una sola app.</h2>
       </div>
 
-      <!-- Separador vertical -->
-      <div id="fp-divider"></div>
-
-      <!-- Izquierda: paneles de texto -->
-      <div id="fp-panels">
-
-        <!-- Panel 0: Mis Cultivos -->
-        <div class="fp-panel fp-active" data-panel="0">
-          <span class="eyebrow" style="color:#4CAF50;">🌱 &nbsp;Mis Cultivos</span>
-          <h3 style="font-size:clamp(1.55rem,2.8vw,2.3rem);font-weight:900;letter-spacing:-0.02em;color:#f0fdf4;margin:0.9rem 0 0.7rem;line-height:1.15;">Cada planta,<br>cada etapa,<br>registrada</h3>
-          <p style="color:rgba(240,253,244,0.52);font-size:0.9rem;line-height:1.72;margin-bottom:1.1rem;">Llevá un historial completo de tus cultivos: desde la germinación hasta la cosecha. Nunca más perdás el seguimiento de lo que funciona.</p>
-          <ul style="display:flex;flex-direction:column;gap:0.55rem;">
-            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(76,175,80,0.13);border:1px solid rgba(76,175,80,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#4CAF50;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Registro por etapa: germinación, vegetación, floración, cosecha</span></li>
-            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(76,175,80,0.13);border:1px solid rgba(76,175,80,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#4CAF50;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Historial completo de cada ciclo, siempre disponible</span></li>
-            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(76,175,80,0.13);border:1px solid rgba(76,175,80,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#4CAF50;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Hasta 5 cultivos activos en Básico · ilimitados en Pro</span></li>
-          </ul>
-        </div>
-
-        <!-- Panel 1: Sensei IA -->
-        <div class="fp-panel" data-panel="1">
-          <span class="eyebrow" style="color:#8B6ED0;">🤖 &nbsp;Sensei IA</span>
-          <h3 style="font-size:clamp(1.55rem,2.8vw,2.3rem);font-weight:900;letter-spacing:-0.02em;color:#f0fdf4;margin:0.9rem 0 0.7rem;line-height:1.15;">Describí síntomas.<br>Sensei te<br>orienta.</h3>
-          <p style="color:rgba(240,253,244,0.52);font-size:0.9rem;line-height:1.72;margin-bottom:1.1rem;">Describí síntomas o subí fotos. Sensei te orienta con precisión y contexto de tu cultivo. Conversaciones guardadas en la app.</p>
-          <ul style="display:flex;flex-direction:column;gap:0.55rem;">
-            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(139,110,208,0.13);border:1px solid rgba(139,110,208,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#8B6ED0;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Diagnóstico por foto o descripción de síntomas</span></li>
-            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(139,110,208,0.13);border:1px solid rgba(139,110,208,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#8B6ED0;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Respuestas con contexto de tu cultivo específico</span></li>
-            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(139,110,208,0.13);border:1px solid rgba(139,110,208,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#8B6ED0;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Historial de conversaciones guardado en la app</span></li>
-          </ul>
-        </div>
-
-        <!-- Panel 2: REPROCANN -->
-        <div class="fp-panel" data-panel="2">
-          <span class="eyebrow" style="color:#4CAF50;">📋 &nbsp;REPROCANN</span>
-          <h3 style="font-size:clamp(1.55rem,2.8vw,2.3rem);font-weight:900;letter-spacing:-0.02em;color:#f0fdf4;margin:0.9rem 0 0.7rem;line-height:1.15;">Sin burocracia.<br>GrowAI te guía<br>paso a paso.</h3>
-          <p style="color:rgba(240,253,244,0.52);font-size:0.9rem;line-height:1.72;margin-bottom:1.1rem;">Gestioná tu trámite REPROCANN paso a paso desde la app. GrowAI te guía en cada etapa del registro sin confusiones.</p>
-          <ul style="display:flex;flex-direction:column;gap:0.55rem;">
-            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(76,175,80,0.13);border:1px solid rgba(76,175,80,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#4CAF50;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Checklist interactivo del trámite</span></li>
-            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(76,175,80,0.13);border:1px solid rgba(76,175,80,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#4CAF50;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Notificaciones de vencimientos y renovaciones</span></li>
-            <li style="display:flex;gap:0.7rem;align-items:flex-start;"><span style="margin-top:4px;width:17px;height:17px;border-radius:50%;background:rgba(76,175,80,0.13);border:1px solid rgba(76,175,80,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:5px;height:5px;border-radius:50%;background:#4CAF50;display:block;"></span></span><span style="font-size:0.79rem;color:rgba(240,253,244,0.62);">Documentación centralizada, siempre disponible</span></li>
-          </ul>
-        </div>
-
-      </div><!-- /#fp-panels -->
-
-      <!-- Derecha: planta con cámara descendente -->
-      <div id="fp-plant-wrap">
-        <!-- fp-plant-inner se traslada en Y vía JS (simula cámara que baja) -->
-        <div id="fp-plant-inner">
-          <img id="fp-plant-img" src="planta.png" alt="Planta de cannabis" />
-
-          <!-- Partículas de polen flotante -->
-          <span class="fp-pollen" style="--fx:-14px;--fd:4.8s;--fdelay:0s;   bottom:22%;left:51%;"></span>
-          <span class="fp-pollen" style="--fx:10px; --fd:5.6s;--fdelay:1.3s; bottom:18%;left:48%;"></span>
-          <span class="fp-pollen" style="--fx:-8px; --fd:6.2s;--fdelay:0.7s; bottom:26%;left:53%;"></span>
-          <span class="fp-pollen" style="--fx:16px; --fd:4.4s;--fdelay:2.5s; bottom:32%;left:44%;"></span>
-          <span class="fp-pollen" style="--fx:-18px;--fd:7.0s;--fdelay:3.8s; bottom:19%;left:56%;"></span>
-          <span class="fp-pollen" style="--fx:6px;  --fd:5.1s;--fdelay:1.9s; bottom:24%;left:49%;"></span>
-
-          <!-- Hotspot 0: Cogollo (~38vh en inner de 200vh → aparece centrado a scroll=0) -->
-          <div class="fp-hotspot fp-hs-active" data-hs="0" style="top:19%;left:46%;">
-            <div class="fp-hotspot-btn">+</div>
-            <span class="fp-hotspot-label">Mis Cultivos</span>
-          </div>
-
-          <!-- Hotspot 1: Tallo medio (100vh en inner → pantalla 50vh a scroll=50%) -->
-          <div class="fp-hotspot" data-hs="1" style="top:50%;left:36%;opacity:0.28;">
-            <div class="fp-hotspot-btn" style="animation-delay:0.85s;">+</div>
-            <span class="fp-hotspot-label">Sensei IA</span>
-          </div>
-
-          <!-- Hotspot 2: Hojas bajas (162vh en inner → pantalla 62vh a scroll=100%) -->
-          <div class="fp-hotspot" data-hs="2" style="top:81%;left:56%;opacity:0.28;">
-            <div class="fp-hotspot-btn" style="animation-delay:1.7s;">+</div>
-            <span class="fp-hotspot-label">REPROCANN</span>
-          </div>
-        </div>
-      </div><!-- /#fp-plant-wrap -->
-
-      <!-- Línea de progreso SVG (reemplaza puntos) -->
-      <div id="fp-path-line">
-        <svg viewBox="0 0 40 560" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Fantasma siempre visible (guía tenue) -->
-          <path class="fp-path-stroke" d="M20,15 C34,100 6,185 20,280 C34,375 6,460 20,545"/>
-          <!-- Trazo que se dibuja con scroll -->
-          <path id="fp-fill-path" class="fp-path-fill" d="M20,15 C34,100 6,185 20,280 C34,375 6,460 20,545"/>
-          <!-- Nodo 0 — panel Mis Cultivos -->
-          <circle class="fp-node-ring fp-node-active" id="fp-node-ring-0" cx="20" cy="93"  r="7"/>
-          <circle class="fp-node-dot  fp-node-active" id="fp-node-dot-0"  cx="20" cy="93"  r="3"/>
-          <!-- Nodo 1 — panel Sensei IA -->
-          <circle class="fp-node-ring" id="fp-node-ring-1" cx="20" cy="280" r="7"/>
-          <circle class="fp-node-dot"  id="fp-node-dot-1"  cx="20" cy="280" r="3"/>
-          <!-- Nodo 2 — panel REPROCANN -->
-          <circle class="fp-node-ring" id="fp-node-ring-2" cx="20" cy="467" r="7"/>
-          <circle class="fp-node-dot"  id="fp-node-dot-2"  cx="20" cy="467" r="3"/>
+      <!-- Línea vertical SVG que se dibuja con el scroll -->
+      <div id="fp-tl-line">
+        <svg viewBox="0 0 2 800" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path class="fp-path-stroke" d="M1,5 L1,795"/>
+          <path id="fp-fill-path" class="fp-path-fill" d="M1,5 L1,795"/>
         </svg>
+      </div>
+
+      <!-- Nodo 0 — Mis Cultivos (top 24%) -->
+      <div class="fp-tl-node fp-tl-active" id="fp-tl-0" style="top:24%;">
+        <div class="fp-tl-step">01</div>
+        <div class="fp-tl-circle">
+          <span class="fp-tl-icon">🌱</span>
+          <div class="fp-tl-burst fp-bursting"></div>
+        </div>
+        <div class="fp-tl-card fp-green">
+          <span class="eyebrow" style="color:#4CAF50;">Mis Cultivos</span>
+          <h3>Cada planta,<br>cada etapa,<br>registrada</h3>
+          <p>Llevá un historial completo de tus cultivos: desde la germinación hasta la cosecha. Nunca más perdás el seguimiento de lo que funciona.</p>
+          <ul>
+            <li>Registro por etapa: germinación, vegetación, floración, cosecha</li>
+            <li>Historial completo de cada ciclo, siempre disponible</li>
+            <li>Hasta 5 cultivos activos en Básico · ilimitados en Pro</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Nodo 1 — Sensei IA (top 50%) -->
+      <div class="fp-tl-node" id="fp-tl-1" style="top:50%;">
+        <div class="fp-tl-step">02</div>
+        <div class="fp-tl-circle">
+          <span class="fp-tl-icon">🤖</span>
+          <div class="fp-tl-burst"></div>
+        </div>
+        <div class="fp-tl-card fp-purple">
+          <span class="eyebrow" style="color:#8B6ED0;">Sensei IA</span>
+          <h3>Describí síntomas.<br>Sensei te orienta.</h3>
+          <p>Describí síntomas o subí fotos. Sensei te orienta con precisión y contexto de tu cultivo.</p>
+          <ul>
+            <li>Diagnóstico por foto o descripción de síntomas</li>
+            <li>Respuestas con contexto de tu cultivo específico</li>
+            <li>Historial de conversaciones guardado en la app</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Nodo 2 — REPROCANN (top 76%) -->
+      <div class="fp-tl-node" id="fp-tl-2" style="top:76%;">
+        <div class="fp-tl-step">03</div>
+        <div class="fp-tl-circle">
+          <span class="fp-tl-icon">📋</span>
+          <div class="fp-tl-burst"></div>
+        </div>
+        <div class="fp-tl-card fp-green">
+          <span class="eyebrow" style="color:#4CAF50;">REPROCANN</span>
+          <h3>Sin burocracia.<br>GrowAI te guía<br>paso a paso.</h3>
+          <p>Gestioná tu trámite REPROCANN paso a paso desde la app. GrowAI te guía en cada etapa del registro sin confusiones.</p>
+          <ul>
+            <li>Checklist interactivo del trámite</li>
+            <li>Notificaciones de vencimientos y renovaciones</li>
+            <li>Documentación centralizada, siempre disponible</li>
+          </ul>
+        </div>
       </div>
 
       <!-- Scroll hint -->
@@ -1614,55 +1566,34 @@
     const formMessage = document.getElementById('form-message');
     const submitBtn   = document.getElementById('contact-submit');
 
-    // ── Funciones: descenso por la planta + línea SVG de progreso ──
+    // ── Funciones: timeline con nodos explosivos + línea SVG ──
     (function () {
       var section  = document.getElementById('funciones');
       if (!section) return;
-      var inner    = document.getElementById('fp-plant-inner');
-      var panels   = section.querySelectorAll('.fp-panel');
-      var hotspots = section.querySelectorAll('.fp-hotspot');
-      var hint     = document.getElementById('fp-scroll-hint');
       var fillPath = document.getElementById('fp-fill-path');
-      var nodeRings = [
-        document.getElementById('fp-node-ring-0'),
-        document.getElementById('fp-node-ring-1'),
-        document.getElementById('fp-node-ring-2')
-      ];
-      var nodeDots = [
-        document.getElementById('fp-node-dot-0'),
-        document.getElementById('fp-node-dot-1'),
-        document.getElementById('fp-node-dot-2')
-      ];
+      var tNodes   = [0,1,2].map(function(i){ return document.getElementById('fp-tl-' + i); });
+      var bursts   = tNodes.map(function(n){ return n ? n.querySelector('.fp-tl-burst') : null; });
+      var hint     = document.getElementById('fp-scroll-hint');
+      var cur      = -1;
+      var pathLen  = 0;
 
-      var cur     = -1;
-      var lerpY   = 0;
-      var targetY = 0;
-      var pathLen = 0;
-
-      // Inicializar stroke-dashoffset en el path SVG
       if (fillPath) {
         pathLen = fillPath.getTotalLength();
         fillPath.style.strokeDasharray  = pathLen;
-        fillPath.style.strokeDashoffset = pathLen; // comienza oculto
+        fillPath.style.strokeDashoffset = pathLen;
       }
 
-      function setPanel(idx) {
+      function setNode(idx) {
         if (idx === cur) return;
-        var prev = cur;
         cur = idx;
-        if (prev >= 0 && panels[prev]) {
-          panels[prev].classList.remove('fp-active');
-          panels[prev].classList.add('fp-exit-up');
-          setTimeout(function () { if (panels[prev]) panels[prev].classList.remove('fp-exit-up'); }, 550);
-        }
-        if (panels[idx]) panels[idx].classList.add('fp-active');
-        // Nodos SVG
-        nodeRings.forEach(function (r, i) { r && r.classList.toggle('fp-node-active', i === idx); });
-        nodeDots.forEach(function  (d, i) { d && d.classList.toggle('fp-node-active', i === idx); });
-        // Hotspots
-        hotspots.forEach(function (h, i) {
-          h.style.opacity = i === idx ? '1' : '0.28';
-          h.classList.toggle('fp-hs-active', i === idx);
+        tNodes.forEach(function(n, i) {
+          if (!n) return;
+          n.classList.toggle('fp-tl-active', i === idx);
+          if (i === idx && bursts[i]) {
+            bursts[i].classList.remove('fp-bursting');
+            void bursts[i].offsetWidth; // fuerza reflow para re-disparar animación
+            bursts[i].classList.add('fp-bursting');
+          }
         });
         if (hint) hint.classList.toggle('fp-hint-hidden', idx > 0);
       }
@@ -1672,30 +1603,14 @@
         var sectionH = section.offsetHeight;
         var vh       = window.innerHeight;
         if (sectionH <= vh + 10) return;
-        var scrolled = Math.max(0, -rect.top);
-        var total    = sectionH - vh;
-        var progress = Math.min(1, scrolled / total);
-
-        targetY = -progress * vh;
-
-        // Dibujar la línea SVG según el progreso total del scroll
-        if (fillPath && pathLen > 0) {
+        var progress = Math.min(1, Math.max(0, -rect.top) / (sectionH - vh));
+        if (fillPath && pathLen > 0)
           fillPath.style.strokeDashoffset = (pathLen * (1 - progress)).toFixed(2);
-        }
-
-        setPanel(progress > 0.66 ? 2 : progress > 0.33 ? 1 : 0);
+        setNode(progress > 0.66 ? 2 : progress > 0.33 ? 1 : 0);
       }
 
       window.addEventListener('scroll', onScroll, { passive: true });
-      setPanel(0);
-
-      // Lerp suavizado para el descenso cinematográfico
-      (function tick() {
-        requestAnimationFrame(tick);
-        if (!inner) return;
-        lerpY += (targetY - lerpY) * 0.07;
-        inner.style.transform = 'translateY(' + lerpY.toFixed(2) + 'px)';
-      })();
+      setNode(0);
     })();
 
     if (contactForm) {
