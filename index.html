@@ -218,7 +218,7 @@
     }
     /* Vertical line container */
     #fp-tl-line {
-      position: absolute; left: 36%; top: 22%; bottom: 12%;
+      position: absolute; left: 36%; top: 30%; bottom: 12%;
       width: 2px; transform: translateX(-50%); z-index: 3; pointer-events: none;
     }
     #fp-tl-line svg { width: 100%; height: 100%; }
@@ -448,27 +448,25 @@
     </div>
   </section>
 
-  <!-- ══════════════════════ COGOLLO SCROLL-SCRUB ════════════════════════ -->
-  <!-- El div exterior tiene altura 250vh → da "recorrido" de scroll -->
-  <!-- El inner sticky se queda fijo en pantalla mientras se scrollea dentro -->
-  <div id="cogollo-section" style="height:250vh;position:relative;">
-    <div style="position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#060e07;">
-      <!-- Video scrubbed por scroll -->
+  <!-- ══════════════════════ COGOLLO AUTOPLAY ════════════════════════ -->
+  <div id="cogollo-section" style="position:relative;">
+    <div style="height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#060e07;">
       <video
         id="cogollo-video"
         src="videos/cogollo-girando.mp4"
-        muted playsinline preload="auto"
-        style="width:100%;height:100%;object-fit:cover;opacity:0.85;"></video>
-      <!-- Overlay gradiente arriba y abajo para transición suave con secciones vecinas -->
+        muted playsinline preload="auto" autoplay loop
+        style="width:100%;height:100%;object-fit:contain;opacity:0.85;"></video>
       <div class="pointer-events-none absolute inset-0"
            style="background:linear-gradient(to bottom,#060e07 0%,transparent 18%,transparent 82%,#060e07 100%);"></div>
-      <!-- Texto superpuesto centrado -->
       <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none">
         <div style="background:rgba(6,14,7,0.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:1.5rem 2.5rem;">
-          <span id="cogollo-eyebrow" class="block text-[0.65rem] font-semibold tracking-[0.2em] uppercase mb-3"
-                style="color:rgba(240,253,244,0.6);opacity:0;transform:translateY(16px);transition:opacity 0.4s ease,transform 0.4s ease;">Naturaleza + tecnología</span>
+          <div id="cogollo-eyebrow" class="flex items-center justify-center gap-2 mb-3" style="overflow:hidden;">
+            <span id="cogollo-word-left" style="font-size:0.65rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,253,244,0.7);opacity:0;transform:translateX(-40px);transition:opacity 0.6s cubic-bezier(0.16,1,0.3,1),transform 0.6s cubic-bezier(0.16,1,0.3,1);">Naturaleza</span>
+            <span id="cogollo-plus" style="font-size:0.65rem;font-weight:600;color:rgba(240,253,244,0.35);opacity:0;transition:opacity 0.4s ease 0.35s;">+</span>
+            <span id="cogollo-word-right" style="font-size:0.65rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(240,253,244,0.7);opacity:0;transform:translateX(40px);transition:opacity 0.6s cubic-bezier(0.16,1,0.3,1) 0.15s,transform 0.6s cubic-bezier(0.16,1,0.3,1) 0.15s;">Tecnología</span>
+          </div>
           <h2 id="cogollo-h2" class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-text-main leading-tight"
-              style="opacity:0;transform:translateY(20px);transition:opacity 0.5s ease,transform 0.5s ease;">
+              style="opacity:0;transform:translateY(20px);transition:opacity 0.5s ease 0.45s,transform 0.5s ease 0.45s;">
             Cultivá con precisión
           </h2>
         </div>
@@ -545,8 +543,8 @@
         </svg>
       </div>
 
-      <!-- Nodo 0 — Mis Cultivos (top 36%) -->
-      <div class="fp-tl-node fp-tl-active" id="fp-tl-0" style="top:36%;">
+      <!-- Nodo 0 — Mis Cultivos (top 46%) -->
+      <div class="fp-tl-node fp-tl-active" id="fp-tl-0" style="top:46%;">
         <div class="fp-tl-step">01</div>
         <div class="fp-tl-circle">
           <span class="fp-tl-icon">🌱</span>
@@ -564,8 +562,8 @@
         </div>
       </div>
 
-      <!-- Nodo 1 — Sensei IA (top 56%) -->
-      <div class="fp-tl-node" id="fp-tl-1" style="top:56%;">
+      <!-- Nodo 1 — Sensei IA (top 63%) -->
+      <div class="fp-tl-node" id="fp-tl-1" style="top:63%;">
         <div class="fp-tl-step">02</div>
         <div class="fp-tl-circle">
           <span class="fp-tl-icon">🤖</span>
@@ -583,8 +581,8 @@
         </div>
       </div>
 
-      <!-- Nodo 2 — REPROCANN (top 76%) -->
-      <div class="fp-tl-node" id="fp-tl-2" style="top:77%;">
+      <!-- Nodo 2 — REPROCANN (top 80%) -->
+      <div class="fp-tl-node" id="fp-tl-2" style="top:80%;">
         <div class="fp-tl-step">03</div>
         <div class="fp-tl-circle">
           <span class="fp-tl-icon">📋</span>
@@ -1243,66 +1241,30 @@
       heroVideo.play().catch(() => {});
     }
 
-    // ── Cogollo scroll-scrub con lerp ──
+    // ── Cogollo autoplay + reveal on enter ──
     const scrubSection = document.getElementById('cogollo-section');
     const scrubVideo   = document.getElementById('cogollo-video');
     if (scrubSection && scrubVideo) {
-      scrubVideo.pause();
-      scrubVideo.currentTime = 0;
+      const wordLeft   = document.getElementById('cogollo-word-left');
+      const wordRight  = document.getElementById('cogollo-word-right');
+      const cogolloPlus = document.getElementById('cogollo-plus');
+      const cogolloH2  = document.getElementById('cogollo-h2');
+      let revealed = false;
 
-      let scrubTarget  = 0; // tiempo objetivo según scroll
-      let scrubCurrent = 0; // tiempo actual (lerpeado)
-      const LERP = 0.08;    // suavidad: más bajo = más lento/suave, más alto = más reactivo
-
-      // Scroll → actualiza solo el target
-      window.addEventListener('scroll', () => {
-        const rect       = scrubSection.getBoundingClientRect();
-        const scrollable = scrubSection.offsetHeight - window.innerHeight;
-        const scrolled   = -rect.top;
-        const progress   = Math.max(0, Math.min(1, scrolled / scrollable));
-        if (scrubVideo.duration) scrubTarget = progress * scrubVideo.duration;
-      }, { passive: true });
-
-      const cogolloEyebrow = document.getElementById('cogollo-eyebrow');
-      const cogolloH2      = document.getElementById('cogollo-h2');
-
-      // Mapea progress [a,b] → opacidad 0→1
-      function revealRange(progress, start, end) {
-        return Math.max(0, Math.min(1, (progress - start) / (end - start)));
+      function revealCogollo() {
+        if (revealed) return;
+        revealed = true;
+        scrubVideo.play().catch(() => {});
+        if (wordLeft) { wordLeft.style.opacity = '1'; wordLeft.style.transform = 'translateX(0)'; }
+        if (wordRight) { wordRight.style.opacity = '1'; wordRight.style.transform = 'translateX(0)'; }
+        if (cogolloPlus) { cogolloPlus.style.opacity = '1'; }
+        if (cogolloH2) { cogolloH2.style.opacity = '1'; cogolloH2.style.transform = 'translateY(0)'; }
       }
 
-      // RAF → lerp suave del currentTime hacia el target + texto scroll-reveal
-      function smoothScrub() {
-        const rect       = scrubSection.getBoundingClientRect();
-        const scrollable = scrubSection.offsetHeight - window.innerHeight;
-        const progress   = Math.max(0, Math.min(1, -rect.top / scrollable));
-
-        if (scrubVideo.readyState >= 2 && scrubVideo.duration) {
-          const diff = scrubTarget - scrubCurrent;
-          if (Math.abs(diff) > 0.001) {
-            scrubCurrent += diff * LERP;
-            scrubVideo.currentTime = scrubCurrent;
-          }
-        }
-
-        // Eyebrow: aparece entre 20%–40% del scroll
-        if (cogolloEyebrow) {
-          const op = revealRange(progress, 0.20, 0.40);
-          const ty = (1 - op) * 16;
-          cogolloEyebrow.style.opacity   = op;
-          cogolloEyebrow.style.transform = `translateY(${ty}px)`;
-        }
-        // H2: aparece entre 38%–60% del scroll
-        if (cogolloH2) {
-          const op = revealRange(progress, 0.38, 0.60);
-          const ty = (1 - op) * 20;
-          cogolloH2.style.opacity   = op;
-          cogolloH2.style.transform = `translateY(${ty}px)`;
-        }
-
-        requestAnimationFrame(smoothScrub);
-      }
-      smoothScrub();
+      const cogolloObs = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) revealCogollo();
+      }, { threshold: 0.25 });
+      cogolloObs.observe(scrubSection);
     }
 
     // ── Moléculas — toggle cards ──
@@ -1606,7 +1568,7 @@
         var progress = Math.min(1, Math.max(0, -rect.top) / (sectionH - vh));
         if (fillPath && pathLen > 0)
           fillPath.style.strokeDashoffset = (pathLen * (1 - progress)).toFixed(2);
-        setNode(progress > 0.66 ? 2 : progress > 0.33 ? 1 : 0);
+        setNode(progress > 0.60 ? 2 : progress > 0.30 ? 1 : 0);
       }
 
       window.addEventListener('scroll', onScroll, { passive: true });
