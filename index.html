@@ -64,6 +64,24 @@
     .reveal-delay-2 { transition-delay: 0.24s; }
     .reveal-delay-3 { transition-delay: 0.36s; }
 
+    /* ── Cards "El desafío" ── */
+    .desafio-card {
+      background: rgba(6,14,7,0.6);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(76,175,80,0.15);
+      transition: transform 0.3s cubic-bezier(0.16,1,0.3,1),
+                  border-color 0.3s ease,
+                  background 0.3s ease,
+                  box-shadow 0.3s ease;
+    }
+    .desafio-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(76,175,80,0.5);
+      background: rgba(6,14,7,0.78);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(76,175,80,0.1);
+    }
+
     /* ── Eyebrow label ── */
     .eyebrow {
       display: block;
@@ -424,34 +442,33 @@
     <div class="absolute inset-0 pointer-events-none"
          style="background:linear-gradient(to bottom,#060e07 0%,rgba(6,14,7,0.25) 35%,rgba(6,14,7,0.25) 65%,#060e07 100%);"></div>
     <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
-      <span class="eyebrow reveal mb-4">El desafío</span>
-      <h2 class="reveal reveal-delay-1 text-3xl sm:text-4xl font-black tracking-tight leading-tight text-text-main mt-4 mb-4">
+      <span class="eyebrow reveal mb-4" style="text-shadow:0 2px 12px rgba(0,0,0,0.8);">El desafío</span>
+      <h2 class="reveal reveal-delay-1 text-3xl sm:text-4xl font-black tracking-tight leading-tight text-text-main mt-4 mb-4"
+          style="text-shadow:0 2px 16px rgba(0,0,0,0.7);">
         Cultivar sin guía es<br>frustrante y solitario
       </h2>
-      <p class="reveal reveal-delay-2 text-text-main/50 text-base max-w-lg mx-auto mb-14 leading-relaxed">
+      <p class="reveal reveal-delay-2 text-text-main/70 text-base max-w-lg mx-auto mb-14 leading-relaxed"
+         style="text-shadow:0 2px 10px rgba(0,0,0,0.7);">
         La mayoría de los cultivadores navegan a ciegas entre errores, papeleo y diagnósticos imposibles.
       </p>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div class="reveal reveal-delay-1 rounded-2xl p-6 text-left"
-             style="background:rgba(0,0,0,0.35);border:1px solid rgba(76,175,80,0.1);">
+        <div class="desafio-card reveal reveal-delay-1 rounded-2xl p-6 text-left">
           <div class="text-3xl mb-4">😓</div>
           <h3 class="font-bold text-green-soft mb-2 text-sm">Sin diagnóstico</h3>
-          <p class="text-text-main/45 text-sm leading-relaxed">No sabés qué le pasa a tu planta y el tiempo corre sin respuestas.</p>
+          <p class="text-text-main/60 text-sm leading-relaxed">No sabés qué le pasa a tu planta y el tiempo corre sin respuestas.</p>
         </div>
-        <div class="reveal reveal-delay-2 rounded-2xl p-6 text-left"
-             style="background:rgba(0,0,0,0.35);border:1px solid rgba(76,175,80,0.1);">
+        <div class="desafio-card reveal reveal-delay-2 rounded-2xl p-6 text-left">
           <div class="text-3xl mb-4">📋</div>
           <h3 class="font-bold text-green-soft mb-2 text-sm">Sin registro</h3>
-          <p class="text-text-main/45 text-sm leading-relaxed">Perdés el historial de cada ciclo y no podés mejorar tu técnica.</p>
+          <p class="text-text-main/60 text-sm leading-relaxed">Perdés el historial de cada ciclo y no podés mejorar tu técnica.</p>
         </div>
-        <div class="reveal reveal-delay-3 rounded-2xl p-6 text-left"
-             style="background:rgba(0,0,0,0.35);border:1px solid rgba(76,175,80,0.1);">
+        <div class="desafio-card reveal reveal-delay-3 rounded-2xl p-6 text-left">
           <div class="text-3xl mb-4">📄</div>
           <h3 class="font-bold text-green-soft mb-2 text-sm">Sin tramitar</h3>
-          <p class="text-text-main/45 text-sm leading-relaxed">El REPROCANN es confuso y no sabés por dónde empezar el registro.</p>
+          <p class="text-text-main/60 text-sm leading-relaxed">El REPROCANN es confuso y no sabés por dónde empezar el registro.</p>
         </div>
       </div>
-      <p class="reveal mt-10 text-text-main/35 text-sm tracking-wide">GrowAI resuelve los tres.</p>
+      <p class="reveal mt-10 text-text-main/50 text-sm tracking-wide" style="text-shadow:0 2px 10px rgba(0,0,0,0.7);">GrowAI resuelve los tres.</p>
     </div>
   </section>
 
