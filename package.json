@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "eleventy",
-    "serve": "eleventy --serve"
+    "build:css": "tailwindcss -i ./src/_includes/styles/tailwind-source.css -o ./src/css/site.css --minify",
+    "build": "npm run build:css && eleventy",
+    "serve": "npm run build:css && eleventy --serve"
   },
   "devDependencies": {
-    "@11ty/eleventy": "^2.0.1"
+    "@11ty/eleventy": "^2.0.1",
+    "tailwindcss": "^3.4.19"
   }
 }

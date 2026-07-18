@@ -22,6 +22,7 @@ config.local.js
 # Node modules
 node_modules/
 _site/
+src/css/
 
 # Worktrees (superpowers)
 .worktrees/
