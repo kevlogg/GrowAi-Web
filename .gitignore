@@ -19,9 +19,12 @@ desktop.ini
 .env.local
 config.local.js
 
-# Node modules (si se agrega en el futuro)
+# Node modules
 node_modules/
-package-lock.json
+_site/
+
+# Worktrees (superpowers)
+.worktrees/
 
 # APK local (se sube via GitHub Releases)
 dowload/
