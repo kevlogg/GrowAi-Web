@@ -10,6 +10,20 @@
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
+    // ── Lazy-play de lupa-video al entrar en viewport ──
+    const lupaVideo = document.getElementById('lupa-video');
+    if (lupaVideo) {
+      const lupaObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            lupaVideo.play();
+            lupaObserver.unobserve(lupaVideo);
+          }
+        });
+      }, { threshold: 0.1 });
+      lupaObserver.observe(lupaVideo);
+    }
+
     // ── Navbar scroll ──
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
