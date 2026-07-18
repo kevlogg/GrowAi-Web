@@ -41,4 +41,27 @@
     closeBtn.addEventListener('click', closeDrawer);
     overlay.addEventListener('click', closeDrawer);
     document.querySelectorAll('.drawer-link').forEach(l => l.addEventListener('click', closeDrawer));
+
+    // ── Lazy-load de dotlottie-player al entrar en viewport ──
+    const lottiePlayers = document.querySelectorAll('dotlottie-player');
+    if (lottiePlayers.length) {
+      let dotlottieLoaded = false;
+      function loadDotlottie() {
+        if (dotlottieLoaded) return;
+        dotlottieLoaded = true;
+        const s = document.createElement('script');
+        s.type = 'module';
+        s.src = 'https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs';
+        document.head.appendChild(s);
+      }
+      const dotlottieObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            loadDotlottie();
+            dotlottieObserver.disconnect();
+          }
+        });
+      }, { threshold: 0.1 });
+      lottiePlayers.forEach(el => dotlottieObserver.observe(el));
+    }
   </script>
