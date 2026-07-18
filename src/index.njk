@@ -1118,8 +1118,15 @@ permalink: /
         updateBtns();
       }
 
-      // Three.js ya está cargado sincrónicamente — init directo
-      loadThreeAndInit();
+      const molObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            loadThreeAndInit();
+            molObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      molObserver.observe(container);
     })();
 
     // ── EmailJS Contact Form ──
