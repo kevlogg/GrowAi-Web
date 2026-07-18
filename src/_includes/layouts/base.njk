@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ title }}</title>
+  <meta name="description" content="{{ description }}" />
+  <link rel="canonical" href="https://growai.com.ar{{ page.url }}" />
+  <link rel="icon" type="image/png" href="/icono/favicon.png" />
+  <link rel="apple-touch-icon" href="/icono/favicon.png" />
+  <meta name="theme-color" content="#060e07" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{{ title }}" />
+  <meta property="og:description" content="{{ description }}" />
+  <meta property="og:url" content="https://growai.com.ar{{ page.url }}" />
+  <meta property="og:image" content="https://growai.com.ar/icono/favicon.png" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { inter: ['Inter', 'sans-serif'] },
+          colors: {
+            'bg-deep':    '#060e07',
+            'bg-forest':  '#0d1f0f',
+            'bg-purple':  '#1B0F2A',
+            'green':      '#4CAF50',
+            'green-soft': '#81c784',
+            'purple':     '#8B6ED0',
+            'text-main':  '#f0fdf4',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    {% include "partials/head-styles.njk" %}
+  </style>
+</head>
+<body>
+  {% include "partials/navbar.njk" %}
+  {{ content | safe }}
+  {% include "partials/footer.njk" %}
+  {% include "partials/mobile-drawer.njk" %}
+  {% include "partials/scripts.njk" %}
+</body>
+</html>
