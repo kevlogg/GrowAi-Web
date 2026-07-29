@@ -1,4 +1,24 @@
 <script>
+    // ── Tracking de eventos hacia el panel de metricas de growAi-app ──
+    const GROWAI_EVENTS_ENDPOINT = 'https://us-central1-growapp-36701.cloudfunctions.net/logWebEvent';
+    function growaiTrack(tipo, metadata) {
+      try {
+        fetch(GROWAI_EVENTS_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tipo, metadata: metadata || {} }),
+          keepalive: true,
+        }).catch(() => {});
+      } catch (e) {
+        // Nunca romper la UX del sitio por un fallo de tracking.
+      }
+    }
+    document.addEventListener('click', (e) => {
+      const el = e.target.closest('[data-web-event]');
+      if (!el) return;
+      growaiTrack(el.dataset.webEvent, { section: el.dataset.webEventSection || null });
+    });
+
     // ── Reveal on scroll (IntersectionObserver) ──
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {

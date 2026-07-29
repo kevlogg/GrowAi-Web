@@ -46,6 +46,7 @@ permalink: /
       </p>
       <div class="reveal reveal-delay-3 flex flex-col sm:flex-row gap-3 justify-center">
         <a href="https://app.growai.com.ar" target="_blank" rel="noopener noreferrer"
+           data-web-event="web_cta_click" data-web-event-section="hero"
            class="inline-flex items-center justify-center gap-2 bg-green text-bg-deep font-bold px-8 py-3.5 rounded-full text-base shadow-[0_4px_24px_rgba(76,175,80,0.35)] hover:shadow-[0_6px_32px_rgba(76,175,80,0.5)] hover:-translate-y-0.5 transition">
           Abrir GrowAI →
         </a>
@@ -305,6 +306,7 @@ permalink: /
           </ul>
           <div class="reveal">
             <a href="https://app.growai.com.ar" target="_blank" rel="noopener noreferrer"
+               data-web-event="web_cta_click" data-web-event-section="mis_cultivos"
                class="inline-flex items-center gap-2 bg-green text-bg-deep font-bold px-7 py-3 rounded-full text-sm shadow-[0_4px_20px_rgba(76,175,80,0.3)] hover:shadow-[0_6px_28px_rgba(76,175,80,0.45)] hover:-translate-y-0.5 transition">
               Empezar a registrar →
             </a>
@@ -423,6 +425,7 @@ permalink: /
           </ul>
           <div class="reveal">
             <a href="https://app.growai.com.ar" target="_blank" rel="noopener noreferrer"
+               data-web-event="web_cta_click" data-web-event-section="sensei"
                class="inline-flex items-center gap-2 font-bold px-7 py-3 rounded-full text-sm transition hover:-translate-y-0.5"
                style="background:#8B6ED0;color:#fff;box-shadow:0 4px 20px rgba(139,110,208,0.35);">
               Probar Sensei →
@@ -485,6 +488,7 @@ permalink: /
       </div>
       <div class="reveal text-center mt-10">
         <a href="https://app.growai.com.ar" target="_blank" rel="noopener noreferrer"
+           data-web-event="web_cta_click" data-web-event-section="reprocann"
            class="inline-flex items-center gap-2 bg-green text-bg-deep font-bold px-7 py-3 rounded-full text-sm shadow-[0_4px_20px_rgba(76,175,80,0.3)] hover:shadow-[0_6px_28px_rgba(76,175,80,0.45)] hover:-translate-y-0.5 transition">
           Gestionar mi REPROCANN →
         </a>
@@ -526,6 +530,7 @@ permalink: /
             <li class="flex gap-2.5 items-start text-sm text-text-main/60"><span class="text-green mt-0.5 shrink-0">✓</span>Exportar reportes PDF</li>
           </ul>
           <a href="https://app.growai.com.ar" target="_blank" rel="noopener noreferrer"
+             data-web-event="web_cta_click" data-web-event-section="planes_basico"
              class="mt-auto block text-center border border-green/40 text-green-soft font-semibold py-3 rounded-full text-sm hover:border-green hover:bg-green/5 transition">
             Suscribirse
           </a>
@@ -555,6 +560,7 @@ permalink: /
             <li class="flex gap-2.5 items-start text-sm text-text-main/60"><span class="text-green mt-0.5 shrink-0">✓</span>Soporte prioritario</li>
           </ul>
           <a href="https://app.growai.com.ar" target="_blank" rel="noopener noreferrer"
+             data-web-event="web_cta_click" data-web-event-section="planes_pro"
              class="mt-auto block text-center bg-green text-bg-deep font-bold py-3 rounded-full text-sm shadow-[0_4px_20px_rgba(76,175,80,0.35)] hover:shadow-[0_6px_28px_rgba(76,175,80,0.5)] transition">
             Suscribirse
           </a>
@@ -610,6 +616,7 @@ permalink: /
       </p>
       <div class="reveal reveal-delay-3">
         <a href="https://app.growai.com.ar" target="_blank" rel="noopener noreferrer"
+           data-web-event="web_cta_click" data-web-event-section="descargar"
            class="inline-flex items-center gap-2 bg-green text-bg-deep font-black px-10 py-4 rounded-full text-lg shadow-[0_8px_32px_rgba(76,175,80,0.4)] hover:shadow-[0_12px_40px_rgba(76,175,80,0.55)] hover:-translate-y-1 transition">
           Abrir GrowAI →
         </a>
@@ -1205,6 +1212,7 @@ permalink: /
         try {
           emailjs.init(EMAILJS_PUBLIC_KEY);
           await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, data);
+          growaiTrack('web_contacto_enviado', { interest: data.interest });
           formMessage.textContent = '¡Mensaje enviado! Te respondemos pronto.';
           formMessage.style.cssText = 'background:rgba(76,175,80,0.08);border:1px solid rgba(76,175,80,0.2);color:#81c784;';
           formMessage.classList.remove('hidden');
