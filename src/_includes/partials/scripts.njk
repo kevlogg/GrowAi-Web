@@ -16,8 +16,15 @@
     document.addEventListener('click', (e) => {
       const el = e.target.closest('[data-web-event]');
       if (!el) return;
-      growaiTrack(el.dataset.webEvent, { section: el.dataset.webEventSection || null });
+      const metadata = {};
+      for (const [key, value] of Object.entries(el.dataset)) {
+        if (key === 'webEvent') continue;
+        const metaKey = key.replace(/^webEvent/, '');
+        metadata[metaKey.charAt(0).toLowerCase() + metaKey.slice(1)] = value;
+      }
+      growaiTrack(el.dataset.webEvent, metadata);
     });
+    growaiTrack('web_page_view', { path: window.location.pathname });
 
     // ── Reveal on scroll (IntersectionObserver) ──
     const revealObserver = new IntersectionObserver((entries) => {
