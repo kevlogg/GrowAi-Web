@@ -654,6 +654,14 @@ permalink: /
                    onblur="this.style.borderColor='rgba(255,255,255,0.08)';this.style.boxShadow='none'" />
           </div>
           <div>
+            <label for="phone" class="block text-xs font-semibold text-text-main/60 mb-1.5">Teléfono <span class="text-text-main/30 font-normal">(opcional)</span></label>
+            <input type="tel" id="phone" name="phone" placeholder="Tu teléfono"
+                   class="w-full rounded-xl px-4 py-3 text-sm text-text-main placeholder-text-main/25 focus:outline-none transition"
+                   style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);"
+                   onfocus="this.style.borderColor='rgba(76,175,80,0.4)';this.style.boxShadow='0 0 0 3px rgba(76,175,80,0.1)'"
+                   onblur="this.style.borderColor='rgba(255,255,255,0.08)';this.style.boxShadow='none'" />
+          </div>
+          <div>
             <label for="interest" class="block text-xs font-semibold text-text-main/60 mb-1.5">Interés principal</label>
             <select id="interest" name="interest" required
                     class="w-full rounded-xl px-4 py-3 text-sm text-text-main focus:outline-none transition appearance-none"
@@ -1205,6 +1213,7 @@ permalink: /
           to_email:          'growai.soporte@gmail.com',
           from_name:         document.getElementById('name').value.trim(),
           from_email:        document.getElementById('email').value.trim(),
+          phone:             document.getElementById('phone').value.trim(),
           interest:          document.getElementById('interest').value,
           other_description: document.getElementById('other-description')?.value.trim() || '',
           message:           document.getElementById('message').value.trim(),
