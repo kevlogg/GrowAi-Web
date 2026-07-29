@@ -1203,8 +1203,8 @@ permalink: /
         submitBtn.textContent = 'Enviando…';
         const data = {
           to_email:          'growai.soporte@gmail.com',
-          name:              document.getElementById('name').value.trim(),
-          email:             document.getElementById('email').value.trim(),
+          from_name:         document.getElementById('name').value.trim(),
+          from_email:        document.getElementById('email').value.trim(),
           interest:          document.getElementById('interest').value,
           other_description: document.getElementById('other-description')?.value.trim() || '',
           message:           document.getElementById('message').value.trim(),
