@@ -704,8 +704,7 @@ permalink: /
     </div>
   </section>
 
-  <!-- Three.js — cargado antes del script inline para garantizar que THREE esté disponible -->
-  <script src="https://unpkg.com/three@0.158.0/build/three.min.js" defer></script>
+  <!-- Three.js: se carga on-demand desde loadThreeAndInit() cuando #moleculas entra en viewport (ver script al final) -->
 
   <!-- ════════════════════════ SCRIPTS ESPECÍFICOS DEL HOME ════════════════ -->
   <script>
