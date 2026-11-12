@@ -5,6 +5,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("lottie");
   eleventyConfig.addPassthroughCopy("lupa.mp4");
   eleventyConfig.addPassthroughCopy("src/robots.txt");
+  eleventyConfig.addPassthroughCopy("src/ads.txt");
   eleventyConfig.addPassthroughCopy("src/css");
 
   return {
