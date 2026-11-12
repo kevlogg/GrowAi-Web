@@ -1,0 +1,359 @@
+---
+layout: layouts/base.njk
+title: "Calculadora de VPD Indoor (Déficit de Presión de Vapor en kPa) | GrowAI"
+description: "Calculá el VPD de tu cultivo en tiempo real con la ecuación psicrométrica de Magnus-Tetens. Incluye offset de temperatura foliar, medidor visual y tabla por etapa."
+permalink: /herramientas/calculadora-vpd/
+---
+
+<section class="py-16 bg-section-a">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    
+    <!-- Breadcrumb -->
+    <div class="mb-6 flex items-center gap-2 text-xs text-text-main/40">
+      <a href="/herramientas/" class="hover:text-green transition">Herramientas</a>
+      <span>/</span>
+      <span class="text-text-main/70">Calculadora de VPD</span>
+    </div>
+
+    <!-- Encabezado -->
+    <div class="mb-12">
+      <span class="eyebrow mb-2">Agronomía & Psicrometría · Precisión Científica</span>
+      <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-text-main mt-2">
+        Calculadora Profesional de VPD (Déficit de Presión de Vapor)
+      </h1>
+      <p class="text-text-main/60 text-sm sm:text-base mt-3 max-w-2xl leading-relaxed">
+        El VPD mide la fuerza con la que el aire "tira" de la humedad de las hojas. Mantenerlo en el rango óptimo garantiza la máxima transpiración y absorción de nutrientes sin causar estrés hídrico ni hongos.
+      </p>
+    </div>
+
+    <!-- Grid de la Calculadora -->
+    <div class="grid lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Panel de Controles (Izquierda) -->
+      <div class="lg:col-span-7 flex flex-col gap-6">
+        
+        <!-- Bloque 1: Parámetros Ambientales -->
+        <div class="rounded-3xl p-6 sm:p-7"
+             style="background:rgba(255,255,255,0.02);border:1px solid rgba(139,110,208,0.25);">
+          
+          <!-- Temperatura ambiente -->
+          <div class="mb-6">
+            <div class="flex justify-between items-center mb-2">
+              <label class="text-xs font-bold text-text-main flex items-center gap-1.5">
+                <span>🌡️</span> Temperatura Ambiente
+              </label>
+              <span class="text-sm font-mono font-black text-purple" id="tempDisplay">25 °C</span>
+            </div>
+            <input type="range" id="tempInput" min="16" max="36" step="0.5" value="25"
+                   class="w-full h-2 rounded-lg appearance-none cursor-pointer accent-purple bg-purple/20 mb-2" />
+            <div class="flex justify-between text-[10px] text-text-main/30 font-mono">
+              <span>16°C (Frío)</span>
+              <span>25°C (Ideal)</span>
+              <span>36°C (Calor extremo)</span>
+            </div>
+          </div>
+
+          <!-- Humedad Relativa -->
+          <div class="mb-6">
+            <div class="flex justify-between items-center mb-2">
+              <label class="text-xs font-bold text-text-main flex items-center gap-1.5">
+                <span>💧</span> Humedad Relativa (HR)
+              </label>
+              <span class="text-sm font-mono font-black text-purple" id="rhDisplay">60 %</span>
+            </div>
+            <input type="range" id="rhInput" min="20" max="95" step="1" value="60"
+                   class="w-full h-2 rounded-lg appearance-none cursor-pointer accent-purple bg-purple/20 mb-2" />
+            <div class="flex justify-between text-[10px] text-text-main/30 font-mono">
+              <span>20% (Muy seco)</span>
+              <span>60% (Moderado)</span>
+              <span>95% (Saturado)</span>
+            </div>
+          </div>
+
+          <!-- Offset foliar -->
+          <div class="p-4 rounded-2xl bg-black/20 border border-purple/20">
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-xs font-semibold text-text-main flex items-center gap-1.5">
+                <span>🍃</span> Diferencia Térmica Foliar (Offset)
+              </label>
+              <span class="text-xs font-mono font-bold text-purple" id="offsetDisplay">-2.0 °C</span>
+            </div>
+            <p class="text-[11px] text-text-main/40 mb-2">
+              Bajo luces LED, la hoja suele estar de 1°C a 3°C más fría que el aire por la transpiración. (En Sodio suele ser 0°C o +1°C).
+            </p>
+            <input type="range" id="offsetInput" min="-4" max="2" step="0.5" value="-2"
+                   class="w-full h-1.5 rounded-lg appearance-none cursor-pointer accent-purple bg-purple/20" />
+          </div>
+
+        </div>
+
+        <!-- Bloque 2: Selector de Etapa del Cultivo -->
+        <div class="rounded-3xl p-6 sm:p-7"
+             style="background:rgba(255,255,255,0.02);border:1px solid rgba(76,175,80,0.2);">
+          <label class="block text-xs font-bold text-text-main mb-3 uppercase tracking-wider">
+            Seleccioná la Etapa de tus Plantas
+          </label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <button type="button" class="stage-btn p-3 rounded-2xl border border-green/20 text-text-main/70 text-xs text-center transition flex flex-col items-center gap-1" data-stage="clon">
+              <span class="text-lg">🌱</span>
+              <span class="font-bold">Plántula / Esqueje</span>
+              <span class="text-[10px] text-text-main/40">0.4 - 0.8 kPa</span>
+            </button>
+            <button type="button" class="stage-btn active-stage p-3 rounded-2xl border border-green bg-green/20 text-green font-bold text-xs text-center transition flex flex-col items-center gap-1" data-stage="vege">
+              <span class="text-lg">🌿</span>
+              <span>Vegetativo</span>
+              <span class="text-[10px] text-green-soft">0.8 - 1.1 kPa</span>
+            </button>
+            <button type="button" class="stage-btn p-3 rounded-2xl border border-green/20 text-text-main/70 text-xs text-center transition flex flex-col items-center gap-1" data-stage="flora_early">
+              <span class="text-lg">🌸</span>
+              <span class="font-bold">Flora Temprana</span>
+              <span class="text-[10px] text-text-main/40">1.0 - 1.3 kPa</span>
+            </button>
+            <button type="button" class="stage-btn p-3 rounded-2xl border border-green/20 text-text-main/70 text-xs text-center transition flex flex-col items-center gap-1" data-stage="flora_late">
+              <span class="text-lg">🍇</span>
+              <span class="font-bold">Flora Tardía</span>
+              <span class="text-[10px] text-text-main/40">1.2 - 1.5 kPa</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Panel de Resultados y Diagnóstico (Derecha - Sticky) -->
+      <div class="lg:col-span-5 sticky top-24">
+        
+        <div class="rounded-3xl p-7 flex flex-col gap-6"
+             style="background:linear-gradient(145deg,rgba(27,15,42,0.95) 0%,rgba(6,14,7,0.95) 100%);border:2px solid rgba(139,110,208,0.4);box-shadow:0 12px 40px rgba(0,0,0,0.5);">
+          
+          <div class="border-b pb-5" style="border-color:rgba(139,110,208,0.2);">
+            <span class="eyebrow text-purple mb-1">Déficit de Presión de Vapor Calculado</span>
+            <div class="flex items-baseline gap-2 mt-2">
+              <span class="text-5xl font-black text-text-main font-mono" id="vpdValue">1.02</span>
+              <span class="text-base text-purple font-bold">kPa</span>
+            </div>
+            
+            <!-- Badge de estado -->
+            <div class="mt-3">
+              <span id="statusBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green/20 text-green border border-green/30">
+                <span class="w-2 h-2 rounded-full bg-green animate-pulse"></span>
+                Zona Óptima de Transpiración
+              </span>
+            </div>
+          </div>
+
+          <!-- Barra Medidora Visual -->
+          <div>
+            <div class="flex justify-between text-[11px] text-text-main/40 mb-1.5 font-mono">
+              <span>0.0 kPa (Saturado)</span>
+              <span>1.0 kPa</span>
+              <span>2.0+ kPa (Seco)</span>
+            </div>
+            <div class="relative h-4 rounded-full overflow-hidden bg-black/50 border border-white/10">
+              <!-- Gradiente de fondo: Azul (húmedo) -> Verde (óptimo) -> Amarillo -> Rojo -->
+              <div class="absolute inset-0" style="background:linear-gradient(to right, #3b82f6 0%, #22c55e 35%, #eab308 70%, #ef4444 100%); opacity:0.85;"></div>
+              <!-- Indicador de aguja -->
+              <div id="gaugePointer" class="absolute top-0 bottom-0 w-2 bg-white rounded-full shadow-[0_0_8px_white] -translate-x-1/2 transition-all duration-300" style="left:51%;"></div>
+            </div>
+          </div>
+
+          <!-- Diagnóstico agronómico -->
+          <div class="p-4 rounded-2xl bg-black/40 border border-purple/20 flex flex-col gap-2">
+            <span class="text-xs font-bold text-text-main flex items-center gap-1.5">
+              <span>💡</span> Recomendación de Clima
+            </span>
+            <p class="text-xs text-text-main/70 leading-relaxed" id="recommendationText">
+              Tu VPD se encuentra en el rango ideal para la fase vegetativa. La planta transpira con fluidez, transportando agua y sales nutricionales sin sobreesfuerzo de las raíces.
+            </p>
+          </div>
+
+          <!-- Detalles técnicos psicrométricos -->
+          <div class="grid grid-cols-2 gap-2 text-[11px] text-text-main/50 font-mono">
+            <div class="p-2.5 rounded-xl bg-black/20 border border-white/5">
+              <span class="block text-text-main/30">Temp. Foliar:</span>
+              <span class="text-text-main font-bold" id="leafTempCalc">23.0 °C</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-black/20 border border-white/5">
+              <span class="block text-text-main/30">Rango Objetivo:</span>
+              <span class="text-green-soft font-bold" id="targetRangeCalc">0.8 - 1.1 kPa</span>
+            </div>
+          </div>
+
+          <!-- Botón hacia Sensei IA -->
+          <div class="pt-4 border-t border-purple/20 text-center">
+            <p class="text-xs text-text-main/50 mb-2">¿Tus hojas muestran signos de estrés por temperatura?</p>
+            <a href="https://app.growai.com.ar?src=calc_vpd" target="_blank" rel="noopener noreferrer"
+               class="inline-block text-xs font-bold text-purple hover:text-white underline">
+              Analizar hojas con Sensei IA →
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Sección Científica y Explicativa (SEO & Google AdSense Value) -->
+    <div class="mt-24 max-w-4xl mx-auto flex flex-col gap-12 text-text-main/70 text-sm sm:text-base leading-relaxed">
+      
+      <div class="p-8 rounded-3xl" style="background:rgba(255,255,255,0.02);border:1px solid rgba(139,110,208,0.2);">
+        <h2 class="text-2xl font-black text-text-main mb-4">¿Qué es el VPD y por qué importa más que la humedad sola?</h2>
+        <p class="mb-4">
+          Muchas veces los cultivadores se limitan a buscar "60% de humedad" sin tener en cuenta la temperatura. Sin embargo, <strong>el aire caliente puede retener mucha más agua que el aire frío</strong>. Un 60% de humedad a 20°C no genera la misma presión biológica sobre la planta que un 60% a 30°C.
+        </p>
+        <p class="mb-4">
+          El <strong>VPD (Vapour Pressure Deficit)</strong> es la diferencia entre la presión de vapor que existe dentro de la cámara subestomática de la hoja (que siempre está al 100% de humedad relativa saturada) y la presión de vapor del aire circundante.
+        </p>
+        <p>
+          Si el aire está demasiado seco (VPD alto), la planta transpira más rápido de lo que las raíces pueden absorber agua, provocando hojas en forma de canoa, puntas quemadas y cierre de estomas (detención de la fotosíntesis). Si el aire está muy húmedo (VPD bajo), la planta no puede transpirar, los nutrientes no suben por el xilema y se disparan los hongos como la botrytis y el oídio.
+        </p>
+      </div>
+
+      <!-- Tabla de referencia rápida -->
+      <div class="p-8 rounded-3xl" style="background:rgba(255,255,255,0.02);border:1px solid rgba(76,175,80,0.2);">
+        <h2 class="text-2xl font-black text-text-main mb-4">Rangos de VPD recomendados por fase</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="border-b border-green/20 text-green-soft">
+              <tr>
+                <th class="py-3 px-4">Etapa del Cultivo</th>
+                <th class="py-3 px-4">VPD Ideal</th>
+                <th class="py-3 px-4">Humedad Relativa típica (a 24-26°C)</th>
+                <th class="py-3 px-4">Objetivo Biológico</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5 text-text-main/70">
+              <tr>
+                <td class="py-3 px-4 font-bold text-text-main">Plántulas y Esquejes</td>
+                <td class="py-3 px-4 font-mono text-purple font-semibold">0.4 - 0.8 kPa</td>
+                <td class="py-3 px-4">70% - 85%</td>
+                <td class="py-3 px-4">Sin raíces desarrolladas; absorben humedad del aire por las hojas.</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-bold text-text-main">Vegetativo Activo</td>
+                <td class="py-3 px-4 font-mono text-green font-semibold">0.8 - 1.1 kPa</td>
+                <td class="py-3 px-4">55% - 70%</td>
+                <td class="py-3 px-4">Máxima absorción de Nitrógeno y elongación foliar rápida.</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-bold text-text-main">Floración Temprana (Sem 1-4)</td>
+                <td class="py-3 px-4 font-mono text-green font-semibold">1.0 - 1.3 kPa</td>
+                <td class="py-3 px-4">45% - 55%</td>
+                <td class="py-3 px-4">Formación de cálices y absorción intensiva de Fósforo y Potasio.</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-bold text-text-main">Floración Tardía (Sem 5+)</td>
+                <td class="py-3 px-4 font-mono text-amber-400 font-semibold">1.2 - 1.5 kPa</td>
+                <td class="py-3 px-4">40% - 48%</td>
+                <td class="py-3 px-4">Protección contra podredumbre interna de cogollos densos.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- Script de cálculo de psicrometría -->
+<script>
+  (function() {
+    const tempInput = document.getElementById('tempInput');
+    const tempDisplay = document.getElementById('tempDisplay');
+    const rhInput = document.getElementById('rhInput');
+    const rhDisplay = document.getElementById('rhDisplay');
+    const offsetInput = document.getElementById('offsetInput');
+    const offsetDisplay = document.getElementById('offsetDisplay');
+
+    const vpdValueEl = document.getElementById('vpdValue');
+    const statusBadgeEl = document.getElementById('statusBadge');
+    const gaugePointer = document.getElementById('gaugePointer');
+    const recommendationText = document.getElementById('recommendationText');
+    const leafTempCalc = document.getElementById('leafTempCalc');
+    const targetRangeCalc = document.getElementById('targetRangeCalc');
+
+    let currentStage = 'vege';
+
+    const stageTargets = {
+      clon:        { min: 0.4, max: 0.8, label: '0.4 - 0.8 kPa' },
+      vege:        { min: 0.8, max: 1.1, label: '0.8 - 1.1 kPa' },
+      flora_early: { min: 1.0, max: 1.3, label: '1.0 - 1.3 kPa' },
+      flora_late:  { min: 1.2, max: 1.5, label: '1.2 - 1.5 kPa' }
+    };
+
+    function calculateVPD() {
+      const Tair = parseFloat(tempInput.value);
+      const RH = parseFloat(rhInput.value);
+      const offset = parseFloat(offsetInput.value);
+      const Tleaf = Tair + offset;
+
+      // Ecuación de Magnus-Tetens:
+      // SVP = 0.61078 * exp((17.27 * T) / (T + 237.3)) en kPa
+      const svpAir = 0.61078 * Math.exp((17.27 * Tair) / (Tair + 237.3));
+      const svpLeaf = 0.61078 * Math.exp((17.27 * Tleaf) / (Tleaf + 237.3));
+      const avpAir = svpAir * (RH / 100);
+
+      const vpd = Math.max(0, svpLeaf - avpAir);
+
+      // Render
+      tempDisplay.textContent = Tair.toFixed(1) + ' °C';
+      rhDisplay.textContent = RH + ' %';
+      offsetDisplay.textContent = (offset > 0 ? '+' : '') + offset.toFixed(1) + ' °C';
+      leafTempCalc.textContent = Tleaf.toFixed(1) + ' °C';
+
+      vpdValueEl.textContent = vpd.toFixed(2);
+
+      // Posición del medidor (0 kPa a 2.0 kPa mapeado a 0% - 100%)
+      const gaugePct = Math.min(100, Math.max(0, (vpd / 2.0) * 100));
+      gaugePointer.style.left = gaugePct + '%';
+
+      // Evaluación según etapa
+      const target = stageTargets[currentStage];
+      targetRangeCalc.textContent = target.label;
+
+      if (vpd < 0.35) {
+        statusBadgeEl.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30';
+        statusBadgeEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-blue-400"></span> Peligro: Aire Demasiado Saturado';
+        recommendationText.textContent = 'El aire tiene tanta humedad que la planta no puede evaporar agua. Riesgo muy alto de condensación foliar, falta de transporte de calcio y hongos. Subí la ventilación/extracción o baja la humedad.';
+      } else if (vpd < target.min) {
+        statusBadgeEl.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30';
+        statusBadgeEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-sky-300"></span> VPD Bajo (Transpiración Lenta)';
+        recommendationText.textContent = `Para esta etapa tu objetivo es ${target.label}. La planta transpira poco. Aumentá levemente la temperatura de la sala o reducí la humedad unos 5-10% para acelerar el metabolismo.`;
+      } else if (vpd <= target.max) {
+        statusBadgeEl.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green/20 text-green border border-green/30';
+        statusBadgeEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-green animate-pulse"></span> Zona Óptima de Crecimiento';
+        recommendationText.textContent = `¡Excelente! Estás dentro de la ventana perfecta (${target.label}). Los estomas permanecen abiertos al 100%, absorbiendo CO2 y transportando agua y sales minerales de manera ideal.`;
+      } else if (vpd <= target.max + 0.3) {
+        statusBadgeEl.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30';
+        statusBadgeEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-300"></span> VPD Ligeramente Alto';
+        recommendationText.textContent = `El aire está algo seco para la etapa actual. La planta empieza a protegerse cerrando parcialmente los estomas. Si podés, humedecé el ambiente o bajá un poco la temperatura.`;
+      } else {
+        statusBadgeEl.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30';
+        statusBadgeEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-400"></span> Peligro: Estrés Hídrico Severo';
+        recommendationText.textContent = 'El ambiente está excesivamente seco y caliente. Las hojas pierden agua a un ritmo destructivo, provocando quemaduras apicales y cierre total de estomas. Necesitás humidificar de urgencia.';
+      }
+    }
+
+    tempInput.addEventListener('input', calculateVPD);
+    rhInput.addEventListener('input', calculateVPD);
+    offsetInput.addEventListener('input', calculateVPD);
+
+    // Selección de etapas
+    document.querySelectorAll('.stage-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.stage-btn').forEach(b => {
+          b.classList.remove('border-green', 'bg-green/20', 'text-green', 'font-bold');
+          b.classList.add('border-green/20', 'text-text-main/70');
+        });
+        this.classList.remove('border-green/20', 'text-text-main/70');
+        this.classList.add('border-green', 'bg-green/20', 'text-green', 'font-bold');
+        currentStage = this.dataset.stage;
+        calculateVPD();
+      });
+    });
+
+    calculateVPD();
+  })();
+</script>

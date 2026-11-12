@@ -1,0 +1,364 @@
+---
+layout: layouts/base.njk
+title: "Calculadora de Macetas, Sustrato y Espacio Indoor | GrowAI"
+description: "Calculá cuántas macetas entran en tu carpa, los litros de sustrato necesarios, bolsas a comprar y potencia LED recomendada según el tamaño de tu indoor."
+permalink: /herramientas/calculadora-sustrato-macetas/
+---
+
+<section class="py-16 bg-section-a">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    
+    <!-- Breadcrumb -->
+    <div class="mb-6 flex items-center gap-2 text-xs text-text-main/40">
+      <a href="/herramientas/" class="hover:text-green transition">Herramientas</a>
+      <span>/</span>
+      <span class="text-text-main/70">Calculadora de Macetas y Sustrato</span>
+    </div>
+
+    <!-- Encabezado -->
+    <div class="mb-12">
+      <span class="eyebrow mb-2">Planificación de Carpas & Distribución</span>
+      <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-text-main mt-2">
+        Calculadora de Macetas, Sustrato y Espacio
+      </h1>
+      <p class="text-text-main/60 text-sm sm:text-base mt-3 max-w-2xl leading-relaxed">
+        Optimizá cada centímetro de tu indoor. Calculá la cantidad ideal de plantas, volumen total de tierra o coco, bolsas a comprar y los requerimientos de luz y extracción para tu superficie.
+      </p>
+    </div>
+
+    <!-- Grid de la Calculadora -->
+    <div class="grid lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Panel de Controles (Izquierda) -->
+      <div class="lg:col-span-7 flex flex-col gap-6">
+        
+        <!-- Bloque 1: Dimensiones de la Carpa / Espacio -->
+        <div class="rounded-3xl p-6 sm:p-7"
+             style="background:rgba(255,255,255,0.02);border:1px solid rgba(76,175,80,0.2);">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="font-bold text-base text-text-main flex items-center gap-2">
+              <span class="text-green text-lg">📐</span> Medidas del Espacio
+            </h2>
+            <span class="text-xs text-green-soft font-mono font-bold" id="areaDisplay">80 × 80 cm · 0.64 m²</span>
+          </div>
+
+          <!-- Presets de carpas populares -->
+          <label class="block text-xs text-text-main/50 mb-2">Medidas estándar de carpas:</label>
+          <div class="grid grid-cols-3 sm:grid-cols-5 gap-2 mb-5">
+            <button type="button" class="preset-tent px-2 py-2 rounded-xl border border-green/30 text-green-soft text-xs text-center hover:bg-green/10" data-w="60" data-d="60" data-h="160">60×60</button>
+            <button type="button" class="preset-tent active-tent px-2 py-2 rounded-xl border border-green bg-green/20 text-green font-bold text-xs text-center" data-w="80" data-d="80" data-h="180">80×80</button>
+            <button type="button" class="preset-tent px-2 py-2 rounded-xl border border-green/30 text-green-soft text-xs text-center hover:bg-green/10" data-w="100" data-d="100" data-h="200">100×100</button>
+            <button type="button" class="preset-tent px-2 py-2 rounded-xl border border-green/30 text-green-soft text-xs text-center hover:bg-green/10" data-w="120" data-d="120" data-h="200">120×120</button>
+            <button type="button" class="preset-tent px-2 py-2 rounded-xl border border-green/30 text-green-soft text-xs text-center hover:bg-green/10" data-w="150" data-d="150" data-h="200">150×150</button>
+          </div>
+
+          <!-- Inputs personalizados -->
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="block text-[11px] text-text-main/40 mb-1">Ancho (cm)</label>
+              <input type="number" id="tentW" value="80" min="30" max="500" step="5"
+                     class="w-full px-3 py-2 bg-black/40 border border-green/30 rounded-xl text-xs font-bold text-text-main" />
+            </div>
+            <div>
+              <label class="block text-[11px] text-text-main/40 mb-1">Largo (cm)</label>
+              <input type="number" id="tentD" value="80" min="30" max="500" step="5"
+                     class="w-full px-3 py-2 bg-black/40 border border-green/30 rounded-xl text-xs font-bold text-text-main" />
+            </div>
+            <div>
+              <label class="block text-[11px] text-text-main/40 mb-1">Alto (cm)</label>
+              <input type="number" id="tentH" value="180" min="50" max="300" step="5"
+                     class="w-full px-3 py-2 bg-black/40 border border-green/30 rounded-xl text-xs font-bold text-text-main" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Bloque 2: Técnica de Cultivo y Tamaño de Maceta -->
+        <div class="rounded-3xl p-6 sm:p-7"
+             style="background:rgba(255,255,255,0.02);border:1px solid rgba(76,175,80,0.15);">
+          <h2 class="font-bold text-base text-text-main flex items-center gap-2 mb-4">
+            <span class="text-green text-lg">🪴</span> Estilo de Cultivo & Macetas
+          </h2>
+
+          <label class="block text-xs text-text-main/50 mb-2">Técnica preferida:</label>
+          <div class="grid sm:grid-cols-3 gap-2.5 mb-5">
+            <button type="button" class="tech-btn active-tech p-3 rounded-2xl border border-green bg-green/20 text-green font-bold text-xs text-left" data-tech="tradicional">
+              <span class="block text-sm mb-1">🌿 Tradicional</span>
+              <span class="text-[10px] text-green-soft font-normal">Macetas de 7L a 11L con podas (4 a 6 p/m²)</span>
+            </button>
+            <button type="button" class="tech-btn p-3 rounded-2xl border border-green/20 text-text-main/70 text-xs text-left hover:border-green/50" data-tech="scrog">
+              <span class="block text-sm mb-1">🕸️ SCROG</span>
+              <span class="text-[10px] text-text-main/40 font-normal">Pocas plantas grandes (15L-20L) con red</span>
+            </button>
+            <button type="button" class="tech-btn p-3 rounded-2xl border border-green/20 text-text-main/70 text-xs text-left hover:border-green/50" data-tech="sog">
+              <span class="block text-sm mb-1">🌲 SOG (Sea of Green)</span>
+              <span class="text-[10px] text-text-main/40 font-normal">Muchas plantas en macetas chicas (3L-5L)</span>
+            </button>
+          </div>
+
+          <!-- Selector de Litraje -->
+          <div class="p-4 rounded-2xl bg-black/20 border border-green/10">
+            <div class="flex justify-between items-center mb-2">
+              <label class="text-xs font-semibold text-text-main">Capacidad de cada maceta final:</label>
+              <span class="text-xs font-mono font-bold text-green" id="potSizeDisplay">10 Litros</span>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" class="pot-btn px-3 py-1.5 rounded-xl border border-green/30 text-green-soft text-xs" data-liters="3">3L</button>
+              <button type="button" class="pot-btn px-3 py-1.5 rounded-xl border border-green/30 text-green-soft text-xs" data-liters="5">5L</button>
+              <button type="button" class="pot-btn px-3 py-1.5 rounded-xl border border-green/30 text-green-soft text-xs" data-liters="7">7L</button>
+              <button type="button" class="pot-btn active-pot px-3 py-1.5 rounded-xl border border-green bg-green/20 text-green font-bold text-xs" data-liters="10">10L</button>
+              <button type="button" class="pot-btn px-3 py-1.5 rounded-xl border border-green/30 text-green-soft text-xs" data-liters="15">15L</button>
+              <button type="button" class="pot-btn px-3 py-1.5 rounded-xl border border-green/30 text-green-soft text-xs" data-liters="20">20L</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Panel de Resultados (Derecha - Sticky) -->
+      <div class="lg:col-span-5 sticky top-24">
+        
+        <div class="rounded-3xl p-7 flex flex-col gap-6"
+             style="background:linear-gradient(145deg,rgba(13,31,15,0.95) 0%,rgba(6,14,7,0.95) 100%);border:2px solid rgba(76,175,80,0.35);box-shadow:0 12px 40px rgba(0,0,0,0.5);">
+          
+          <div class="border-b pb-5" style="border-color:rgba(76,175,80,0.15);">
+            <span class="eyebrow mb-1">Configuración Óptima Calculada</span>
+            <div class="flex items-baseline gap-2 mt-2">
+              <span class="text-4xl sm:text-5xl font-black text-text-main font-mono" id="potCount">4</span>
+              <span class="text-base text-green-soft font-bold">Macetas</span>
+            </div>
+            <p class="text-xs text-text-main/50 mt-1" id="distributionText">
+              Distribución sugerida: Matriz de 2 × 2
+            </p>
+          </div>
+
+          <!-- Métricas de sustrato -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="p-3.5 rounded-2xl bg-black/30 border border-green/10">
+              <span class="block text-[11px] text-text-main/40 uppercase">Sustrato Total</span>
+              <span class="text-lg font-mono font-black text-text-main mt-1 block" id="totalSubstrate">44 Litros</span>
+              <span class="text-[10px] text-text-main/40">+10% por compactación</span>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-black/30 border border-green/10">
+              <span class="block text-[11px] text-text-main/40 uppercase">Bolsas a Comprar</span>
+              <span class="text-sm font-mono font-bold text-green mt-1 block" id="bagSuggestion">1 bolsa de 50L</span>
+            </div>
+          </div>
+
+          <!-- Requerimientos del indoor -->
+          <div class="p-4 rounded-2xl bg-green/5 border border-green/20 flex flex-col gap-3">
+            <span class="text-xs font-bold text-text-main flex items-center gap-1.5">
+              <span>💡</span> Equipamiento Recomendado para este espacio
+            </span>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-text-main/60">Potencia LED recomendada:</span>
+              <span class="font-mono font-bold text-green" id="recommendedLed">200W - 250W</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-text-main/60">Extracción mínima de aire:</span>
+              <span class="font-mono font-bold text-green" id="recommendedCfm">110 m³/h</span>
+            </div>
+          </div>
+
+          <!-- Banner hacia la app -->
+          <div class="pt-4 border-t border-green/10 text-center">
+            <p class="text-xs text-text-main/50 mb-2">Llevá la bitácora de cada maceta desde el primer día</p>
+            <a href="https://app.growai.com.ar?src=calc_sustrato" target="_blank" rel="noopener noreferrer"
+               class="inline-block text-xs font-bold text-green hover:underline">
+              Crear cultivo en GrowAI →
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Sección Informativa Agronómica (SEO & AdSense Value) -->
+    <div class="mt-24 max-w-4xl mx-auto flex flex-col gap-12 text-text-main/70 text-sm sm:text-base leading-relaxed">
+      
+      <div class="p-8 rounded-3xl" style="background:rgba(255,255,255,0.02);border:1px solid rgba(76,175,80,0.15);">
+        <h2 class="text-2xl font-black text-text-main mb-4">¿Macetas Geotextiles, de Plástico o Air-Pot?</h2>
+        <div class="grid sm:grid-cols-3 gap-4 text-xs sm:text-sm">
+          <div class="p-4 rounded-2xl bg-black/20 border border-green/10">
+            <h3 class="font-bold text-green mb-1.5">Macetas Geotextiles (Tela)</h3>
+            <p class="text-text-main/60">
+              Permiten la <strong>poda aérea de raíces</strong>: cuando la raíz toca la tela y el aire exterior, se frena y genera miles de ramificaciones secundarias, evitando raíces enroscadas en espiral. Mejoran la oxigenación un 40%.
+            </p>
+          </div>
+          <div class="p-4 rounded-2xl bg-black/20 border border-green/10">
+            <h3 class="font-bold text-green mb-1.5">Macetas Plásticas Sopladas</h3>
+            <p class="text-text-main/60">
+              Económicas y fáciles de desinfectar entre ciclos. Sin embargo, retienen la humedad por más tiempo y las raíces tienden a concentrarse en el fondo, exigiendo un control más riguroso del drenaje.
+            </p>
+          </div>
+          <div class="p-4 rounded-2xl bg-black/20 border border-green/10">
+            <h3 class="font-bold text-green mb-1.5">Macetas Radiculares (Air-Pot)</h3>
+            <p class="text-text-main/60">
+              Con conos perforados dirigidos hacia afuera. Ofrecen un drenaje ultra rápido y excelente aireación, ideales para quienes fertilizan con sistemas de fertirriego diario o sustratos de fibra de coco.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-8 rounded-3xl" style="background:rgba(255,255,255,0.02);border:1px solid rgba(76,175,80,0.15);">
+        <h2 class="text-2xl font-black text-text-main mb-4">Composición ideal de un sustrato para cultivo indoor</h2>
+        <p class="mb-4">
+          Un sustrato de alto rendimiento no es simplemente tierra negra del jardín; requiere una estructura física balanceada que retenga humedad sin asfixiar a las raíces:
+        </p>
+        <ul class="list-disc pl-5 flex flex-col gap-2 text-sm text-text-main/60">
+          <li><strong>Turba de Sphagnum (40-50%):</strong> Base porosa y liviana que retiene agua y aire en proporciones equilibradas.</li>
+          <li><strong>Perlita expandida (15-20%):</strong> Mineral volcánico inerte que previene la compactación y facilita el drenaje del agua excedente.</li>
+          <li><strong>Humus de Lombriz (15-20%):</strong> Aporta carga microbiana viva, ácidos húmicos y fúlvicos, y nutrientes de liberación gradual.</li>
+          <li><strong>Fibra de Coco (10-15%):</strong> Facilita la rehidratación uniforme del sustrato si se llega a secar por completo.</li>
+          <li><strong>Micorrizas y Trichodermas:</strong> Hongos benéficos que colonizan las raíces protegiéndolas de patógenos radiculares como el <em>Pythium</em>.</li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- Lógica de cálculo -->
+<script>
+  (function() {
+    const tentWInput = document.getElementById('tentW');
+    const tentDInput = document.getElementById('tentD');
+    const tentHInput = document.getElementById('tentH');
+    const areaDisplay = document.getElementById('areaDisplay');
+    const potSizeDisplay = document.getElementById('potSizeDisplay');
+
+    const potCountEl = document.getElementById('potCount');
+    const distributionTextEl = document.getElementById('distributionText');
+    const totalSubstrateEl = document.getElementById('totalSubstrate');
+    const bagSuggestionEl = document.getElementById('bagSuggestion');
+    const recommendedLedEl = document.getElementById('recommendedLed');
+    const recommendedCfmEl = document.getElementById('recommendedCfm');
+
+    let currentLiters = 10;
+    let currentTech = 'tradicional';
+
+    function calculate() {
+      const w = parseFloat(tentWInput.value) || 80;
+      const d = parseFloat(tentDInput.value) || 80;
+      const h = parseFloat(tentHInput.value) || 180;
+
+      const areaM2 = (w * d) / 10000;
+      areaDisplay.textContent = `${w} × ${d} cm · ${areaM2.toFixed(2)} m²`;
+      potSizeDisplay.textContent = `${currentLiters} Litros`;
+
+      // Calcular cantidad de macetas según técnica y m2
+      let plants = 4;
+      let dist = 'Matriz recomendada: 2 × 2';
+
+      if (currentTech === 'sog') {
+        // Sea of Green: ~16 a 25 plantas por m2
+        plants = Math.max(4, Math.round(areaM2 * 18));
+      } else if (currentTech === 'scrog') {
+        // SCROG: 1 a 4 plantas por m2
+        plants = Math.max(1, Math.round(areaM2 * 3));
+      } else {
+        // Tradicional
+        if (currentLiters <= 5) {
+          plants = Math.round(areaM2 * 12);
+        } else if (currentLiters <= 11) {
+          plants = Math.round(areaM2 * 6);
+        } else {
+          plants = Math.round(areaM2 * 3);
+        }
+        plants = Math.max(1, plants);
+      }
+
+      // Distribución visual
+      const sqrt = Math.round(Math.sqrt(plants));
+      const cols = sqrt;
+      const rows = Math.ceil(plants / cols);
+      dist = `Distribución aproximada: ${cols} × ${rows} filas`;
+
+      // Sustrato con 10% por compactación de riego
+      const baseSubstrate = plants * currentLiters;
+      const totalSubstrate = Math.round(baseSubstrate * 1.1);
+
+      // Bolsas recomendadas (bolsas de 50L y 20L)
+      let bagsText = '';
+      if (totalSubstrate <= 25) {
+        bagsText = '1 bolsa de 20L o 25L';
+      } else if (totalSubstrate <= 55) {
+        bagsText = '1 bolsa grande de 50L';
+      } else if (totalSubstrate <= 80) {
+        bagsText = '1 bolsa de 50L + 1 de 20L';
+      } else {
+        const bags50 = Math.ceil(totalSubstrate / 50);
+        bagsText = `${bags50} bolsas de 50L`;
+      }
+
+      // Potencia LED recomendada (300W - 400W por m2)
+      const minW = Math.round(areaM2 * 300);
+      const maxW = Math.round(areaM2 * 400);
+
+      // Extracción de aire: Volumen m3 * 60 renovaciones/hora * 1.3 factor filtro
+      const volumeM3 = (w * d * h) / 1000000;
+      const minCfm = Math.round(volumeM3 * 60 * 1.3);
+
+      // Update DOM
+      potCountEl.textContent = plants;
+      distributionTextEl.textContent = dist;
+      totalSubstrateEl.textContent = totalSubstrate + ' Litros';
+      bagSuggestionEl.textContent = bagsText;
+      recommendedLedEl.textContent = `${minW}W - ${maxW}W reales`;
+      recommendedCfmEl.textContent = `${minCfm} m³/h`;
+    }
+
+    tentWInput.addEventListener('input', calculate);
+    tentDInput.addEventListener('input', calculate);
+    tentHInput.addEventListener('input', calculate);
+
+    // Presets carpa
+    document.querySelectorAll('.preset-tent').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.preset-tent').forEach(b => {
+          b.classList.remove('border-green', 'bg-green/20', 'text-green', 'font-bold');
+          b.classList.add('border-green/30', 'text-green-soft');
+        });
+        this.classList.remove('border-green/30', 'text-green-soft');
+        this.classList.add('border-green', 'bg-green/20', 'text-green', 'font-bold');
+
+        tentWInput.value = this.dataset.w;
+        tentDInput.value = this.dataset.d;
+        tentHInput.value = this.dataset.h;
+        calculate();
+      });
+    });
+
+    // Técnica
+    document.querySelectorAll('.tech-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tech-btn').forEach(b => {
+          b.classList.remove('border-green', 'bg-green/20', 'text-green', 'font-bold');
+          b.classList.add('border-green/20', 'text-text-main/70');
+        });
+        this.classList.remove('border-green/20', 'text-text-main/70');
+        this.classList.add('border-green', 'bg-green/20', 'text-green', 'font-bold');
+        currentTech = this.dataset.tech;
+        calculate();
+      });
+    });
+
+    // Litros
+    document.querySelectorAll('.pot-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.pot-btn').forEach(b => {
+          b.classList.remove('border-green', 'bg-green/20', 'text-green', 'font-bold');
+          b.classList.add('border-green/30', 'text-green-soft');
+        });
+        this.classList.remove('border-green/30', 'text-green-soft');
+        this.classList.add('border-green', 'bg-green/20', 'text-green', 'font-bold');
+        currentLiters = parseInt(this.dataset.liters, 10);
+        calculate();
+      });
+    });
+
+    calculate();
+  })();
+</script>

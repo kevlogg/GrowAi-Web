@@ -1,0 +1,508 @@
+---
+layout: layouts/base.njk
+title: "Calculadora de Consumo Eléctrico Indoor (Costo en $ ARS y kWh) | GrowAI"
+description: "Calculá con precisión el consumo en kWh y el gasto mensual de tus luces LED o Sodio y periféricos de cultivo indoor en pesos argentinos."
+permalink: /herramientas/calculadora-consumo-electrico/
+---
+
+<section class="py-16 bg-section-a">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    
+    <!-- Breadcrumb -->
+    <div class="mb-6 flex items-center gap-2 text-xs text-text-main/40">
+      <a href="/herramientas/" class="hover:text-green transition">Herramientas</a>
+      <span>/</span>
+      <span class="text-text-main/70">Calculadora de Consumo Eléctrico</span>
+    </div>
+
+    <!-- Encabezado -->
+    <div class="mb-12">
+      <span class="eyebrow mb-2">Herramienta Gratuita · Argentina</span>
+      <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-text-main mt-2">
+        Calculadora de Consumo Eléctrico para Indoor
+      </h1>
+      <p class="text-text-main/60 text-sm sm:text-base mt-3 max-w-2xl leading-relaxed">
+        Conocé con precisión matemática cuántos kilowatt-hora (kWh) consume tu sala o carpa y calculá el costo real en tu factura de luz según las horas de fotoperiodo y las tarifas vigentes.
+      </p>
+    </div>
+
+    <!-- Grid de la Calculadora -->
+    <div class="grid lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Panel de Controles (Izquierda) -->
+      <div class="lg:col-span-7 flex flex-col gap-6">
+        
+        <!-- Bloque 1: Iluminación Principal -->
+        <div class="rounded-3xl p-6 sm:p-7"
+             style="background:rgba(255,255,255,0.02);border:1px solid rgba(76,175,80,0.2);">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="font-bold text-base text-text-main flex items-center gap-2">
+              <span class="text-green text-lg">💡</span> Iluminación Principal
+            </h2>
+            <span class="text-xs text-green-soft font-mono font-bold" id="lightWattsDisplay">240 W</span>
+          </div>
+
+          <label class="block text-xs text-text-main/50 mb-2">Potencia real de la lámpara (Watts medidos al enchufe)</label>
+          <input type="range" id="lightWatts" min="50" max="1200" step="10" value="240"
+                 class="w-full h-2 rounded-lg appearance-none cursor-pointer accent-green bg-green/20 mb-3" />
+          
+          <!-- Presets rápidos -->
+          <div class="flex flex-wrap gap-2 mb-5">
+            <button type="button" class="preset-light px-3 py-1 rounded-full text-xs border border-green/30 text-green-soft hover:bg-green/10" data-val="100">100W</button>
+            <button type="button" class="preset-light px-3 py-1 rounded-full text-xs border border-green/30 text-green-soft hover:bg-green/10" data-val="150">150W</button>
+            <button type="button" class="preset-light active-preset px-3 py-1 rounded-full text-xs border border-green bg-green/20 text-green font-bold" data-val="240">240W QB</button>
+            <button type="button" class="preset-light px-3 py-1 rounded-full text-xs border border-green/30 text-green-soft hover:bg-green/10" data-val="300">300W</button>
+            <button type="button" class="preset-light px-3 py-1 rounded-full text-xs border border-green/30 text-green-soft hover:bg-green/10" data-val="480">480W</button>
+            <button type="button" class="preset-light px-3 py-1 rounded-full text-xs border border-green/30 text-green-soft hover:bg-green/10" data-val="600">600W Sodio</button>
+          </div>
+
+          <!-- Horas de luz -->
+          <label class="block text-xs text-text-main/50 mb-2">Fotoperiodo diario (horas de luz encendida)</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" class="fotope-btn py-2 px-3 rounded-xl border border-green bg-green/20 text-green text-xs font-bold transition text-center" data-hours="18">
+              18h (Vegetativo)
+            </button>
+            <button type="button" class="fotope-btn py-2 px-3 rounded-xl border border-green/30 text-text-main/70 text-xs font-medium hover:border-green/60 transition text-center" data-hours="12">
+              12h (Floración)
+            </button>
+            <button type="button" class="fotope-btn py-2 px-3 rounded-xl border border-green/30 text-text-main/70 text-xs font-medium hover:border-green/60 transition text-center" data-hours="20">
+              20h (Automáticas)
+            </button>
+          </div>
+          <input type="hidden" id="lightHours" value="18" />
+        </div>
+
+        <!-- Bloque 2: Periféricos y Ventilación -->
+        <div class="rounded-3xl p-6 sm:p-7"
+             style="background:rgba(255,255,255,0.02);border:1px solid rgba(76,175,80,0.15);">
+          <h2 class="font-bold text-base text-text-main flex items-center gap-2 mb-4">
+            <span class="text-green text-lg">🌀</span> Ventilación y Equipamiento Extra
+          </h2>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <!-- Extractor -->
+            <div class="p-3.5 rounded-2xl bg-black/20 border border-green/10">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs font-semibold text-text-main">Extractor de aire</span>
+                <span class="text-[11px] text-green-soft font-mono" id="extractorDisplay">45 W · 24h</span>
+              </div>
+              <div class="flex gap-2 items-center mt-2">
+                <input type="number" id="extractorWatts" value="45" min="0" max="250" class="w-20 px-2 py-1 bg-black/40 border border-green/30 rounded-lg text-xs text-text-main" placeholder="Watts" />
+                <span class="text-xs text-text-main/40">Watts</span>
+                <select id="extractorHours" class="ml-auto px-2 py-1 bg-black/40 border border-green/30 rounded-lg text-xs text-text-main">
+                  <option value="24" selected>24h continuo</option>
+                  <option value="18">18h con luz</option>
+                  <option value="12">12h alternado</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Ventilador oscilante -->
+            <div class="p-3.5 rounded-2xl bg-black/20 border border-green/10">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs font-semibold text-text-main">Ventilador interno</span>
+                <span class="text-[11px] text-green-soft font-mono" id="fanDisplay">20 W · 24h</span>
+              </div>
+              <div class="flex gap-2 items-center mt-2">
+                <input type="number" id="fanWatts" value="20" min="0" max="150" class="w-20 px-2 py-1 bg-black/40 border border-green/30 rounded-lg text-xs text-text-main" placeholder="Watts" />
+                <span class="text-xs text-text-main/40">Watts</span>
+                <select id="fanHours" class="ml-auto px-2 py-1 bg-black/40 border border-green/30 rounded-lg text-xs text-text-main">
+                  <option value="24" selected>24h continuo</option>
+                  <option value="18">18h con luz</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Climatización Opcional -->
+            <div class="sm:col-span-2 p-3.5 rounded-2xl bg-black/20 border border-green/10">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs font-semibold text-text-main">Deshumidificador / Caloventor / Humidificador (Opcional)</span>
+                <span class="text-[11px] text-green-soft font-mono" id="extraDisplay">0 W</span>
+              </div>
+              <div class="flex gap-2 items-center mt-2">
+                <input type="number" id="extraWatts" value="0" min="0" max="2500" class="w-24 px-2 py-1 bg-black/40 border border-green/30 rounded-lg text-xs text-text-main" placeholder="0 W" />
+                <span class="text-xs text-text-main/40">Watts</span>
+                <select id="extraHours" class="ml-auto px-2 py-1 bg-black/40 border border-green/30 rounded-lg text-xs text-text-main">
+                  <option value="0">Apagado (0h)</option>
+                  <option value="4">4h por día</option>
+                  <option value="8">8h por día</option>
+                  <option value="12">12h por día</option>
+                  <option value="24">24h continuo</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bloque 3: Tarifa Eléctrica -->
+        <div class="rounded-3xl p-6 sm:p-7"
+             style="background:rgba(255,255,255,0.02);border:1px solid rgba(76,175,80,0.15);">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="font-bold text-base text-text-main flex items-center gap-2">
+              <span class="text-green text-lg">⚡</span> Tarifa por kWh ($ ARS)
+            </h2>
+            <span class="text-xs text-green-soft font-mono font-bold" id="rateDisplay">$ 130 / kWh</span>
+          </div>
+
+          <label class="block text-xs text-text-main/50 mb-2">Precio promedio por kilowatt-hora (fijate en el cargo variable de tu factura)</label>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-sm font-bold text-text-main">$</span>
+            <input type="number" id="kwhRate" value="130" min="10" max="1000" step="5"
+                   class="w-32 px-3 py-2 bg-black/40 border border-green/30 rounded-xl text-sm font-bold text-green focus:outline-none focus:border-green" />
+            <span class="text-xs text-text-main/40">ARS por cada kWh consumido</span>
+          </div>
+
+          <!-- Presets de segmentación en Argentina -->
+          <span class="block text-[11px] text-text-main/40 uppercase tracking-wider mb-2">Referencias de segmentación energética:</span>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" class="rate-preset px-2 py-2 rounded-xl border border-green/20 text-text-main/70 text-xs hover:border-green/50 text-center" data-rate="85">
+              Nivel N2<br><span class="text-[10px] text-text-main/40">Bajos ingresos (~$85)</span>
+            </button>
+            <button type="button" class="rate-preset active-rate px-2 py-2 rounded-xl border border-green bg-green/20 text-green font-bold text-xs text-center" data-rate="130">
+              Nivel N3<br><span class="text-[10px] text-green-soft">Medios (~$130)</span>
+            </button>
+            <button type="button" class="rate-preset px-2 py-2 rounded-xl border border-green/20 text-text-main/70 text-xs hover:border-green/50 text-center" data-rate="180">
+              Nivel N1<br><span class="text-[10px] text-text-main/40">Tarifa plena (~$180)</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Panel de Resultados (Derecha - Sticky) -->
+      <div class="lg:col-span-5 sticky top-24">
+        
+        <div class="rounded-3xl p-7 flex flex-col gap-6"
+             style="background:linear-gradient(145deg,rgba(13,31,15,0.95) 0%,rgba(6,14,7,0.95) 100%);border:2px solid rgba(76,175,80,0.35);box-shadow:0 12px 40px rgba(0,0,0,0.5);">
+          
+          <div class="border-b pb-5" style="border-color:rgba(76,175,80,0.15);">
+            <span class="eyebrow mb-1">Estimación en Tiempo Real</span>
+            <div class="flex items-baseline gap-2 mt-2">
+              <span class="text-4xl sm:text-5xl font-black text-text-main font-mono" id="monthlyCost">$ 22.932</span>
+              <span class="text-xs text-text-main/40 uppercase font-semibold">/ mes</span>
+            </div>
+            <p class="text-xs text-green-soft mt-1.5 flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-green animate-pulse"></span>
+              Aprox. <strong id="dailyCost">$ 764</strong> por día
+            </p>
+          </div>
+
+          <!-- Métricas clave -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="p-3.5 rounded-2xl bg-black/30 border border-green/10">
+              <span class="block text-[11px] text-text-main/40 uppercase">Consumo Diario</span>
+              <span class="text-lg font-mono font-black text-text-main mt-1 block" id="dailyKwh">5.88 kWh</span>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-black/30 border border-green/10">
+              <span class="block text-[11px] text-text-main/40 uppercase">Consumo Mensual</span>
+              <span class="text-lg font-mono font-black text-text-main mt-1 block" id="monthlyKwh">176.4 kWh</span>
+            </div>
+          </div>
+
+          <!-- Desglose por componente -->
+          <div>
+            <span class="block text-xs font-bold text-text-main mb-3">Distribución del gasto energético</span>
+            <div class="flex h-3 rounded-full overflow-hidden mb-3 bg-black/40">
+              <div id="barLight" class="bg-green transition-all duration-300" style="width:75%;"></div>
+              <div id="barVent" class="bg-purple transition-all duration-300" style="width:25%;"></div>
+              <div id="barExtra" class="bg-amber-400 transition-all duration-300" style="width:0%;"></div>
+            </div>
+            <div class="flex flex-col gap-1.5 text-xs text-text-main/60">
+              <div class="flex items-center justify-between">
+                <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-green"></span> Luz principal</span>
+                <span class="font-mono font-semibold" id="lightPct">75%</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-purple"></span> Extracción & ventilador</span>
+                <span class="font-mono font-semibold" id="ventPct">25%</span>
+              </div>
+              <div class="flex items-center justify-between" id="rowExtra" style="display:none;">
+                <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Climatización extra</span>
+                <span class="font-mono font-semibold" id="extraPct">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Estimación del ciclo completo -->
+          <div class="p-4 rounded-2xl bg-green/5 border border-green/20">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-bold text-green-soft">Costo Ciclo Completo (13 sem.)</span>
+              <span class="text-xs text-text-main/40">4 sem vege + 9 sem flora</span>
+            </div>
+            <span class="text-2xl font-black font-mono text-text-main mt-1 block" id="cycleCost">$ 64.210</span>
+            <p class="text-[11px] text-text-main/50 mt-1">
+              Calculado combinando 18h en vegetativo y 12h en floración con tu configuración.
+            </p>
+          </div>
+
+          <!-- Botón copiar -->
+          <button type="button" id="copyReportBtn"
+                  class="w-full py-3 px-4 rounded-full border border-green/40 text-green-soft font-bold text-xs hover:border-green hover:bg-green/10 transition flex items-center justify-center gap-2">
+            📋 Copiar resumen para mis notas
+          </button>
+
+          <!-- Banner app -->
+          <div class="pt-4 border-t border-green/10 text-center">
+            <p class="text-xs text-text-main/50 mb-2">¿Querés registrar los días de cultivo y llevar control del gasto?</p>
+            <a href="https://app.growai.com.ar?src=calc_consumo" target="_blank" rel="noopener noreferrer"
+               class="inline-block text-xs font-bold text-green hover:underline">
+              Abrir GrowAI App →
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Sección Educativa y Explicativa (SEO & AdSense Value) -->
+    <div class="mt-24 max-w-4xl mx-auto flex flex-col gap-12 text-text-main/70 text-sm sm:text-base leading-relaxed">
+      
+      <div class="p-8 rounded-3xl" style="background:rgba(255,255,255,0.02);border:1px solid rgba(76,175,80,0.15);">
+        <h2 class="text-2xl font-black text-text-main mb-4">¿Cómo se calcula el consumo eléctrico de un indoor?</h2>
+        <p class="mb-4">
+          La fórmula física para determinar el consumo de cualquier artefacto eléctrico es:
+        </p>
+        <div class="p-4 rounded-xl bg-black/40 font-mono text-xs text-green-soft mb-4">
+          Consumo Diario (kWh) = [ Potencia (Watts) × Horas de uso al día ] ÷ 1000
+        </div>
+        <p class="mb-4">
+          Luego, para obtener el consumo del mes se multiplica el consumo diario por 30 (días promedio) y se multiplica por el costo del kWh de tu distribuidora eléctrica (Edenor, Edesur, EPE, EPEC, etc.).
+        </p>
+        <p>
+          <strong>Ejemplo práctico:</strong> Un panel LED Quantum Board de <strong>240W</strong> encendido durante <strong>18 horas diarias</strong> en fase vegetativa consume:
+          <br>
+          <code class="text-xs text-green bg-green/10 px-2 py-0.5 rounded">(240W × 18h) ÷ 1000 = 4,32 kWh al día</code>.
+          <br>
+          En 30 días representa <strong>129,6 kWh</strong>. Si tu tarifa es de $130 por kWh, el costo mensual de la luz principal es de <strong>$16.848 ARS</strong>.
+        </p>
+      </div>
+
+      <div class="p-8 rounded-3xl" style="background:rgba(255,255,255,0.02);border:1px solid rgba(76,175,80,0.15);">
+        <h2 class="text-2xl font-black text-text-main mb-4">¿Cómo saber cuánto pagás el kWh en tu factura en Argentina?</h2>
+        <p class="mb-4">
+          En las facturas de electricidad argentinas, el costo no es plano; se compone de dos factores esenciales:
+        </p>
+        <ul class="list-disc pl-5 flex flex-col gap-2 text-sm text-text-main/60 mb-4">
+          <li><strong>Cargo Fijo:</strong> Es un monto base que pagás independientemente de si consumiste electricidad o no.</li>
+          <li><strong>Cargo Variable ($/kWh):</strong> Es el precio por cada kilowatt-hora efectivamente consumido en el período. Este es el valor que debés ingresar en la calculadora.</li>
+          <li><strong>Segmentación de subsidios:</strong>
+            <br>• <strong>Nivel 1 (N1):</strong> Sin subsidio (tarifa plena, mayor costo).
+            <br>• <strong>Nivel 2 (N2):</strong> Con subsidio alto (menores ingresos).
+            <br>• <strong>Nivel 3 (N3):</strong> Subsidio intermedio hasta 250 o 350 kWh mensuales; el excedente se factura a tarifa plana.
+          </li>
+        </ul>
+        <p class="text-xs text-text-main/50">
+          *Tip pro:* Podés dividir el monto total de la factura por la cantidad total de kWh consumidos para obtener un costo promedio real "con impuestos y cargos fijos incluidos".
+        </p>
+      </div>
+
+      <div class="p-8 rounded-3xl" style="background:rgba(255,255,255,0.02);border:1px solid rgba(76,175,80,0.15);">
+        <h2 class="text-2xl font-black text-text-main mb-4">Consejos para optimizar la factura eléctrica de tu cultivo</h2>
+        <div class="grid sm:grid-cols-2 gap-4 text-sm">
+          <div class="p-4 rounded-2xl bg-black/20 border border-green/10">
+            <h3 class="font-bold text-green-soft mb-2">1. Invertir en LEDs de alta eficiencia (µmol/J)</h3>
+            <p class="text-xs text-text-main/60">
+              Un LED Samsung LM301H o similar entrega casi el doble de radiación fotosintéticamente activa (PAR) por cada Watt comparado con las lámparas de Sodio HPS o LEDs cob comunes, reduciendo la disipación térmica y el gasto de aire acondicionado.
+            </p>
+          </div>
+          <div class="p-4 rounded-2xl bg-black/20 border border-green/10">
+            <h3 class="font-bold text-green-soft mb-2">2. Fotoperiodo nocturno en verano</h3>
+            <p class="text-xs text-text-main/60">
+              Encendé las luces durante la noche (por ejemplo de 20:00 a 14:00 o de 21:00 a 09:00). Las temperaturas ambientales exteriores son más bajas, lo que disminuye drásticamente la necesidad de forzar extractores a máxima potencia o encender aires acondicionados.
+            </p>
+          </div>
+          <div class="p-4 rounded-2xl bg-black/20 border border-green/10">
+            <h3 class="font-bold text-green-soft mb-2">3. Timers digitales de precisión</h3>
+            <p class="text-xs text-text-main/60">
+              Los timers analógicos suelen atrasarse con cortes de luz o picos de tensión. Un timer digital o inteligente Wi-Fi asegura ciclos exactos de 18/6 o 12/12 sin desfasajes ni consumos fantasmas.
+            </p>
+          </div>
+          <div class="p-4 rounded-2xl bg-black/20 border border-green/10">
+            <h3 class="font-bold text-green-soft mb-2">4. Regulación con Dimmers</h3>
+            <p class="text-xs text-text-main/60">
+              En las primeras dos semanas de vida de una plántula o esqueje, 50W a 80W son más que suficientes. No enciendas la luminaria al 100% hasta que la planta tenga suficiente masa foliar para absorber esa energía.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- Lógica Interactiva en JavaScript Puro -->
+<script>
+  (function() {
+    const lightWattsInput = document.getElementById('lightWatts');
+    const lightWattsDisplay = document.getElementById('lightWattsDisplay');
+    const lightHoursInput = document.getElementById('lightHours');
+    const extractorWattsInput = document.getElementById('extractorWatts');
+    const extractorHoursInput = document.getElementById('extractorHours');
+    const fanWattsInput = document.getElementById('fanWatts');
+    const fanHoursInput = document.getElementById('fanHours');
+    const extraWattsInput = document.getElementById('extraWatts');
+    const extraHoursInput = document.getElementById('extraHours');
+    const kwhRateInput = document.getElementById('kwhRate');
+    const rateDisplay = document.getElementById('rateDisplay');
+
+    // Outputs
+    const monthlyCostEl = document.getElementById('monthlyCost');
+    const dailyCostEl = document.getElementById('dailyCost');
+    const dailyKwhEl = document.getElementById('dailyKwh');
+    const monthlyKwhEl = document.getElementById('monthlyKwh');
+    const cycleCostEl = document.getElementById('cycleCost');
+    const barLight = document.getElementById('barLight');
+    const barVent = document.getElementById('barVent');
+    const barExtra = document.getElementById('barExtra');
+    const lightPct = document.getElementById('lightPct');
+    const ventPct = document.getElementById('ventPct');
+    const extraPct = document.getElementById('extraPct');
+    const rowExtra = document.getElementById('rowExtra');
+    const copyReportBtn = document.getElementById('copyReportBtn');
+
+    function calculate() {
+      const lightW = parseFloat(lightWattsInput.value) || 0;
+      const lightH = parseFloat(lightHoursInput.value) || 18;
+      const extW = parseFloat(extractorWattsInput.value) || 0;
+      const extH = parseFloat(extractorHoursInput.value) || 24;
+      const fanW = parseFloat(fanWattsInput.value) || 0;
+      const fanH = parseFloat(fanHoursInput.value) || 24;
+      const extExtraW = parseFloat(extraWattsInput.value) || 0;
+      const extExtraH = parseFloat(extraHoursInput.value) || 0;
+      const rate = parseFloat(kwhRateInput.value) || 130;
+
+      // Diarios en kWh
+      const lightDailyKwh = (lightW * lightH) / 1000;
+      const ventDailyKwh = ((extW * extH) + (fanW * fanH)) / 1000;
+      const extraDailyKwh = (extExtraW * extExtraH) / 1000;
+      const totalDailyKwh = lightDailyKwh + ventDailyKwh + extraDailyKwh;
+
+      const monthlyKwh = totalDailyKwh * 30;
+      const monthlyCost = monthlyKwh * rate;
+      const dailyCost = totalDailyKwh * rate;
+
+      // Ciclo completo (4 sem vege a 18h + 9 sem flora a 12h)
+      // Vegetativo: 28 días con luz a 18h
+      const lightVegeKwh = ((lightW * 18) / 1000) * 28;
+      const ventVegeKwh = ventDailyKwh * 28;
+      const extraVegeKwh = extraDailyKwh * 28;
+
+      // Floración: 63 días con luz a 12h
+      const lightFloraKwh = ((lightW * 12) / 1000) * 63;
+      const ventFloraKwh = ventDailyKwh * 63;
+      const extraFloraKwh = extraDailyKwh * 63;
+
+      const totalCycleKwh = lightVegeKwh + ventVegeKwh + extraVegeKwh + lightFloraKwh + ventFloraKwh + extraFloraKwh;
+      const cycleCost = totalCycleKwh * rate;
+
+      // Actualizar DOM
+      lightWattsDisplay.textContent = lightW + ' W';
+      rateDisplay.textContent = '$ ' + rate + ' / kWh';
+      dailyKwhEl.textContent = totalDailyKwh.toFixed(2) + ' kWh';
+      monthlyKwhEl.textContent = monthlyKwh.toFixed(1) + ' kWh';
+      dailyCostEl.textContent = '$ ' + Math.round(dailyCost).toLocaleString('es-AR');
+      monthlyCostEl.textContent = '$ ' + Math.round(monthlyCost).toLocaleString('es-AR');
+      cycleCostEl.textContent = '$ ' + Math.round(cycleCost).toLocaleString('es-AR');
+
+      // Barras porcentuales
+      if (totalDailyKwh > 0) {
+        const pLight = Math.round((lightDailyKwh / totalDailyKwh) * 100);
+        const pVent = Math.round((ventDailyKwh / totalDailyKwh) * 100);
+        const pExtra = Math.max(0, 100 - pLight - pVent);
+
+        barLight.style.width = pLight + '%';
+        barVent.style.width = pVent + '%';
+        barExtra.style.width = pExtra + '%';
+
+        lightPct.textContent = pLight + '%';
+        ventPct.textContent = pVent + '%';
+        extraPct.textContent = pExtra + '%';
+
+        if (extraDailyKwh > 0) {
+          rowExtra.style.display = 'flex';
+        } else {
+          rowExtra.style.display = 'none';
+        }
+      }
+    }
+
+    // Event listeners
+    lightWattsInput.addEventListener('input', calculate);
+    extractorWattsInput.addEventListener('input', calculate);
+    extractorHoursInput.addEventListener('change', calculate);
+    fanWattsInput.addEventListener('input', calculate);
+    fanHoursInput.addEventListener('change', calculate);
+    extraWattsInput.addEventListener('input', calculate);
+    extraHoursInput.addEventListener('change', calculate);
+    kwhRateInput.addEventListener('input', calculate);
+
+    // Presets de lámparas
+    document.querySelectorAll('.preset-light').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.preset-light').forEach(b => {
+          b.classList.remove('border-green', 'bg-green/20', 'text-green', 'font-bold');
+          b.classList.add('border-green/30', 'text-green-soft');
+        });
+        this.classList.remove('border-green/30', 'text-green-soft');
+        this.classList.add('border-green', 'bg-green/20', 'text-green', 'font-bold');
+        lightWattsInput.value = this.dataset.val;
+        calculate();
+      });
+    });
+
+    // Presets de fotoperiodo
+    document.querySelectorAll('.fotope-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.fotope-btn').forEach(b => {
+          b.classList.remove('border-green', 'bg-green/20', 'text-green', 'font-bold');
+          b.classList.add('border-green/30', 'text-text-main/70', 'font-medium');
+        });
+        this.classList.remove('border-green/30', 'text-text-main/70', 'font-medium');
+        this.classList.add('border-green', 'bg-green/20', 'text-green', 'font-bold');
+        lightHoursInput.value = this.dataset.hours;
+        calculate();
+      });
+    });
+
+    // Presets de tarifas
+    document.querySelectorAll('.rate-preset').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.rate-preset').forEach(b => {
+          b.classList.remove('border-green', 'bg-green/20', 'text-green', 'font-bold');
+          b.classList.add('border-green/20', 'text-text-main/70');
+        });
+        this.classList.remove('border-green/20', 'text-text-main/70');
+        this.classList.add('border-green', 'bg-green/20', 'text-green', 'font-bold');
+        kwhRateInput.value = this.dataset.rate;
+        calculate();
+      });
+    });
+
+    // Copiar reporte
+    copyReportBtn.addEventListener('click', function() {
+      const summary = `📊 *Reporte de Consumo Indoor - GrowAI*\n` +
+        `• Iluminación: ${lightWattsInput.value}W (${lightHoursInput.value}h/día)\n` +
+        `• Consumo diario: ${dailyKwhEl.textContent}\n` +
+        `• Consumo mensual: ${monthlyKwhEl.textContent}\n` +
+        `• Costo estimado mensual: ${monthlyCostEl.textContent}\n` +
+        `• Costo ciclo completo (13 sem): ${cycleCostEl.textContent}\n` +
+        `Calculado con: https://www.growai.com.ar/herramientas/calculadora-consumo-electrico/`;
+
+      navigator.clipboard.writeText(summary).then(() => {
+        const originalText = copyReportBtn.innerHTML;
+        copyReportBtn.innerHTML = '✅ ¡Copiado al portapapeles!';
+        copyReportBtn.classList.add('bg-green/20', 'text-green');
+        setTimeout(() => {
+          copyReportBtn.innerHTML = originalText;
+          copyReportBtn.classList.remove('bg-green/20', 'text-green');
+        }, 2500);
+      });
+    });
+
+    // Inicializar
+    calculate();
+  })();
+</script>
