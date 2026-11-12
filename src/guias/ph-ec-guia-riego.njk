@@ -1,0 +1,228 @@
+---
+layout: layouts/base.njk
+title: "Manual de pH y Electroconductividad (EC) en Cultivo | GrowAI"
+description: "Guía científica de riego y fertirriego: cómo medir y regular el pH, tabla de EC por semana, escala de PPM y diagnóstico por drenaje (run-off)."
+permalink: /guias/ph-ec-guia-riego/
+---
+
+<article class="py-16 bg-section-a">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6">
+    
+    <!-- Breadcrumb -->
+    <div class="mb-6 flex items-center gap-2 text-xs text-text-main/40">
+      <a href="/guias/" class="hover:text-green transition">Guías</a>
+      <span>/</span>
+      <span class="text-text-main/70">Manual de pH y EC</span>
+    </div>
+
+    <!-- Encabezado del Artículo -->
+    <header class="mb-12">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-purple px-3 py-1 rounded-full bg-purple/10 border border-purple/20">
+          Química del Agua & Fertirriego
+        </span>
+        <span class="text-xs text-text-main/40">Actualizado: 2026 · Lectura: 9 min</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-text-main mt-2 leading-[1.12]">
+        Manual Definitivo de pH y Electroconductividad (EC)
+      </h1>
+      <p class="text-text-main/60 text-base sm:text-lg mt-4 leading-relaxed">
+        Podés comprar los fertilizantes más costosos del mercado, pero si el pH del agua está descalibrado, tus plantas morirán de hambre con el plato lleno. Conocé las bases electroquímicas del riego eficiente.
+      </p>
+    </header>
+
+    <!-- Contenido del Artículo -->
+    <div class="prose max-w-none flex flex-col gap-10 text-text-main/75 text-sm sm:text-base leading-relaxed">
+      
+      <!-- Sección 1: El pH -->
+      <section class="p-8 rounded-3xl" style="background:rgba(255,255,255,0.02);border:1px solid rgba(139,110,208,0.25);">
+        <h2 class="text-2xl sm:text-3xl font-black text-text-main mb-4">
+          1. ¿Qué es el pH y por qué es la llave maestra?
+        </h2>
+        <p class="mb-4">
+          El <strong>pH (Potencial de Hidrógeno)</strong> mide la concentración de iones de hidrógeno libres en una solución acuosa, en una escala de 0 a 14. Un valor de 7.0 es neutro, por debajo de 7 es ácido y por encima de 7 es alcalino.
+        </p>
+        <p class="mb-4">
+          Lo que muchos cultivadores olvidan es que <strong>la escala de pH es logarítmica</strong>: un agua con pH 6.0 es <strong>10 veces más ácida</strong> que una de pH 7.0, y <strong>100 veces más ácida</strong> que una de pH 8.0. Un desvío de apenas 0.5 puntos en la lectura representa una variación drástica para la microflora y la membrana radicular.
+        </p>
+        
+        <div class="p-4 rounded-2xl bg-black/40 border border-purple/20 my-4 text-xs sm:text-sm">
+          <strong class="text-purple font-bold">¿Por qué importa tanto?</strong> A diferentes niveles de pH, los nutrientes cambian su carga química. Si el pH sube de 7.0 en tierra, el Hierro (Fe) precipita y no puede ser absorbido. Si el pH cae por debajo de 5.5, el Fósforo (P) se bloquea químicamente y los metales pesados se vuelven tóxicos.
+        </div>
+      </section>
+
+      <!-- Tabla de Rangos Óptimos de pH -->
+      <section>
+        <h2 class="text-2xl font-black text-text-main mb-4">Rangos de pH recomendados por medio de cultivo</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="border-b border-green/20 text-green-soft">
+              <tr>
+                <th class="py-3 px-4">Medio de Cultivo</th>
+                <th class="py-3 px-4">Fase Vegetativa</th>
+                <th class="py-3 px-4">Fase de Floración</th>
+                <th class="py-3 px-4">Comportamiento Ideal</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5 text-text-main/70">
+              <tr>
+                <td class="py-3 px-4 font-bold text-text-main">Sustrato / Tierra Orgánica</td>
+                <td class="py-3 px-4 font-mono font-bold text-green">6.0 – 6.3</td>
+                <td class="py-3 px-4 font-mono font-bold text-green">6.4 – 6.8</td>
+                <td class="py-3 px-4">Dejar oscilar naturalmente dentro del rango para permitir la asimilación de todos los microelementos.</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-bold text-text-main">Fibra de Coco (Sustrato Inerte)</td>
+                <td class="py-3 px-4 font-mono font-bold text-purple">5.7 – 5.9</td>
+                <td class="py-3 px-4 font-mono font-bold text-purple">6.0 – 6.2</td>
+                <td class="py-3 px-4">Exige calibración rigurosa en cada riego, ya que el medio no amortigua (bufferiza) por sí mismo.</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-bold text-text-main">Hidroponía (DWC / NFT / Aeroponía)</td>
+                <td class="py-3 px-4 font-mono font-bold text-purple">5.5 – 5.8</td>
+                <td class="py-3 px-4 font-mono font-bold text-purple">5.8 – 6.2</td>
+                <td class="py-3 px-4">Medición diaria dos veces al día con medidor electrónico de grado profesional.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Sección 2: La Electroconductividad (EC) -->
+      <section class="p-8 rounded-3xl" style="background:rgba(255,255,255,0.02);border:1px solid rgba(76,175,80,0.25);">
+        <h2 class="text-2xl sm:text-3xl font-black text-text-main mb-4">
+          2. Electroconductividad (EC): ¿Cuánta comida tiene el agua?
+        </h2>
+        <p class="mb-4">
+          El agua pura destilada no conduce la electricidad. Cuando agregamos fertilizantes minerales (sales solubles de nitrógeno, potasio, fósforo, etc.), el agua se ioniza y conduce corriente eléctrica.
+        </p>
+        <p class="mb-4">
+          La <strong>Electroconductividad (EC)</strong> se mide en milisiemens por centímetro (<code class="text-green font-mono">mS/cm</code>) o microsiemens (<code class="text-green font-mono">µS/cm</code>) y es la única medida universal para saber la concentración real de nutrientes en el agua.
+        </p>
+
+        <!-- La trampa de las PPM -->
+        <div class="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/20 my-4 text-xs sm:text-sm">
+          <h3 class="font-bold text-amber-300 text-sm mb-2">⚠️ Cuidado con las PPM (Partes Por Millón)</h3>
+          <p class="text-text-main/70 mb-2">
+            Ningún medidor del mercado mide PPM directamente: todos leen la <strong>EC</strong> y luego la multiplican por un factor de conversión que varía según el fabricante:
+          </p>
+          <ul class="list-disc pl-5 flex flex-col gap-1 text-text-main/60 text-xs font-mono">
+            <li>Escala Hanna: 1.0 mS/cm = 500 PPM (factor 0.5)</li>
+            <li>Escala Eutech: 1.0 mS/cm = 640 PPM (factor 0.64)</li>
+            <li>Escala Truncheon / Bluelab: 1.0 mS/cm = 700 PPM (factor 0.7)</li>
+          </ul>
+          <p class="text-text-main/70 mt-2 text-xs">
+            👉 <strong>Regla de oro:</strong> Si una tabla de fertilizantes dice "1000 PPM", puede significar cosas totalmente distintas según tu medidor. <strong>Usá siempre lecturas en EC (mS/cm).</strong>
+          </p>
+        </div>
+      </section>
+
+      <!-- Tabla de EC por semana -->
+      <section>
+        <h2 class="text-2xl font-black text-text-main mb-4">Tabla de EC recomendada según etapa de vida</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="border-b border-green/20 text-green-soft">
+              <tr>
+                <th class="py-3 px-4">Fase del Cultivo</th>
+                <th class="py-3 px-4">Semanas Típicas</th>
+                <th class="py-3 px-4">EC Recomendada (mS/cm)</th>
+                <th class="py-3 px-4">Observaciones Nutricionales</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5 text-text-main/70">
+              <tr>
+                <td class="py-3 px-4 font-bold text-text-main">Plántula / Esqueje recién enraizado</td>
+                <td class="py-3 px-4">Semana 1 – 2</td>
+                <td class="py-3 px-4 font-mono font-bold text-green">0.4 – 0.6</td>
+                <td class="py-3 px-4">Raíces delicadas. Agua base muy suave; solo enraizantes biológicos.</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-bold text-text-main">Vegetativo Temprano</td>
+                <td class="py-3 px-4">Semana 3 – 4</td>
+                <td class="py-3 px-4 font-mono font-bold text-green">0.8 – 1.1</td>
+                <td class="py-3 px-4">Comienza la demanda de nitrógeno y calcio.</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-bold text-text-main">Vegetativo Tardío / Pre-flora</td>
+                <td class="py-3 px-4">Semana 5 – 6</td>
+                <td class="py-3 px-4 font-mono font-bold text-green">1.2 – 1.4</td>
+                <td class="py-3 px-4">El "stretch" o estirón exige nutrición balanceada N-P-K.</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-bold text-text-main">Floración Pico (Sem 3 a 6 de flora)</td>
+                <td class="py-3 px-4">Semana 7 – 10</td>
+                <td class="py-3 px-4 font-mono font-bold text-amber-400">1.6 – 2.0</td>
+                <td class="py-3 px-4">Máxima demanda de fósforo y potasio para engorde floral.</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-bold text-text-main">Lavado final / Maduración</td>
+                <td class="py-3 px-4">Últimas 1 – 2 sem</td>
+                <td class="py-3 px-4 font-mono font-bold text-green">0.2 – 0.4</td>
+                <td class="py-3 px-4">Agua sola para que la planta consuma sus reservas internas.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Diagnóstico por Run-Off -->
+      <section class="p-8 rounded-3xl" style="background:rgba(255,255,255,0.02);border:1px solid rgba(76,175,80,0.2);">
+        <h2 class="text-2xl sm:text-3xl font-black text-text-main mb-4">
+          3. El secreto de los profesionales: Medir el Run-off (Drenaje)
+        </h2>
+        <p class="mb-4">
+          El agua que escurre por debajo de la maceta te dice exactamente qué está pasando en la zona de raíces:
+        </p>
+        <div class="grid sm:grid-cols-3 gap-4 text-xs sm:text-sm my-4">
+          <div class="p-4 rounded-2xl bg-black/30 border border-green/20">
+            <h3 class="font-bold text-green mb-1.5">EC Entrada = EC Salida</h3>
+            <p class="text-text-main/60">
+              <strong>Equilibrio perfecto.</strong> La planta está consumiendo exactamente la misma proporción de agua y nutrientes que le estás aportando.
+            </p>
+          </div>
+          <div class="p-4 rounded-2xl bg-black/30 border border-red-500/20">
+            <h3 class="font-bold text-red-400 mb-1.5">EC Salida > EC Entrada (+0.5 mS/cm)</h3>
+            <p class="text-text-main/60">
+              <strong>Peligro de sobrefertilización.</strong> La planta está absorbiendo agua pero dejando sales en el sustrato. El próximo riego debe ser solo con agua pura.
+            </p>
+          </div>
+          <div class="p-4 rounded-2xl bg-black/30 border border-sky-500/20">
+            <h3 class="font-bold text-sky-400 mb-1.5">EC Salida < EC Entrada</h3>
+            <p class="text-text-main/60">
+              <strong>Planta hambrienta.</strong> El sustrato se está quedando sin nutrientes disponibles. Podés incrementar la dosis del fertilizante un 10-15%.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Consejos de mantenimiento -->
+      <section class="p-8 rounded-3xl" style="background:rgba(255,255,255,0.02);border:1px solid rgba(139,110,208,0.2);">
+        <h2 class="text-2xl font-black text-text-main mb-4">Cuidado y calibración de peachímetros digitales</h2>
+        <ul class="list-disc pl-5 flex flex-col gap-2.5 text-xs sm:text-sm text-text-main/60">
+          <li><strong>Nunca dejes secar la sonda:</strong> El bulbo de vidrio contiene un gel electrolítico. Guardalo siempre con unas gotas de solución de almacenamiento (KCl) o en su defecto solución buffer pH 4.01. Jamás lo guardes en agua destilada (arruina la membrana por ósmosis inversa).</li>
+          <li><strong>Calibrá al menos una vez al mes:</strong> Utilizá sobres de calibración de dos puntos (primero pH 7.01 y luego pH 4.01).</li>
+          <li><strong>Temperatura:</strong> Medí siempre las soluciones a temperatura ambiente (entre 18°C y 24°C) para evitar desvíos en el sensor de compensación térmica automática (ATC).</li>
+        </ul>
+      </section>
+
+      <!-- CTA App -->
+      <section class="rounded-3xl p-8 text-center relative overflow-hidden"
+               style="background:linear-gradient(135deg,rgba(13,31,15,0.9) 0%,rgba(27,15,42,0.85) 100%);border:1px solid rgba(76,175,80,0.3);">
+        <span class="eyebrow mb-2">Bitácora de Riego Digital</span>
+        <h3 class="text-2xl sm:text-3xl font-black text-text-main mt-2 mb-3">
+          Llevá el registro de pH y EC en cada riego con GrowAI
+        </h3>
+        <p class="text-text-main/70 text-sm max-w-xl mx-auto mb-6">
+          Guardá los valores de entrada y salida de cada maceta, mirá gráficos de evolución a lo largo de las semanas y recibí alertas si la conductividad se dispara.
+        </p>
+        <a href="https://app.growai.com.ar?src=guia_ph_ec" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-2 bg-green text-bg-deep font-bold px-8 py-3.5 rounded-full hover:bg-green-soft transition shadow-[0_4px_20px_rgba(76,175,80,0.3)]">
+          Probar Bitácora en GrowAI →
+        </a>
+      </section>
+
+    </div>
+
+  </div>
+</article>
